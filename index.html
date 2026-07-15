@@ -10,24 +10,14 @@
     <button id="generateBtn">Tạo số ngẫu nhiên mới</button>
 
     <script type="module">
-        import { getTrulyRandomNumber } from './JS/mixer.js';
+    import { getTrulyRandomNumber } from './JS/mixer.js';
 
-        const btn = document.getElementById('generateBtn');
-
-        btn.addEventListener('click', async () => {
-            console.clear();
-            console.log("🚀 Bắt đầu quá trình thu thập entropy...");
-
-            // Tui giả định bro có thể xuất cái pool ra log trong mixer hoặc ở đây
-            // Nếu muốn debug kỹ, bro hãy sửa hàm getTrulyRandomNumber 
-            // để return cả cái object 'entropyPool' luôn nhé.
-            
-            const randomVal = await getTrulyRandomNumber(1, 100);
-            
-            console.log("✅ Kết quả cuối cùng:", randomVal);
-            console.log("---------------------------------------");
-            alert("Số ngẫu nhiên tạo ra: " + randomVal);
-        });
-    </script>
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+        const randomVal = await getTrulyRandomNumber(1, 100);
+        // Chỉ xuất kết quả cuối cùng hoặc cập nhật vào giao diện
+        document.getElementById('result').innerText = "Số ngẫu nhiên: " + randomVal;
+    });
+</script>
+<div id="result"></div>
 </body>
 </html>
