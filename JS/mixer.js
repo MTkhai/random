@@ -11,7 +11,7 @@ import { measureLatency } from './dns-engine.js';
 
 export async function getTrulyRandomNumber(min, max) {
     const [dns, fp, env] = await Promise.all([
-        Promise.all(myDNSProviders.map(measureLatency)),
+        Promise.all(myDNSProviders.map(p => measureLatency(p.url))),
         getFingerprintSeed(),
         getEnvironmentalEntropy()
     ]);
