@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Entropy Generator - Beta Debug</title>
+</head>
+<body>
+    <h1>Entropy Engine Beta</h1>
+    <p>Nhấn F12 để theo dõi quá trình tạo số ngẫu nhiên...</p>
+    <button id="generateBtn">Tạo số ngẫu nhiên mới</button>
+
+    <script type="module">
+        import { getTrulyRandomNumber } from './JS/mixer.js';
+
+        const btn = document.getElementById('generateBtn');
+
+        btn.addEventListener('click', async () => {
+            console.clear();
+            console.log("🚀 Bắt đầu quá trình thu thập entropy...");
+
+            // Tui giả định bro có thể xuất cái pool ra log trong mixer hoặc ở đây
+            // Nếu muốn debug kỹ, bro hãy sửa hàm getTrulyRandomNumber 
+            // để return cả cái object 'entropyPool' luôn nhé.
+            
+            const randomVal = await getTrulyRandomNumber(1, 100);
+            
+            console.log("✅ Kết quả cuối cùng:", randomVal);
+            console.log("---------------------------------------");
+            alert("Số ngẫu nhiên tạo ra: " + randomVal);
+        });
+    </script>
+</body>
+</html>
