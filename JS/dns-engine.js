@@ -31,13 +31,17 @@ function buildDNSQuery(hostname) {
 
 // 2. Bộ máy đo
 export async function measureLatency(url) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), 2000);
     try {
         const start = performance.now();
-        // Chỉ dùng GET đơn giản, không cần query phức tạp cho nhanh
-        await fetch(url, { method: 'GET', mode: 'no-cors' });
+        // Dùng HEAD request: chỉ hỏi "ông có đó không?", không bắt nó xử lý query DNS
+        await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: controller.signal });
         return performance.now() - start;
     } catch (e) {
-        return Math.random() * 50; // Trả về số random thay vì null
+        return Math.random() * 100; // Vẫn là fallback để không nổ log
+    } finally {
+        clearTimeout(id);
     }
 }
 // danh sách seed

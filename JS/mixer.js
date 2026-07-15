@@ -18,8 +18,6 @@ export async function getTrulyRandomNumber(min, max) {
     
     const entropyPool = { dns, fp: Array.from(new Uint8Array(fp)), env, time: performance.now() };
     
-    // LOG RA ĐỂ BETA TEST:
-    console.log("📦 Dữ liệu thô (Entropy Pool):", entropyPool);
 
     const data = JSON.stringify(entropyPool);
     const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
