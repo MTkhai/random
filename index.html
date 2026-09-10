@@ -1,23 +1,143 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en" data-theme="dark" data-sidebar-pos="left">
 <head>
     <meta charset="UTF-8">
-    <title>Entropy Generator - Beta Debug</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANS — Random All-in-One System</title>
+    
+    <!-- Typography & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@lucide/web"></script>
+    
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <h1>Entropy Engine Beta</h1>
-    <p>Nhấn F12 để theo dõi quá trình tạo số ngẫu nhiên...</p>
-    <button id="generateBtn">Tạo số ngẫu nhiên mới</button>
 
-    <script type="module">
-    import { getTrulyRandomNumber } from './JS/mixer.js';
+    <div id="rans-app">
+        <!-- 🛠️ SIDEBAR NAVIGATION -->
+        <aside id="sidebar" class="sidebar">
+            
+            <!-- Block 1: Logo & Toggle -->
+            <div class="sidebar-header">
+                <div class="brand">
+                    <i data-lucide="dice-5" class="brand-icon"></i>
+                    <span class="brand-name">RANS</span>
+                </div>
+                <button id="btn-toggle-sidebar" class="btn-icon" title="Toggle Sidebar (Ctrl+B)">
+                    <i data-lucide="panel-left-close"></i>
+                </button>
+            </div>
 
-    document.getElementById('generateBtn').addEventListener('click', async () => {
-        const randomVal = await getTrulyRandomNumber(1, 100);
-        // Chỉ xuất kết quả cuối cùng hoặc cập nhật vào giao diện
-        document.getElementById('result').innerText = "Số ngẫu nhiên: " + randomVal;
-    });
-</script>
-<div id="result"></div>
+            <!-- Block 2: 12 Modules Nav -->
+            <nav class="sidebar-nav custom-scroll">
+                <a href="#number" class="nav-item active" data-module="number">
+                    <i data-lucide="binary"></i>
+                    <span class="nav-label">Number Generator</span>
+                </a>
+                <a href="#spinner" class="nav-item" data-module="spinner">
+                    <i data-lucide="disc"></i>
+                    <span class="nav-label">Custom Spinner</span>
+                </a>
+                <a href="#coin" class="nav-item" data-module="coin">
+                    <i data-lucide="circle-dot"></i>
+                    <span class="nav-label">Flip a Coin</span>
+                </a>
+                <a href="#dice" class="nav-item" data-module="dice">
+                    <i data-lucide="dices"></i>
+                    <span class="nav-label">Roll a Dice</span>
+                </a>
+                <a href="#groups" class="nav-item" data-module="groups">
+                    <i data-lucide="users"></i>
+                    <span class="nav-label">Group Generator</span>
+                </a>
+                <a href="#color" class="nav-item" data-module="color">
+                    <i data-lucide="palette"></i>
+                    <span class="nav-label">Color Palette</span>
+                </a>
+                <a href="#quotes" class="nav-item" data-module="quotes">
+                    <i data-lucide="quote"></i>
+                    <span class="nav-label">Random Quotes</span>
+                </a>
+                <a href="#food" class="nav-item" data-module="food">
+                    <i data-lucide="utensils"></i>
+                    <span class="nav-label">Food Picker</span>
+                </a>
+                <a href="#cards" class="nav-item" data-module="cards">
+                    <i data-lucide="playing-card"></i>
+                    <span class="nav-label">Card Drawer</span>
+                </a>
+                <a href="#image" class="nav-item" data-module="image">
+                    <i data-lucide="image"></i>
+                    <span class="nav-label">Image Placeholder</span>
+                </a>
+                <a href="#password" class="nav-item" data-module="password">
+                    <i data-lucide="key-round"></i>
+                    <span class="nav-label">Password Generator</span>
+                </a>
+                <a href="#time" class="nav-item" data-module="time">
+                    <i data-lucide="clock"></i>
+                    <span class="nav-label">Time Info</span>
+                </a>
+            </nav>
+
+            <!-- Block 3: Settings & Status -->
+            <div class="sidebar-footer">
+                <!-- Live Entropy Monitor -->
+                <div class="entropy-status" title="Live Entropy Pool Status">
+                    <span class="dot pulse"></span>
+                    <span class="status-text">Entropy Live</span>
+                </div>
+
+                <div class="footer-actions">
+                    <button id="btn-theme-toggle" class="btn-icon" title="Toggle Theme">
+                        <i data-lucide="moon"></i>
+                    </button>
+                    <button id="btn-sidebar-pos" class="btn-icon" title="Switch Sidebar Position">
+                        <i data-lucide="arrow-left-right"></i>
+                    </button>
+                    <button id="btn-history-toggle" class="btn-icon" title="Open History">
+                        <i data-lucide="history"></i>
+                    </button>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- 🎯 DYNAMIC WORKSPACE (RENDER BY SPA ROUTER) -->
+        <main id="main-workspace" class="workspace">
+            <!-- App.js & Router.js sẽ nhét HTML của từng module vào đây -->
+            <div id="module-container" class="module-container"></div>
+        </main>
+
+        <!-- 📜 SLIDE-OVER HISTORY DRAWER -->
+        <div id="history-drawer" class="history-drawer">
+            <div class="drawer-header">
+                <div class="drawer-title">
+                    <i data-lucide="history"></i>
+                    <span>Global History Log</span>
+                </div>
+                <button id="btn-close-history" class="btn-icon">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div id="history-content" class="drawer-body custom-scroll">
+                <!-- History.js sẽ render danh sách kết quả vào đây -->
+            </div>
+            <div class="drawer-footer">
+                <button id="btn-clear-history" class="btn-danger-outline">
+                    <i data-lucide="trash-2"></i>
+                    <span>Clear All History</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Backdrop overlay khi mở History trên Mobile -->
+        <div id="drawer-backdrop" class="drawer-backdrop"></div>
+    </div>
+
+    <!-- Bootstrap Entry Point -->
+    <script type="module" src="./bootstrap/app.js"></script>
 </body>
 </html>
