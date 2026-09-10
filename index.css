@@ -359,3 +359,34 @@ body {
     background: var(--border-color);
     border-radius: 4px;
 }
+
+/* Đảm bảo Icon SVG luôn hiển thị kích thước chuẩn */
+.sidebar svg, .btn-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+    display: inline-block;
+}
+
+/* Ép Lucide Icon hiển thị đúng dạng flex */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Đảm bảo Footer không bị ẩn nút */
+.sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto; /* Đẩy footer xuống đáy */
+}
+
+.footer-actions {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
