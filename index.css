@@ -360,3 +360,11 @@ body {
     background: var(--border-color);
     border-radius: 4px;
 }
+
+svg {
+    width: 20px;
+    height: 20px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
