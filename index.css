@@ -73,7 +73,7 @@ body {
 
 .sidebar {
     width: var(--sidebar-width);
-    height: 100%;
+    height: 100vh;
     background-color: var(--bg-surface);
     border-right: 1px solid var(--border-color);
     display: flex;
@@ -81,6 +81,7 @@ body {
     transition: width var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10;
     flex-shrink: 0;
+    overflow: hidden;
 }
 
 [data-sidebar-pos="right"] .sidebar {
@@ -120,6 +121,7 @@ body {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .brand {
@@ -140,6 +142,7 @@ body {
 /* Block 2: 12 Modules Nav */
 .sidebar-nav {
     flex: 1;
+    min-height: 0; /* KHÓA CHÍ MẠNG GIÚP CONTAINER KHÔNG BỊ ĐẨY CHÂN FOOTER */
     padding: 1rem 0.75rem;
     display: flex;
     flex-direction: column;
@@ -171,9 +174,10 @@ body {
     font-weight: 600;
 }
 
-.nav-item svg {
-    width: 20px;
-    height: 20px;
+.sidebar svg, .btn-icon svg, .nav-item svg {
+    width: 20px !important;
+    height: 20px !important;
+    display: inline-block;
     flex-shrink: 0;
 }
 
@@ -184,6 +188,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    flex-shrink: 0;
+    background-color: var(--bg-surface);
 }
 
 .entropy-status {
@@ -214,7 +220,7 @@ body {
 }
 
 .footer-actions {
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
@@ -241,11 +247,6 @@ body {
 .btn-icon:hover {
     background-color: var(--bg-surface-hover);
     color: var(--text-main);
-}
-
-.btn-icon svg {
-    width: 18px;
-    height: 18px;
 }
 
 .btn-danger-outline {
@@ -358,48 +359,4 @@ body {
 .custom-scroll::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: 4px;
-}
-
-.sidebar {
-    width: var(--sidebar-width);
-    height: 100vh; /* Ép cứng bằng chiều cao màn hình */
-    background-color: var(--bg-surface);
-    border-right: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Đẩy header lên top, footer xuống đáy */
-    transition: width var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10;
-    flex-shrink: 0;
-    overflow: hidden; /* Cấm thòi ra ngoài */
-}
-/* Đảm bảo Icon SVG luôn hiển thị kích thước chuẩn */
-.sidebar svg, .btn-icon svg {
-    width: 20px !important;
-    height: 20px !important;
-    display: inline-block;
-}
-
-/* Ép Lucide Icon hiển thị đúng dạng flex */
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-/* Đảm bảo Footer không bị ẩn nút */
-.sidebar-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1rem;
-    border-top: 1px solid var(--border-color);
-    margin-top: auto; /* Đẩy footer xuống đáy */
-}
-
-.footer-actions {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
 }
