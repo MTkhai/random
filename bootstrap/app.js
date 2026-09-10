@@ -3,6 +3,7 @@
  */
 
 import { Router } from './router.js';
+import { historyManager } from '../engine/history.js';
 
 class RansApp {
     constructor() {
@@ -105,3 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const app = new RansApp();
     app.init();
 });
+
+historyManager.init();
+historyManager.init(); // 👈 Thêm dòng này
+
+        console.log('🚀 RANS App initialized successfully!');
