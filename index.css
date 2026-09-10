@@ -360,6 +360,19 @@ body {
     border-radius: 4px;
 }
 
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh; /* Ép cứng bằng chiều cao màn hình */
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Đẩy header lên top, footer xuống đáy */
+    transition: width var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    flex-shrink: 0;
+    overflow: hidden; /* Cấm thòi ra ngoài */
+}
 /* Đảm bảo Icon SVG luôn hiển thị kích thước chuẩn */
 .sidebar svg, .btn-icon svg {
     width: 20px !important;
