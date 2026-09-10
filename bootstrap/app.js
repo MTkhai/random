@@ -1,7 +1,3 @@
-/**
- * RANS App Initializer — Central State & UI Event Manager
- */
-
 import { Router } from './router.js';
 import { historyManager } from '../engine/history.js';
 
@@ -17,49 +13,55 @@ class RansApp {
     }
 
     init() {
-        // 1. Restore & Áp dụng State giao diện
+        // 1. Áp dụng State
         this.applyTheme(this.state.theme);
         this.applySidebarPos(this.state.sidebarPos);
         this.applySidebarCollapsed(this.state.sidebarCollapsed);
 
-        // 2. Gán sự kiện cho các nút điều khiển trên UI
+        // 2. Gán sự kiện
         this.bindEvents();
 
-        // 3. Khởi tạo SPA Router
+        // 3. Khởi tạo History & Router
+        historyManager.init();
         this.router = new Router('module-container');
         this.router.init();
 
-        // 4. Render Lucide Icons ban đầu
-        if (window.lucide) {
-            window.lucide.createIcons();
-        }
+        // 4. ÉP RENDER ICON LUCIDE (Sửa lỗi mất Icon & Nút)
+        this.initIcons();
 
         console.log('🚀 RANS App initialized successfully!');
     }
 
+    initIcons() {
+        const renderLucide = () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            } else {
+                setTimeout(renderLucide, 50); // Thử lại nếu CDN load chậm
+            }
+        };
+        renderLucide();
+    }
+
     bindEvents() {
-        // Toggle Collapse Sidebar
         const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
         btnToggleSidebar?.addEventListener('click', () => {
             this.state.sidebarCollapsed = !this.state.sidebarCollapsed;
             this.applySidebarCollapsed(this.state.sidebarCollapsed);
         });
 
-        // Toggle Dark / Light Theme
         const btnTheme = document.getElementById('btn-theme-toggle');
         btnTheme?.addEventListener('click', () => {
             this.state.theme = this.state.theme === 'dark' ? 'light' : 'dark';
             this.applyTheme(this.state.theme);
         });
 
-        // Toggle Sidebar Position (Left <-> Right)
         const btnPos = document.getElementById('btn-sidebar-pos');
         btnPos?.addEventListener('click', () => {
             this.state.sidebarPos = this.state.sidebarPos === 'left' ? 'right' : 'left';
             this.applySidebarPos(this.state.sidebarPos);
         });
 
-        // Toggle History Drawer
         const btnHistory = document.getElementById('btn-history-toggle');
         const btnCloseHistory = document.getElementById('btn-close-history');
         const backdrop = document.getElementById('drawer-backdrop');
@@ -75,7 +77,6 @@ class RansApp {
         btnCloseHistory?.addEventListener('click', () => toggleHistory(false));
         backdrop?.addEventListener('click', () => toggleHistory(false));
 
-        // Phím tắt nhanh: Ctrl + B để đóng/mở nhanh Sidebar
         window.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
                 e.preventDefault();
@@ -101,13 +102,7 @@ class RansApp {
     }
 }
 
-// Chạy App khi DOM sẵn sàng
 document.addEventListener('DOMContentLoaded', () => {
     const app = new RansApp();
     app.init();
 });
-
-historyManager.init();
-historyManager.init(); // 👈 Thêm dòng này
-
-        console.log('🚀 RANS App initialized successfully!');
