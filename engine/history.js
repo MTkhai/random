@@ -5,12 +5,19 @@
 export class HistoryManager {
     constructor() {
         this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
-        this.container = null;
+        // Tự động lắng nghe sự kiện nút Clear ngay khi class được khởi tạo
+        this.bindEvents();
     }
 
-    /**
-     * Hàm ghi Log mới
-     */
+    bindEvents() {
+        // Lắng nghe theo Event Delegation để không bị trượt DOM
+        document.addEventListener('click', (e) => {
+            if (e.target && e.target.closest('#btn-clear-history, .btn-clear-history, [data-action="clear-history"]')) {
+                this.clear();
+            }
+        });
+    }
+
     addLog(moduleName, result) {
         const record = {
             id: Date.now(),
@@ -35,7 +42,6 @@ export class HistoryManager {
     }
 
     render() {
-        // Tìm DOM chứa danh sách History trong Drawer
         const container = document.getElementById('history-content') || document.querySelector('.history-drawer-body');
         if (!container) return;
 
@@ -56,5 +62,4 @@ export class HistoryManager {
     }
 }
 
-// Export duy nhất 1 instance dùng chung cho toàn bộ App
 export const historyManager = new HistoryManager();
