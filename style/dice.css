@@ -1,0 +1,109 @@
+/* ==========================================================================
+   MODULE: ROLL A DICE (3D)
+   ========================================================================== */
+
+.dice-workspace {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 75vh;
+    gap: 3rem;
+}
+
+.dice-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.dice-scene {
+    width: 100px;
+    height: 100px;
+}
+
+.dice {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.3, 1.15);
+}
+
+.dice-face {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    border: 2px solid #ccc;
+    border-radius: 16px;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Các chấm điểm của xúc xắc */
+.dot {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-color: #1e293b;
+    border-radius: 50%;
+    align-self: center;
+    justify-self: center;
+}
+
+/* Vị trí 6 mặt trong không gian 3D */
+.face-1 { transform: rotateY(0deg) translateZ(50px); }
+.face-2 { transform: rotateY(90deg) translateZ(50px); }
+.face-3 { transform: rotateY(180deg) translateZ(50px); }
+.face-4 { transform: rotateY(-90deg) translateZ(50px); }
+.face-5 { transform: rotateX(90deg) translateZ(50px); }
+.face-6 { transform: rotateX(-90deg) translateZ(50px); }
+
+/* Bố trí điểm chấm chuẩn cho từng mặt */
+.face-1 .dot { grid-area: 2 / 2; background-color: #ef4444; width: 22px; height: 22px; } /* Mặt 1 đỏ to */
+
+.face-2 .dot:nth-child(1) { grid-area: 1 / 1; }
+.face-2 .dot:nth-child(2) { grid-area: 3 / 3; }
+
+.face-3 .dot:nth-child(1) { grid-area: 1 / 1; }
+.face-3 .dot:nth-child(2) { grid-area: 2 / 2; }
+.face-3 .dot:nth-child(3) { grid-area: 3 / 3; }
+
+.face-4 .dot:nth-child(1) { grid-area: 1 / 1; }
+.face-4 .dot:nth-child(2) { grid-area: 1 / 3; }
+.face-4 .dot:nth-child(3) { grid-area: 3 / 1; }
+.face-4 .dot:nth-child(4) { grid-area: 3 / 3; }
+
+.face-5 .dot:nth-child(1) { grid-area: 1 / 1; }
+.face-5 .dot:nth-child(2) { grid-area: 1 / 3; }
+.face-5 .dot:nth-child(3) { grid-area: 2 / 2; }
+.face-5 .dot:nth-child(4) { grid-area: 3 / 1; }
+.face-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+
+.face-6 .dot:nth-child(1) { grid-area: 1 / 1; }
+.face-6 .dot:nth-child(2) { grid-area: 1 / 3; }
+.face-6 .dot:nth-child(3) { grid-area: 2 / 1; }
+.face-6 .dot:nth-child(4) { grid-area: 2 / 3; }
+.face-6 .dot:nth-child(5) { grid-area: 3 / 1; }
+.face-6 .dot:nth-child(6) { grid-area: 3 / 3; }
+
+.dice-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.dice-count-select {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    background: #1e293b;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-weight: 600;
+}
