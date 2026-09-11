@@ -1,0 +1,263 @@
+/* Phá vỡ giới hạn 900px của module-container chung */
+.workspace:has(.spinner-workspace),
+.module-container:has(.spinner-workspace) {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100vh !important;
+}
+
+/* Layout chính */
+.spinner-workspace {
+    display: flex !important;
+    width: 100% !important;
+    height: 100vh !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+/* Stage chứa Bánh xe */
+.spinner-workspace .spinner-stage {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+}
+
+.spinner-workspace .wheel-wrapper {
+    position: relative !important;
+    width: min(75vh, 620px) !important;
+    height: min(75vh, 620px) !important;
+    aspect-ratio: 1 / 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.spinner-workspace .wheel-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+}
+
+/* Pointer 3 giờ */
+.spinner-workspace .wheel-pointer {
+    position: absolute !important;
+    right: -15px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-top: 16px solid transparent !important;
+    border-bottom: 16px solid transparent !important;
+    border-right: 28px solid var(--danger) !important;
+    z-index: 50 !important;
+}
+
+/* Nút SPIN tròn ở giữa */
+.spinner-workspace .wheel-center-btn {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 76px !important;
+    height: 76px !important;
+    border-radius: 50% !important;
+    background: var(--bg-surface) !important;
+    border: 4px solid var(--bg-main) !important;
+    color: var(--text-main) !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.05em !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 60 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+    user-select: none !important;
+    transition: transform 0.15s ease !important;
+}
+
+.spinner-workspace .wheel-center-btn:hover {
+    transform: translate(-50%, -50%) scale(1.06) !important;
+}
+
+/* Bảng Panel Entries tối giản bên phải */
+.spinner-workspace .spinner-panel {
+    position: relative !important;
+    flex: 0 0 320px !important;
+    height: calc(100vh - 3rem) !important;
+    margin: 1.5rem 1.5rem 1.5rem 0 !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    padding: 1rem !important;
+    box-sizing: border-box !important;
+    z-index: 10 !important;
+}
+
+/* Header đếm số lượng Entries */
+.spinner-workspace .panel-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0.25rem 0.5rem !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    color: var(--text-main) !important;
+}
+
+.spinner-workspace .entries-badge {
+    background: var(--accent) !important;
+    color: #000 !important;
+    font-size: 0.75rem !important;
+    padding: 0.1rem 0.5rem !important;
+    border-radius: 999px !important;
+    font-family: var(--font-mono, monospace) !important;
+}
+
+/* Toolbar Shuffle / Sort */
+.spinner-workspace .panel-toolbar {
+    display: flex !important;
+    gap: 0.5rem !important;
+}
+
+.spinner-workspace .tool-btn {
+    flex: 1 !important;
+    background: var(--bg-surface-hover) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    padding: 0.5rem !important;
+    border-radius: 8px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.spinner-workspace .tool-btn:hover {
+    background: var(--bg-surface) !important;
+    border-color: var(--accent) !important;
+}
+
+/* Textarea chiếm trọn phần còn lại */
+.spinner-workspace .panel-textarea {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    resize: none !important;
+    background: var(--bg-main) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    padding: 0.75rem !important;
+    color: var(--text-main) !important;
+    font-family: var(--font-mono, monospace) !important;
+    font-size: 0.85rem !important;
+    line-height: 1.6 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+.spinner-workspace .panel-textarea:focus {
+    border-color: var(--accent) !important;
+}
+
+/* === MODAL THÔNG BÁO WINNER (WHEELOFNAMES STYLE) === */
+.spinner-winner-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(4px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 999 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.2s ease !important;
+}
+
+.spinner-winner-modal.show {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.spinner-winner-card {
+    width: 420px !important;
+    max-width: 90vw !important;
+    background: #18181b !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+    transform: scale(0.9) !important;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.spinner-winner-modal.show .spinner-winner-card {
+    transform: scale(1) !important;
+}
+
+.spinner-winner-header {
+    background: #eab308 !important; /* Vàng rực rỡ */
+    color: #000 !important;
+    padding: 0.85rem 1.25rem !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+}
+
+.spinner-winner-body {
+    padding: 2.5rem 1.5rem !important;
+    text-align: center !important;
+    font-size: 2.25rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    word-break: break-word !important;
+}
+
+.spinner-winner-footer {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 0.75rem !important;
+    padding: 1rem 1.25rem !important;
+    background: #18181b !important;
+}
+
+.btn-winner-close {
+    background: transparent !important;
+    border: none !important;
+    color: #a1a1aa !important;
+    padding: 0.6rem 1.2rem !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer !important;
+    border-radius: 6px !important;
+}
+
+.btn-winner-close:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.btn-winner-remove {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 0.6rem 1.2rem !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer !important;
+    border-radius: 6px !important;
+    transition: background 0.15s ease !important;
+}
+
+.btn-winner-remove:hover {
+    background: #1d4ed8 !important;
+}

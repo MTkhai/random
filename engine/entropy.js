@@ -189,3 +189,7 @@ export class EntropyEngine {
 
 // Export một Instance Singleton duy nhất dùng cho toàn ứng dụng RANS
 export const entropyEngine = new EntropyEngine();
+export default function initSpinner() {
+    const spinner = new SpinnerModule();
+    spinner.init();
+}

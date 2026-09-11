@@ -38,23 +38,23 @@ export class Router {
 
         // Dynamic import module tương ứng từ engine/modules/
         try {
-            const module = await import(`../engine/modules/${hash}.js`);
-            
+            const moduleExports = await import(`../engine/modules/${hash}.js`);
+            const ModuleClass = moduleExports.default;
+
             // Xóa UI cũ trong workspace
             this.container.innerHTML = '';
 
-            // Render UI mới & khởi tạo listener của module đó
-            if (module.render && typeof module.render === 'function') {
-                this.container.innerHTML = module.render();
-            }
-
-            if (module.init && typeof module.init === 'function') {
-                module.init();
-            }
-
-            // Reload Lucide Icons cho các icon mới render trong module
-            if (window.lucide) {
-                window.lucide.createIcons();
+            // Kiểm tra xem module export ra Class hay Object/Function thông thường
+            if (typeof ModuleClass === 'function') {
+                // Style OOP: Class có hàm render(container)
+                const instance = new ModuleClass();
+                instance.render(this.container);
+            } else if (moduleExports.render && typeof moduleExports.render === 'function') {
+                // Style Functional (dự phòng)
+                this.container.innerHTML = moduleExports.render();
+                if (moduleExports.init && typeof moduleExports.init === 'function') {
+                    moduleExports.init();
+                }
             }
 
             this.currentModule = hash;

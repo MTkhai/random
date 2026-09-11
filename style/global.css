@@ -1,5 +1,5 @@
 /* ==========================================================================
-   RANS (Random All-in-One System) — Core Minimalist Design System
+   RANS (Random All-in-One System) — Global Core & Design System
    ========================================================================== */
 
 :root {
@@ -39,7 +39,10 @@
     --accent-glow: rgba(5, 150, 105, 0.1);
 }
 
-/* Base Reset */
+/* ==========================================================================
+   BASE RESET
+   ========================================================================== */
+
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -68,7 +71,7 @@ body {
 }
 
 /* ==========================================================================
-   SIDEBAR STYLES (3 BLOCKS)
+   SIDEBAR STYLES
    ========================================================================== */
 
 .sidebar {
@@ -139,10 +142,10 @@ body {
     height: 24px;
 }
 
-/* Block 2: 12 Modules Nav */
+/* Block 2: Modules Nav */
 .sidebar-nav {
     flex: 1;
-    min-height: 0; /* KHÓA CHÍ MẠNG GIÚP CONTAINER KHÔNG BỊ ĐẨY CHÂN FOOTER */
+    min-height: 0;
     padding: 1rem 0.75rem;
     display: flex;
     flex-direction: column;
@@ -227,8 +230,107 @@ body {
 }
 
 /* ==========================================================================
-   BUTTONS & COMMON UI COMPONENTS
+   MAIN WORKSPACE AREA
    ========================================================================== */
+
+.workspace {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.module-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100%;
+}
+
+/* ==========================================================================
+   COMMON UI COMPONENTS (CARDS, BUTTONS, INPUTS)
+   ========================================================================== */
+
+.module-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.module-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.module-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: -0.75rem;
+}
+
+/* Form Controls */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.form-input {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+}
 
 .btn-icon {
     background: transparent;
@@ -268,24 +370,6 @@ body {
 
 .btn-danger-outline:hover {
     background-color: var(--danger-glow);
-}
-
-/* ==========================================================================
-   MAIN WORKSPACE AREA
-   ========================================================================== */
-
-.workspace {
-    flex: 1;
-    height: 100%;
-    overflow-y: auto;
-    padding: 2rem;
-    position: relative;
-}
-
-.module-container {
-    max-width: 900px;
-    margin: 0 auto;
-    min-height: 100%;
 }
 
 /* ==========================================================================
@@ -349,13 +433,18 @@ body {
     border-top: 1px solid var(--border-color);
 }
 
-/* Scrollbar Customization */
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
 .custom-scroll::-webkit-scrollbar {
     width: 5px;
 }
+
 .custom-scroll::-webkit-scrollbar-track {
     background: transparent;
 }
+
 .custom-scroll::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: 4px;

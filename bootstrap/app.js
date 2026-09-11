@@ -22,7 +22,7 @@ class RansApp {
         this.bindEvents();
 
         // 3. Khởi tạo History & Router
-        historyManager.init();
+        // historyManager.init();
         this.router = new Router('module-container');
         this.router.init();
 

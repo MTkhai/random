@@ -1,4 +1,4 @@
-# 🎲 RANS — Random All-in-One System
+# 🎲 RANS — Random with muti-function
 
 > A minimalist, high-entropy web application that provides a suite of 12 random utilities powered by a multi-source entropy mixing engine.
 
@@ -40,9 +40,13 @@
 
 ## 📁 Project Structure
 
-```text
+```random
 ├── index.html            # Main SPA Dashboard Container
-├── index.css             # Core CSS Variable Design System
+├── style/                # Modular Stylesheets
+│   ├── global.css        # Core CSS Variables, Reset, App Layout & Shared UI
+│   ├── number.css        # Number Generator Styles & Animations
+│   ├── spinner.css       # Fullscreen Wheel Spinner & Dynamic Panel Layout
+│   └── ...               # Module-specific CSS files
 ├── engine/
 │   ├── entropy.js        # Multi-source Entropy Pool & SHA-256 Mixer
 │   ├── history.js        # Global History Drawer Manager
