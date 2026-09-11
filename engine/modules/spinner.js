@@ -2,8 +2,8 @@ import { historyManager } from '../history.js';
 
 export default class SpinnerModule {
     constructor() {
-        this.entries = ['alpha', 'beta', 'charlie', 'delta'];
-        this.colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+        this.entries = ['alpha(A)', 'beta(B)', 'charlie(C)', 'delta(D)', 'echo(E)'];
+        this.colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
         this.currentAngle = 0;
         this.isSpinning = false;
         this.canvas = null;
