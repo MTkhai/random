@@ -160,6 +160,11 @@ export default class SpinnerModule {
         const startTime = performance.now();
         const duration = 4500;
 
+        // Biến theo dõi để phát tiếng tick mỗi khi kim gạt qua 1 ô (slice)
+        const numSlices = this.entries.length;
+        const sliceAngle = (2 * Math.PI) / numSlices;
+        let lastSliceIndex = -1;
+
         const animate = (currentTime) => {
             const elapsed = currentTime - startTime;
             if (elapsed < duration) {
@@ -168,6 +173,14 @@ export default class SpinnerModule {
                 
                 this.currentAngle = startAngle + totalRotation * easeOut;
                 this.drawWheel();
+
+                // KHAI BÁO ÂM THANH: Phát tiếng Tick khi góc quay bước sang Slice mới
+                const currentSliceIndex = Math.floor((this.currentAngle % (2 * Math.PI)) / sliceAngle);
+                if (currentSliceIndex !== lastSliceIndex) {
+                    sfxSpinner.playTick();
+                    lastSliceIndex = currentSliceIndex;
+                }
+
                 requestAnimationFrame(animate);
             } else {
                 this.currentAngle = (startAngle + totalRotation) % (2 * Math.PI);
@@ -191,11 +204,10 @@ export default class SpinnerModule {
         document.getElementById('winner-name').textContent = winner;
         document.getElementById('winner-modal').classList.add('show');
 
+        // KHAI BÁO ÂM THANH: Tiếng chuông reo chiến thắng
+        sfxSpinner.playWin();
+
         // Gọi đồng bộ qua historyManager.addLog
         historyManager.addLog('Custom Spinner', winner);
-    }
-
-    hideModal() {
-        document.getElementById('winner-modal').classList.remove('show');
     }
 }
