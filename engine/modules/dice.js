@@ -3,12 +3,12 @@
    ========================================================================== */
 
 import { historyManager } from '../history.js';
+import { sfxDice } from '../utils/sfx_dice.js'; // Import SFX
 
 export default class DiceModule {
     constructor() {
         this.container = null;
         this.isRolling = false;
-        // Tọa độ góc quay tương ứng với kết quả 1 -> 6
         this.rotations = {
             1: { x: 0, y: 0 },
             2: { x: 0, y: -90 },
@@ -32,9 +32,7 @@ export default class DiceModule {
                     </select>
                 </div>
 
-                <div class="dice-container" id="dice-holder">
-                    <!-- Render xúc xắc động tại đây -->
-                </div>
+                <div class="dice-container" id="dice-holder"></div>
 
                 <button class="btn-primary" id="btn-roll-dice" style="max-width: 220px;">
                     🎲 Gieo Xúc Xắc
@@ -79,6 +77,9 @@ export default class DiceModule {
         if (this.isRolling) return;
         this.isRolling = true;
 
+        // PHÁT TIẾNG XÓC XÚC XẮC LÓC CỐC
+        sfxDice.playDiceRoll();
+
         const diceElements = this.container.querySelectorAll('.dice');
         const btnRoll = this.container.querySelector('#btn-roll-dice');
         btnRoll.disabled = true;
@@ -89,7 +90,6 @@ export default class DiceModule {
             const result = Math.floor(Math.random() * 6) + 1;
             results.push(result);
 
-            // Quay nhiều vòng để tạo hiệu ứng
             const extraRoundsX = (Math.floor(Math.random() * 4) + 4) * 360;
             const extraRoundsY = (Math.floor(Math.random() * 4) + 4) * 360;
 
@@ -100,7 +100,6 @@ export default class DiceModule {
             dice.style.transform = `rotateX(${finalX}deg) rotateY(${finalY}deg)`;
         });
 
-        // Chờ chạy hết Animation 1.5s
         setTimeout(() => {
             this.isRolling = false;
             btnRoll.disabled = false;

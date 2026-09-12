@@ -3,6 +3,7 @@
    ========================================================================== */
 
 import { historyManager } from '../history.js';
+import { sfxDice } from '../utils/sfx_dice.js'; // Import SFX
 
 export default class CoinModule {
     constructor() {
@@ -46,6 +47,9 @@ export default class CoinModule {
         if (this.isFlipping) return;
         this.isFlipping = true;
 
+        // PHÁT TIẾNG BÚNG XU "KENGGG"
+        sfxDice.playCoinFlip();
+
         const coin = this.container.querySelector('#coin-element');
         const resultDisplay = this.container.querySelector('#coin-result');
         const btnFlip = this.container.querySelector('#btn-flip-coin');
@@ -53,15 +57,12 @@ export default class CoinModule {
         btnFlip.disabled = true;
         resultDisplay.textContent = 'Đang tung...';
 
-        // Kết quả ngẫu nhiên: 'Heads' (Mặt Ngửa) hoặc 'Tails' (Mặt Sấp)
         const isHeads = Math.random() < 0.5;
         const resultText = isHeads ? 'Heads (Mặt Ngửa)' : 'Tails (Mặt Sấp)';
 
-        // Cộng dồn góc quay để quay không bị giật lùi
-        const extraRounds = 10; // 5 vòng quay full
+        const extraRounds = 10;
         const targetAngle = isHeads ? 0 : 180;
         
-        // Tính tổng góc quay tiếp theo
         this.currentRotation += (extraRounds * 180) + targetAngle;
         if (this.currentRotation % 360 !== targetAngle) {
             this.currentRotation += 180;
@@ -69,13 +70,11 @@ export default class CoinModule {
 
         coin.style.transform = `rotateY(${this.currentRotation}deg)`;
 
-        // Đợi 3 giây chạy hết Animation CSS
         setTimeout(() => {
             this.isFlipping = false;
             btnFlip.disabled = false;
             resultDisplay.textContent = resultText;
 
-            // Ghi Log vào History chung
             historyManager.addLog('Flip a Coin', resultText);
         }, 3000);
     }
