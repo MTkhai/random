@@ -1,7 +1,7 @@
 /* ==========================================================================
    WEB AUDIO SYNTHESIZER (Tạo âm thanh trực tiếp bằng Code)
    ========================================================================== */
-
+import { soundMaster } from './sound_master.js';
 class SoundEffects {
     constructor() {
         this.ctx = null;
@@ -54,5 +54,6 @@ class SoundEffects {
         osc.stop(this.ctx.currentTime + 0.5);
     }
 }
-
+const masterVol = soundMaster.getVolume();
+gain.gain.setValueAtTime(0.15 * masterVol, this.ctx.currentTime);
 export const sfx = new SoundEffects();

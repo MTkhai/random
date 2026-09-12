@@ -1,7 +1,7 @@
 /* ==========================================================================
    SFX ENGINE: CUSTOM SPINNER
    ========================================================================== */
-
+import { soundMaster } from './sound_master.js';
 class SpinnerSFX {
     constructor() {
         this.ctx = null;
@@ -96,5 +96,6 @@ class SpinnerSFX {
         }
     }
 }
-
+const masterVol = soundMaster.getVolume();
+gain.gain.setValueAtTime(0.15 * masterVol, this.ctx.currentTime);
 export const sfxSpinner = new SpinnerSFX();

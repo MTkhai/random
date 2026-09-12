@@ -2,6 +2,7 @@
    SFX ENGINE: DICE & COIN
    ========================================================================== */
 
+   import { soundMaster } from './sound_master.js';
 class DiceSFX {
     constructor() {
         this.ctx = null;
@@ -57,5 +58,6 @@ class DiceSFX {
         }
     }
 }
-
+const masterVol = soundMaster.getVolume();
+gain.gain.setValueAtTime(0.15 * masterVol, this.ctx.currentTime);
 export const sfxDice = new DiceSFX();
