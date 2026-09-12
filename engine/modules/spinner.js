@@ -149,57 +149,36 @@ export default class SpinnerModule {
     }
 
     spin() {
-    if (this.isSpinning || this.items.length < 2) return;
-    this.isSpinning = true;
+        if (this.isSpinning || this.entries.length === 0) return;
+        this.isSpinning = true;
 
-    const btnSpin = this.container.querySelector('#btn-spin');
-    btnSpin.disabled = true;
-
-    // Số vòng quay ngẫu nhiên (5 - 8 vòng) + góc ngẫu nhiên
-    const extraRounds = Math.floor(Math.random() * 4) + 5;
-    const randomDegree = Math.floor(Math.random() * 360);
-    this.currentRotation += (extraRounds * 360) + randomDegree;
-
-    const canvas = this.container.querySelector('#spinner-canvas');
-    canvas.style.transition = 'transform 4s cubic-bezier(0.15, 0.85, 0.35, 1.2)';
-    canvas.style.transform = `rotate(${this.currentRotation}deg)`;
-
-    // PHÁT TIẾNG TICK KHI ĐANG QUAY (chậm dần theo thời gian)
-    let tickDelay = 50;
-    const playSpinTicks = () => {
-        if (!this.isSpinning) return;
-        sfxSpinner.playTick();
-        tickDelay += 15; // Tăng delay để tiếng tạch tạch chậm dần
-        if (tickDelay < 400) {
-            setTimeout(playSpinTicks, tickDelay);
-        }
-    };
-    playSpinTicks();
-
-    // KHI DỪNG BÁNH XE (Sau 4 giây animation)
-    setTimeout(() => {
-        this.isSpinning = false;
-        btnSpin.disabled = false;
-
-        // Tính toán ô trúng thưởng dựa trên góc quay cuối cùng
-        const actualDegree = this.currentRotation % 360;
-        const sliceAngle = 360 / this.items.length;
+        const spinRounds = 5 + Math.random() * 5;
+        const randomTargetAngle = Math.random() * 2 * Math.PI;
+        const totalRotation = spinRounds * 2 * Math.PI + randomTargetAngle;
         
-        // Kim chỉ ở đỉnh (270 độ / 12h)
-        const winningIndex = Math.floor((360 - (actualDegree % 360) + 270) % 360 / sliceAngle);
-        const winner = this.items[winningIndex];
+        const startAngle = this.currentAngle;
+        const startTime = performance.now();
+        const duration = 4500;
 
-        // PHÁT TIẾNG THẮNG GIẢI & LƯU LOG
-        sfxSpinner.playWin();
-        historyManager.addLog('Custom Spinner', winner);
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            if (elapsed < duration) {
+                const progress = elapsed / duration;
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                
+                this.currentAngle = startAngle + totalRotation * easeOut;
+                this.drawWheel();
+                requestAnimationFrame(animate);
+            } else {
+                this.currentAngle = (startAngle + totalRotation) % (2 * Math.PI);
+                this.drawWheel();
+                this.isSpinning = false;
+                this.calculateWinner();
+            }
+        };
 
-        // Hiển thị kết quả
-        const resultDisplay = this.container.querySelector('#spinner-result');
-        if (resultDisplay) {
-            resultDisplay.textContent = `🎉 Kết quả: ${winner}`;
-        }
-    }, 4000);
-}
+        requestAnimationFrame(animate);
+    }
 
     calculateWinner() {
         const numSlices = this.entries.length;
