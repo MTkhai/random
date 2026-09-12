@@ -204,66 +204,83 @@ export default class SpinnerModule {
         document.getElementById('winner-name').textContent = winner;
         document.getElementById('winner-modal').classList.add('show');
 
-        // PHÁT TIẾNG THẮNG & BẮN PHÁO HOA
+        // PHÁT TIẾNG THẮNG & TIẾNG PHÁO
         sfxSpinner.playWin();
         sfxSpinner.playFireworks();
-        this.triggerFireworks();
+
+        // BẮN PHÁO GIẤY RƠI MÀN HÌNH
+        this.triggerConfetti();
 
         historyManager.addLog('Custom Spinner', winner);
     }
 
-    // Hiệu ứng pháo hoa bắn tung tóe
-    triggerFireworks() {
-        const fwCanvas = document.getElementById('firework-canvas');
-        if (!fwCanvas) return;
-        const ctx = fwCanvas.getContext('2d');
-        fwCanvas.width = fwCanvas.offsetWidth;
-        fwCanvas.height = fwCanvas.offsetHeight;
+    // Hiệu ứng pháo giấy (Confetti) rơi tràn màn hình
+    triggerConfetti() {
+        // Tạo Canvas full màn hình đè lên Modal
+        let canvas = document.getElementById('confetti-canvas');
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.id = 'confetti-canvas';
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.zIndex = '9999';
+            document.body.appendChild(canvas);
+        }
 
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const colors = ['#f43f5e', '#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#f97316'];
         this.particles = [];
-        const colors = ['#f43f5e', '#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899'];
 
-        // Tạo 100 hạt pháo hoa
-        for (let i = 0; i < 120; i++) {
+        // Tạo 150 mảnh pháo giấy từ đỉnh màn hình
+        for (let i = 0; i < 150; i++) {
             this.particles.push({
-                x: fwCanvas.width / 2,
-                y: fwCanvas.height / 2,
-                vx: (Math.random() - 0.5) * 12,
-                vy: (Math.random() - 0.5) * 12 - 2,
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height, // Bắt đầu ở trên cao
+                w: Math.random() * 10 + 6,
+                h: Math.random() * 6 + 4,
                 color: colors[Math.floor(Math.random() * colors.length)],
-                radius: Math.random() * 4 + 2,
-                alpha: 1
+                vx: (Math.random() - 0.5) * 2,
+                vy: Math.random() * 3 + 2,
+                rotation: Math.random() * 360,
+                rspeed: (Math.random() - 0.5) * 8
             });
         }
 
-        const renderFw = () => {
-            ctx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+        const render = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             let alive = false;
 
             this.particles.forEach(p => {
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.15; // Trọng lực
-                p.alpha -= 0.015;
+                p.rotation += p.rspeed;
 
-                if (p.alpha > 0) {
+                if (p.y < canvas.height + 20) {
                     alive = true;
                     ctx.save();
-                    ctx.globalAlpha = p.alpha;
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
                     ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fill();
+                    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
                     ctx.restore();
                 }
             });
 
             if (alive) {
-                this.fireworkAnimation = requestAnimationFrame(renderFw);
+                this.fireworkAnimation = requestAnimationFrame(render);
+            } else {
+                canvas.remove();
             }
         };
 
-        renderFw();
+        render();
     }
 
     hideModal() {
@@ -271,8 +288,10 @@ export default class SpinnerModule {
         if (modal) {
             modal.classList.remove('show');
         }
-        if (this.fireworkAnimation) {
-            cancelAnimationFrame(this.fireworkAnimation);
-        }
+        
+        // Dọn dẹp Canvas pháo giấy khi đóng Modal
+        const canvas = document.getElementById('confetti-canvas');
+        if (canvas) canvas.remove();
+        if (this.fireworkAnimation) cancelAnimationFrame(this.fireworkAnimation);
     }
 }

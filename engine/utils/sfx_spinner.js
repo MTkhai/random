@@ -55,45 +55,44 @@ class SpinnerSFX {
         });
     }
 
-    // Tiếng pháo hoa nổ tạch tạch đùng!
+    // Tiếng pháo hoa nổ giòn giã
     playFireworks() {
         this.init();
-        // Giả lập 3 đợt pháo nổ liên tiếp
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 4; i++) {
             setTimeout(() => {
                 // Tiếng rít vút lên
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(300, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, this.ctx.currentTime + 0.15);
+                osc.frequency.exponentialRampToValueAtTime(1000, this.ctx.currentTime + 0.12);
 
-                gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
 
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
                 osc.start();
-                osc.stop(this.ctx.currentTime + 0.15);
+                osc.stop(this.ctx.currentTime + 0.12);
 
-                // Tiếng BÙM nổ tung (Trầm & nhiễu)
+                // Tiếng đùng nổ trầm
                 setTimeout(() => {
                     const boomOsc = this.ctx.createOscillator();
                     const boomGain = this.ctx.createGain();
                     boomOsc.type = 'triangle';
-                    boomOsc.frequency.setValueAtTime(120, this.ctx.currentTime);
-                    boomOsc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.3);
+                    boomOsc.frequency.setValueAtTime(100, this.ctx.currentTime);
+                    boomOsc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.35);
 
-                    boomGain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-                    boomGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+                    boomGain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+                    boomGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
 
                     boomOsc.connect(boomGain);
                     boomGain.connect(this.ctx.destination);
                     boomOsc.start();
-                    boomOsc.stop(this.ctx.currentTime + 0.3);
-                }, 150);
+                    boomOsc.stop(this.ctx.currentTime + 0.35);
+                }, 120);
 
-            }, i * 350);
+            }, i * 280);
         }
     }
 }
