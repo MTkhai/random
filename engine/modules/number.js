@@ -1,5 +1,5 @@
 import { historyManager } from '../history.js';
-import { sfx } from '../utils/sfx_number.js';
+import { NumberSFX} from '../utils/sfx_number.js';
 
 export default class NumberModule {
     constructor() {

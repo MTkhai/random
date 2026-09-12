@@ -4,7 +4,7 @@
 
 import { soundMaster } from './sound_master.js';
 
-class SFX {
+class NumberSFX {
     constructor() {
         this.ctx = null;
     }
@@ -15,6 +15,7 @@ class SFX {
         }
     }
 
+    // Tiếng nhảy số tạch tạch
     playTick() {
         this.init();
         const masterVol = soundMaster.getVolume();
@@ -37,7 +38,8 @@ class SFX {
         osc.stop(this.ctx.currentTime + 0.03);
     }
 
-    playSuccess() {
+    // Tiếng chốt kết quả số
+    playResult() {
         this.init();
         const masterVol = soundMaster.getVolume();
         if (masterVol === 0) return;
