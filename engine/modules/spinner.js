@@ -4,11 +4,13 @@ import { sfxSpinner } from '../utils/sfx_spinner.js';
 export default class SpinnerModule {
     constructor() {
         this.entries = ['alpha(A)', 'beta(B)', 'charlie(C)', 'delta(D)' , 'echo(E)'];
-        this.colors = ['#ef4444', '#3b82f6', '#98a19e', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
+        this.colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
         this.currentAngle = 0;
         this.isSpinning = false;
         this.canvas = null;
         this.ctx = null;
+        this.particles = [];
+        this.fireworkAnimation = null;
     }
 
     render(container) {
@@ -22,7 +24,8 @@ export default class SpinnerModule {
         if (!this.container) return;
 
         this.container.innerHTML = `
-            <div class="spinner-workspace">
+            <div class="spinner-workspace" style="position: relative;">
+                <canvas id="firework-canvas" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:99;"></canvas>
                 <div class="spinner-stage">
                     <div class="wheel-wrapper">
                         <canvas id="wheel-canvas" width="800" height="800"></canvas>
@@ -44,7 +47,6 @@ export default class SpinnerModule {
                 </div>
             </div>
 
-            <!-- MODAL WINNER -->
             <div class="spinner-winner-modal" id="winner-modal">
                 <div class="spinner-winner-card">
                     <div class="spinner-winner-header">We have a winner!</div>
@@ -160,7 +162,6 @@ export default class SpinnerModule {
         const startTime = performance.now();
         const duration = 4500;
 
-        // Biến theo dõi để phát tiếng tick mỗi khi kim gạt qua 1 ô (slice)
         const numSlices = this.entries.length;
         const sliceAngle = (2 * Math.PI) / numSlices;
         let lastSliceIndex = -1;
@@ -174,7 +175,6 @@ export default class SpinnerModule {
                 this.currentAngle = startAngle + totalRotation * easeOut;
                 this.drawWheel();
 
-                // KHAI BÁO ÂM THANH: Phát tiếng Tick khi góc quay bước sang Slice mới
                 const currentSliceIndex = Math.floor((this.currentAngle % (2 * Math.PI)) / sliceAngle);
                 if (currentSliceIndex !== lastSliceIndex) {
                     sfxSpinner.playTick();
@@ -204,17 +204,75 @@ export default class SpinnerModule {
         document.getElementById('winner-name').textContent = winner;
         document.getElementById('winner-modal').classList.add('show');
 
-        // KHAI BÁO ÂM THANH: Tiếng chuông reo chiến thắng
+        // PHÁT TIẾNG THẮNG & BẮN PHÁO HOA
         sfxSpinner.playWin();
+        sfxSpinner.playFireworks();
+        this.triggerFireworks();
 
-        // Gọi đồng bộ qua historyManager.addLog
         historyManager.addLog('Custom Spinner', winner);
+    }
+
+    // Hiệu ứng pháo hoa bắn tung tóe
+    triggerFireworks() {
+        const fwCanvas = document.getElementById('firework-canvas');
+        if (!fwCanvas) return;
+        const ctx = fwCanvas.getContext('2d');
+        fwCanvas.width = fwCanvas.offsetWidth;
+        fwCanvas.height = fwCanvas.offsetHeight;
+
+        this.particles = [];
+        const colors = ['#f43f5e', '#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899'];
+
+        // Tạo 100 hạt pháo hoa
+        for (let i = 0; i < 120; i++) {
+            this.particles.push({
+                x: fwCanvas.width / 2,
+                y: fwCanvas.height / 2,
+                vx: (Math.random() - 0.5) * 12,
+                vy: (Math.random() - 0.5) * 12 - 2,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                radius: Math.random() * 4 + 2,
+                alpha: 1
+            });
+        }
+
+        const renderFw = () => {
+            ctx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+            let alive = false;
+
+            this.particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.15; // Trọng lực
+                p.alpha -= 0.015;
+
+                if (p.alpha > 0) {
+                    alive = true;
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            });
+
+            if (alive) {
+                this.fireworkAnimation = requestAnimationFrame(renderFw);
+            }
+        };
+
+        renderFw();
     }
 
     hideModal() {
         const modal = document.getElementById('winner-modal');
         if (modal) {
             modal.classList.remove('show');
+        }
+        if (this.fireworkAnimation) {
+            cancelAnimationFrame(this.fireworkAnimation);
         }
     }
 }
