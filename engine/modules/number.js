@@ -1,4 +1,5 @@
 import { historyManager } from '../history.js';
+import { sfx } from '../utils/sound.js';
 
 export default class NumberModule {
     constructor() {
