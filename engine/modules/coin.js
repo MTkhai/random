@@ -3,7 +3,7 @@
    ========================================================================== */
 
 import { historyManager } from '../history.js';
-import { sfx } from '../utils/sfx_dice.js'; // Import SFX
+import { sfx } from '../utils/sfx_dice.js';
 
 export default class CoinModule {
     constructor() {
