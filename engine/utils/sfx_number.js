@@ -4,7 +4,7 @@
 
 import { soundMaster } from './sound_master.js';
 
-class NumberSFX {
+class SFX {
     constructor() {
         this.ctx = null;
     }

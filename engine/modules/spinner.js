@@ -1,5 +1,5 @@
 import { historyManager } from '../history.js';
-import { sfxSpinner } from '../utils/sfx_spinner.js';
+import { sfx} from '../utils/sfx_spinner.js';
 
 export default class SpinnerModule {
     constructor() {

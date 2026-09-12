@@ -4,7 +4,7 @@
 
 import { soundMaster } from './sound_master.js';
 
-class SpinnerSFX {
+class SFX {
     constructor() {
         this.ctx = null;
     }
