@@ -1,9 +1,5 @@
-/* ==========================================================================
-   MODULE: FLIP A COIN
-   ========================================================================== */
-
 import { historyManager } from '../history.js';
-import { sfx } from '../utils/sfx_dice.js';
+import { sfxDice } from '../utils/sfx_dice.js';
 
 export default class CoinModule {
     constructor() {
@@ -23,15 +19,10 @@ export default class CoinModule {
                     </div>
                 </div>
                 <div class="coin-shadow" id="coin-shadow"></div>
-
                 <div class="coin-result-display" id="coin-result">Nhấn để Tung Xu!</div>
-
-                <button class="btn-primary" id="btn-flip-coin" style="max-width: 200px;">
-                    🪙 Tung Xu
-                </button>
+                <button class="btn-primary" id="btn-flip-coin" style="max-width: 200px;">🪙 Tung Xu</button>
             </div>
         `;
-
         this.bindEvents();
     }
 
@@ -47,8 +38,7 @@ export default class CoinModule {
         if (this.isFlipping) return;
         this.isFlipping = true;
 
-        // PHÁT TIẾNG BÚNG XU "KENGGG"
-        sfxDice.playCoinFlip();
+        sfxDice.playTick(); // Âm thanh búng xu
 
         const coin = this.container.querySelector('#coin-element');
         const resultDisplay = this.container.querySelector('#coin-result');
@@ -74,7 +64,6 @@ export default class CoinModule {
             this.isFlipping = false;
             btnFlip.disabled = false;
             resultDisplay.textContent = resultText;
-
             historyManager.addLog('Flip a Coin', resultText);
         }, 3000);
     }

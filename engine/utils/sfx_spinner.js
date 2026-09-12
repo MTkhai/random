@@ -4,7 +4,7 @@
 
 import { soundMaster } from './sound_master.js';
 
-class SFX {
+class SpinnerSFX {
     constructor() {
         this.ctx = null;
     }
@@ -37,7 +37,7 @@ class SFX {
         osc.stop(this.ctx.currentTime + 0.02);
     }
 
-    playWin() {
+    playResult() {
         this.init();
         const masterVol = soundMaster.getVolume();
         if (masterVol === 0) return;
@@ -63,7 +63,7 @@ class SFX {
         });
     }
 
-    playFireworks() {
+    playSpecial() {
         this.init();
         const masterVol = soundMaster.getVolume();
         if (masterVol === 0) return;

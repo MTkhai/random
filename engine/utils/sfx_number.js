@@ -15,7 +15,6 @@ class NumberSFX {
         }
     }
 
-    // Tiếng nhảy số tạch tạch
     playTick() {
         this.init();
         const masterVol = soundMaster.getVolume();
@@ -38,7 +37,6 @@ class NumberSFX {
         osc.stop(this.ctx.currentTime + 0.03);
     }
 
-    // Tiếng chốt kết quả số
     playResult() {
         this.init();
         const masterVol = soundMaster.getVolume();

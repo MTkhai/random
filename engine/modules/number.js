@@ -1,5 +1,5 @@
 import { historyManager } from '../history.js';
-import { NumberSFX} from '../utils/sfx_number.js';
+import { sfxNumber } from '../utils/sfx_number.js';
 
 export default class NumberModule {
     constructor() {
@@ -12,7 +12,6 @@ export default class NumberModule {
             <div class="module-card">
                 <h2 class="module-title">Number Generator</h2>
                 <p class="module-desc">Tạo số ngẫu nhiên trong khoảng tùy chỉnh với các tùy chọn nâng cao.</p>
-
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="num-min">Giá trị tối thiểu (Min)</label>
@@ -27,7 +26,6 @@ export default class NumberModule {
                         <input type="number" id="num-count" value="1" min="1" max="100" class="form-input">
                     </div>
                 </div>
-
                 <div class="form-options">
                     <label class="checkbox-label">
                         <input type="checkbox" id="num-unique">
@@ -38,18 +36,13 @@ export default class NumberModule {
                         <span>Sắp xếp tăng dần</span>
                     </label>
                 </div>
-
-                <button id="btn-gen-number" class="btn-primary">
-                    🚀 Tạo Số Ngẫu Nhiên
-                </button>
-
+                <button id="btn-gen-number" class="btn-primary">🚀 Tạo Số Ngẫu Nhiên</button>
                 <div id="num-result-box" class="result-box hidden">
                     <span class="result-label">Kết quả:</span>
                     <div id="num-result-value" class="result-value">--</div>
                 </div>
             </div>
         `;
-
         this.bindEvents();
     }
 
@@ -93,9 +86,7 @@ export default class NumberModule {
             }
             resultValue.textContent = tempResults.join(', ');
 
-            if (typeof sfx !== 'undefined' && sfx?.playTick) {
-                sfx.playTick();
-            }
+            sfxNumber.playTick(); // Âm nhảy số
             ticks++;
 
             if (ticks >= maxTicks) {
@@ -121,9 +112,7 @@ export default class NumberModule {
                 resultValue.textContent = resultStr;
                 btnGen.disabled = false;
 
-                if (typeof sfx !== 'undefined' && sfx?.playSuccess) {
-                    sfx.playSuccess();
-                }
+                sfxNumber.playResult(); // Âm kết quả
                 historyManager.addLog('Number Generator', resultStr);
             }
         }, 60);

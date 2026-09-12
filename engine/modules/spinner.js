@@ -1,9 +1,9 @@
 import { historyManager } from '../history.js';
-import { sfx} from '../utils/sfx_spinner.js';
+import { sfxSpinner } from '../utils/sfx_spinner.js';
 
 export default class SpinnerModule {
     constructor() {
-        this.entries = ['alpha(A)', 'beta(B)', 'charlie(C)', 'delta(D)' , 'echo(E)'];
+        this.entries = ['alpha(A)', 'beta(B)', 'charlie(C)', 'delta(D)', 'echo(E)'];
         this.colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
         this.currentAngle = 0;
         this.isSpinning = false;
@@ -177,7 +177,7 @@ export default class SpinnerModule {
 
                 const currentSliceIndex = Math.floor((this.currentAngle % (2 * Math.PI)) / sliceAngle);
                 if (currentSliceIndex !== lastSliceIndex) {
-                    sfxSpinner.playTick();
+                    sfxSpinner.playTick(); // Tiếng quay tạch tạch
                     lastSliceIndex = currentSliceIndex;
                 }
 
@@ -204,19 +204,14 @@ export default class SpinnerModule {
         document.getElementById('winner-name').textContent = winner;
         document.getElementById('winner-modal').classList.add('show');
 
-        // PHÁT TIẾNG THẮNG & TIẾNG PHÁO
-        sfxSpinner.playWin();
-        sfxSpinner.playFireworks();
+        sfxSpinner.playResult(); // Tiếng thắng
+        sfxSpinner.playSpecial(); // Tiếng pháo nổ
 
-        // BẮN PHÁO GIẤY RƠI MÀN HÌNH
         this.triggerConfetti();
-
         historyManager.addLog('Custom Spinner', winner);
     }
 
-    // Hiệu ứng pháo giấy (Confetti) rơi tràn màn hình
     triggerConfetti() {
-        // Tạo Canvas full màn hình đè lên Modal
         let canvas = document.getElementById('confetti-canvas');
         if (!canvas) {
             canvas = document.createElement('canvas');
@@ -238,11 +233,10 @@ export default class SpinnerModule {
         const colors = ['#f43f5e', '#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#f97316'];
         this.particles = [];
 
-        // Tạo 150 mảnh pháo giấy từ đỉnh màn hình
         for (let i = 0; i < 150; i++) {
             this.particles.push({
                 x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height, // Bắt đầu ở trên cao
+                y: Math.random() * canvas.height - canvas.height,
                 w: Math.random() * 10 + 6,
                 h: Math.random() * 6 + 4,
                 color: colors[Math.floor(Math.random() * colors.length)],
@@ -289,7 +283,6 @@ export default class SpinnerModule {
             modal.classList.remove('show');
         }
         
-        // Dọn dẹp Canvas pháo giấy khi đóng Modal
         const canvas = document.getElementById('confetti-canvas');
         if (canvas) canvas.remove();
         if (this.fireworkAnimation) cancelAnimationFrame(this.fireworkAnimation);

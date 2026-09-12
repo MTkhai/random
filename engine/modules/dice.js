@@ -1,9 +1,5 @@
-/* ==========================================================================
-   MODULE: ROLL A DICE
-   ========================================================================== */
-
 import { historyManager } from '../history.js';
-import { sfx } from '../utils/sfx_dice.js'; // Import SFX
+import { sfxDice } from '../utils/sfx_dice.js';
 
 export default class DiceModule {
     constructor() {
@@ -31,15 +27,10 @@ export default class DiceModule {
                         <option value="3">3 Xúc xắc</option>
                     </select>
                 </div>
-
                 <div class="dice-container" id="dice-holder"></div>
-
-                <button class="btn-primary" id="btn-roll-dice" style="max-width: 220px;">
-                    🎲 Gieo Xúc Xắc
-                </button>
+                <button class="btn-primary" id="btn-roll-dice" style="max-width: 220px;">🎲 Gieo Xúc Xắc</button>
             </div>
         `;
-
         this.updateDiceCount(1);
         this.bindEvents();
     }
@@ -77,8 +68,7 @@ export default class DiceModule {
         if (this.isRolling) return;
         this.isRolling = true;
 
-        // PHÁT TIẾNG XÓC XÚC XẮC LÓC CỐC
-        sfxDice.playDiceRoll();
+        sfxDice.playResult(); // Âm thanh xóc xúc xắc
 
         const diceElements = this.container.querySelectorAll('.dice');
         const btnRoll = this.container.querySelector('#btn-roll-dice');
@@ -105,10 +95,7 @@ export default class DiceModule {
             btnRoll.disabled = false;
 
             const total = results.reduce((a, b) => a + b, 0);
-            const logText = results.length > 1 
-                ? `${results.join(' + ')} = ${total}` 
-                : `${results[0]}`;
-
+            const logText = results.length > 1 ? `${results.join(' + ')} = ${total}` : `${results[0]}`;
             historyManager.addLog('Roll a Dice', logText);
         }, 1500);
     }
