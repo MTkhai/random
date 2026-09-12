@@ -60,7 +60,7 @@ export default class NumberModule {
     generateNumbers() {
         const min = parseInt(this.container.querySelector('#num-min').value) || 0;
         const max = parseInt(this.container.querySelector('#num-max').value) || 0;
-        const count = parseInt(this.container.querySelector('#num-count').value) || 1;
+        let count = parseInt(this.container.querySelector('#num-count').value) || 1;
         const isUnique = this.container.querySelector('#num-unique').checked;
         const isSort = this.container.querySelector('#num-sort').checked;
 
@@ -69,39 +69,62 @@ export default class NumberModule {
             return;
         }
 
+        count = Math.max(1, count);
+
         if (isUnique && count > (max - min + 1)) {
             alert('Khoảng giá trị không đủ để tạo các số không trùng lặp!');
             return;
         }
 
-        let results = [];
-        if (isUnique) {
-            const pool = [];
-            for (let i = min; i <= max; i++) pool.push(i);
-            for (let i = 0; i < count; i++) {
-                const randIndex = Math.floor(Math.random() * pool.length);
-                results.push(pool.splice(randIndex, 1)[0]);
-            }
-        } else {
-            for (let i = 0; i < count; i++) {
-                const rand = Math.floor(Math.random() * (max - min + 1)) + min;
-                results.push(rand);
-            }
-        }
-
-        if (isSort) {
-            results.sort((a, b) => a - b);
-        }
-
-        const resultStr = results.join(', ');
-
-        // Hiển thị kết quả
         const resultBox = this.container.querySelector('#num-result-box');
         const resultValue = this.container.querySelector('#num-result-value');
-        resultValue.textContent = resultStr;
+        const btnGen = this.container.querySelector('#btn-gen-number');
+
+        btnGen.disabled = true;
         resultBox.classList.remove('hidden');
 
-        // Lưu History
-        historyManager.addLog('Number Generator', resultStr);
+        let ticks = 0;
+        const maxTicks = 12;
+        const interval = setInterval(() => {
+            const tempResults = [];
+            for (let i = 0; i < count; i++) {
+                tempResults.push(Math.floor(Math.random() * (max - min + 1)) + min);
+            }
+            resultValue.textContent = tempResults.join(', ');
+
+            if (typeof sfx !== 'undefined' && sfx?.playTick) {
+                sfx.playTick();
+            }
+            ticks++;
+
+            if (ticks >= maxTicks) {
+                clearInterval(interval);
+
+                let finalResults = [];
+                if (isUnique) {
+                    const pool = [];
+                    for (let i = min; i <= max; i++) pool.push(i);
+                    for (let i = 0; i < count; i++) {
+                        const randIndex = Math.floor(Math.random() * pool.length);
+                        finalResults.push(pool.splice(randIndex, 1)[0]);
+                    }
+                } else {
+                    for (let i = 0; i < count; i++) {
+                        finalResults.push(Math.floor(Math.random() * (max - min + 1)) + min);
+                    }
+                }
+
+                if (isSort) finalResults.sort((a, b) => a - b);
+
+                const resultStr = finalResults.join(', ');
+                resultValue.textContent = resultStr;
+                btnGen.disabled = false;
+
+                if (typeof sfx !== 'undefined' && sfx?.playSuccess) {
+                    sfx.playSuccess();
+                }
+                historyManager.addLog('Number Generator', resultStr);
+            }
+        }, 60);
     }
 }
