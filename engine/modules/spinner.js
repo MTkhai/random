@@ -210,5 +210,11 @@ export default class SpinnerModule {
         // Gọi đồng bộ qua historyManager.addLog
         historyManager.addLog('Custom Spinner', winner);
     }
-}
 
+    hideModal() {
+        const modal = document.getElementById('winner-modal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+}
