@@ -1,63 +1,47 @@
-/* ==========================================================================
-   SFX ENGINE: DICE & COIN
-   ========================================================================== */
-
 import { soundMaster } from './sound_master.js';
 
 class DiceSFX {
-    constructor() {
-        this.ctx = null;
-    }
-
-    init() {
-        if (!this.ctx) {
-            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-    }
-
     playTick() {
-        this.init();
-        const masterVol = soundMaster.getVolume();
-        if (masterVol === 0) return;
+        const ctx = soundMaster.getContext();
+        const output = soundMaster.getOutputNode();
 
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(1200, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(2400, this.ctx.currentTime + 0.08);
+        osc.frequency.setValueAtTime(1200, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(2400, ctx.currentTime + 0.08);
 
-        gain.gain.setValueAtTime(0.2 * masterVol, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001 * masterVol, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
 
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(output);
 
         osc.start();
-        osc.stop(this.ctx.currentTime + 0.3);
+        osc.stop(ctx.currentTime + 0.3);
     }
 
     playResult() {
-        this.init();
-        const masterVol = soundMaster.getVolume();
-        if (masterVol === 0) return;
+        const ctx = soundMaster.getContext();
+        const output = soundMaster.getOutputNode();
 
         for (let i = 0; i < 4; i++) {
             setTimeout(() => {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
 
                 osc.type = 'square';
-                osc.frequency.setValueAtTime(200 + Math.random() * 300, this.ctx.currentTime);
+                osc.frequency.setValueAtTime(200 + Math.random() * 300, ctx.currentTime);
 
-                gain.gain.setValueAtTime(0.1 * masterVol, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01 * masterVol, this.ctx.currentTime + 0.04);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
 
                 osc.connect(gain);
-                gain.connect(this.ctx.destination);
+                gain.connect(output);
 
                 osc.start();
-                osc.stop(this.ctx.currentTime + 0.04);
+                osc.stop(ctx.currentTime + 0.04);
             }, i * 70);
         }
     }
