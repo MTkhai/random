@@ -3,7 +3,7 @@ import { sfxSpinner } from '../utils/sfx_spinner.js';
 
 export default class SpinnerModule {
     constructor() {
-        this.entries = ['alpha(A)', 'beta(B)', 'charlie(C)', 'delta(D)', 'echo(E)'];
+        this.entries = ['alpha(A)', 'bravo(B)', 'charlie(C)', 'delta(D)', 'echo(E)'];
         this.colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
         this.currentAngle = 0;
         this.isSpinning = false;
@@ -195,17 +195,27 @@ export default class SpinnerModule {
 
     calculateWinner() {
         const numSlices = this.entries.length;
+        if (numSlices === 0) return;
+
         const sliceAngle = (2 * Math.PI) / numSlices;
-        
         let normalizedAngle = (2 * Math.PI - (this.currentAngle % (2 * Math.PI))) % (2 * Math.PI);
         const winnerIndex = Math.floor(normalizedAngle / sliceAngle);
-        const winner = this.entries[winnerIndex];
+        const winner = this.entries[winnerIndex] || 'N/A';
 
-        document.getElementById('winner-name').textContent = winner;
-        document.getElementById('winner-modal').classList.add('show');
+        // Fix lỗi null DOM element
+        const winnerNameEl = document.getElementById('winner-name');
+        const winnerModalEl = document.getElementById('winner-modal');
 
-        sfxSpinner.playResult(); // Tiếng thắng
-        sfxSpinner.playSpecial(); // Tiếng pháo nổ
+        if (winnerNameEl) {
+            winnerNameEl.textContent = winner;
+        }
+
+        if (winnerModalEl) {
+            winnerModalEl.classList.add('show');
+        }
+
+        sfxSpinner.playResult();
+        sfxSpinner.playSpecial();
 
         this.triggerConfetti();
         historyManager.addLog('Custom Spinner', winner);
