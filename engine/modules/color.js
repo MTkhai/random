@@ -116,9 +116,6 @@ export default class ColorPaletteModule {
             let hex = '';
             if (mode === 'random') {
                 hex = this.getRandomHex();
-            } else if (mode === 'monochromatic') {
-                const lightness = 20 + (idx * (60 / this.paletteSize)) + (Math.random() * 10);
-                hex = this.hslToHex(baseHue, 70, lightness);
             } else if (mode === 'analogous') {
                 const hue = (baseHue + (idx * 25)) % 360;
                 hex = this.hslToHex(hue, 65 + (Math.random() * 20), 50 + (Math.random() * 15));
@@ -129,6 +126,9 @@ export default class ColorPaletteModule {
                 const shift = (idx % 3) * 120;
                 const hue = (baseHue + shift) % 360;
                 hex = this.hslToHex(hue, 75, 45 + (Math.random() * 20));
+            } else if (mode === 'monochromatic') {
+                const lightness = 20 + (idx * (60 / this.paletteSize)) + (Math.random() * 10);
+                hex = this.hslToHex(0, 0, lightness);
             }
 
             col.hex = hex;
