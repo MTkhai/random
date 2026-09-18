@@ -3,7 +3,7 @@
    ========================================================================== */
 
 import { soundMaster } from '../utils/sound_master.js';
-import { historyManager } from '../utils/history.js';
+import { historyManager } from '../history.js';
 
 export default class ColorPaletteModule {
     constructor() {

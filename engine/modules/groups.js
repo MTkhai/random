@@ -202,31 +202,27 @@ export default class GroupsModule {
     }
 
     renderResults(groups) {
-        const grid = this.container.querySelector('#groups-output-grid');
-        grid.innerHTML = '';
+    const grid = this.container.querySelector('#groups-output-grid');
+    grid.innerHTML = '';
 
-        groups.forEach((group, idx) => {
-            const card = document.createElement('div');
-            card.style.cssText = `
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 8px;
-                padding: 12px;
-            `;
+    groups.forEach((group, idx) => {
+        const card = document.createElement('div');
+        card.className = 'group-card';
 
-            const membersList = group.map(m => `<li style="margin-bottom: 4px; color: var(--text-main, #eee);">${m}</li>`).join('');
+        const membersList = group.map(m => `<li>${m}</li>`).join('');
 
-            card.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 8px; color: #10b981; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">
-                    Nhóm ${idx + 1} (${group.length})
-                </div>
-                <ul style="margin: 0; padding-left: 18px; font-size: 0.9em;">
-                    ${membersList}
-                </ul>
-            `;
-            grid.appendChild(card);
-        });
-    }
+        card.innerHTML = `
+            <div class="group-card-header">
+                <span>Nhóm ${idx + 1}</span>
+                <span class="badge">${group.length} người</span>
+            </div>
+            <ul class="group-member-list">
+                ${membersList}
+            </ul>
+        `;
+        grid.appendChild(card);
+    });
+}
 
     playSFX() {
         try {
