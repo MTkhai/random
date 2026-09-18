@@ -42,8 +42,8 @@ export default class ColorPaletteModule {
                     <button id="btn-gen-palette" class="btn-primary" style="margin-left: auto;">🎨 Tạo Bảng Màu Baru (Space)</button>
                 </div>
 
-                <!-- CARDS DISPLAY CONTAINER -->
-                <div id="palette-cards-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; min-height: 320px; margin-top: 15px;">
+                <!-- ĐÃ SỬA: Đổi grid sang flex để không bị nhảy dòng -->
+                <div id="palette-cards-container" style="display: flex; gap: 12px; height: 360px; margin-top: 15px; width: 100%;">
                 </div>
             </div>
         `;
@@ -56,7 +56,6 @@ export default class ColorPaletteModule {
     bindEvents() {
         const btnGen = this.container.querySelector('#btn-gen-palette');
         const countSelect = this.container.querySelector('#palette-count');
-        const modeSelect = this.container.querySelector('#palette-mode');
 
         btnGen?.addEventListener('click', () => this.generatePalette());
 
@@ -66,12 +65,10 @@ export default class ColorPaletteModule {
             this.renderCards();
         });
 
-        // Phím Spacebar để đổi màu nhanh
         window.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
 
     handleKeyDown(e) {
-        // Chỉ bắt phím Space nếu đang ở màn hình Color Palette và không focus vào input
         if (e.code === 'Space' && document.body.contains(this.container) && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
             e.preventDefault();
             this.generatePalette();
@@ -98,7 +95,6 @@ export default class ColorPaletteModule {
         return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
     }
 
-    // Helper đổi HSL sang HEX cho các chế độ phối màu nâng cao
     hslToHex(h, s, l) {
         l /= 100;
         const a = s * Math.min(l, 1 - l) / 100;
@@ -115,7 +111,7 @@ export default class ColorPaletteModule {
         const baseHue = Math.floor(Math.random() * 360);
 
         this.colors.forEach((col, idx) => {
-            if (col.locked) return; // Giữ nguyên màu đã khóa
+            if (col.locked) return;
 
             let hex = '';
             if (mode === 'random') {
@@ -150,22 +146,24 @@ export default class ColorPaletteModule {
         if (!grid) return;
         grid.innerHTML = '';
 
-        this.colors.forEach((col, idx) => {
+        this.colors.forEach((col) => {
             const card = document.createElement('div');
             card.className = 'color-card';
+            
+            // ĐÃ SỬA: Thêm flex: 1 và min-width: 0 để 6 màu ép vừa đúng 1 hàng
             card.style.cssText = `
-    flex: 1;
-    min-width: 0;
-    background-color: ${col.hex};
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 16px;
-    transition: all 0.2s ease;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-`;
+                flex: 1;
+                min-width: 0;
+                background-color: ${col.hex};
+                border-radius: 12px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 16px;
+                transition: all 0.2s ease;
+                position: relative;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
 
             const isDark = this.isDarkColor(col.hex);
             const textColor = isDark ? '#ffffff' : '#0f172a';
@@ -189,27 +187,26 @@ export default class ColorPaletteModule {
                 <div style="text-align: center; margin-top: 60px;">
                     <div class="hex-text" style="
                         font-weight: bold; 
-                        font-size: 1.1em; 
+                        font-size: 1em; 
                         color: ${textColor}; 
-                        letter-spacing: 1px;
+                        letter-spacing: 0.5px;
                         cursor: pointer;
-                        padding: 6px 10px;
+                        padding: 6px 8px;
                         border-radius: 6px;
                         background: rgba(0,0,0,0.15);
                         backdrop-filter: blur(4px);
+                        white-space: nowrap;
                     ">${col.hex.toUpperCase()}</div>
                     <div style="font-size: 0.75em; color: ${textColor}; opacity: 0.8; margin-top: 4px;">Bấm để Copy</div>
                 </div>
             `;
 
-            // Lock event
             card.querySelector('.btn-lock').addEventListener('click', (e) => {
                 e.stopPropagation();
                 col.locked = !col.locked;
                 this.renderCards();
             });
 
-            // Copy Hex event
             card.querySelector('.hex-text').addEventListener('click', () => {
                 navigator.clipboard.writeText(col.hex.toUpperCase());
                 this.playCopySFX();
@@ -238,7 +235,6 @@ export default class ColorPaletteModule {
         try {
             const ctx = soundMaster.getContext();
             const output = soundMaster.getOutputNode();
-
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
 
@@ -261,7 +257,6 @@ export default class ColorPaletteModule {
         try {
             const ctx = soundMaster.getContext();
             const output = soundMaster.getOutputNode();
-
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
 
