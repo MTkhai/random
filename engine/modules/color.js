@@ -154,16 +154,18 @@ export default class ColorPaletteModule {
             const card = document.createElement('div');
             card.className = 'color-card';
             card.style.cssText = `
-                background-color: ${col.hex};
-                border-radius: 12px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: 16px;
-                transition: transform 0.2s, box-shadow 0.2s;
-                position: relative;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            `;
+    flex: 1;
+    min-width: 0;
+    background-color: ${col.hex};
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    transition: all 0.2s ease;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+`;
 
             const isDark = this.isDarkColor(col.hex);
             const textColor = isDark ? '#ffffff' : '#0f172a';
