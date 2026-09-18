@@ -3,7 +3,7 @@
    ========================================================================== */
 
 import { soundMaster } from '../utils/sound_master.js';
-import { historyManager } from '../utils/history.js';
+import { historyManager } from '../history.js';
 
 export default class GroupsModule {
     constructor() {
@@ -24,7 +24,7 @@ export default class GroupsModule {
                             <label style="display: block; margin-bottom: 5px; color: var(--text-muted, #aaa);">
                                 Danh sách tên (Mỗi tên 1 dòng):
                             </label>
-                            <textarea id="group-names-input" class="form-input" rows="8" placeholder="Nguyễn Văn A&#10;Trần Thị B&#10;Lê Văn C..." style="width: 100%; resize: vertical;"></textarea>
+                            <textarea id="group-names-input" class="form-input" rows="8" placeholder="Nguyễn Văn A&#10;Nguyễn Khắc An Duy&#10;Mai Nguyệt Anh..." style="width: 100%; resize: vertical;"></textarea>
                         </div>
 
                         <div class="form-group" style="margin-bottom: 15px;">
