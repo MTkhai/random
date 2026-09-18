@@ -3,7 +3,7 @@
    ========================================================================== */
 
 import { soundMaster } from '../utils/sound_master.js';
-import { historyManager } from '../utils/history_manager.js'; // Nếu có
+import { HistoryManager } from '../history.js'; // Nếu có
 
 export class GroupGeneratorModule {
     constructor() {
