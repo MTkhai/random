@@ -3,47 +3,152 @@
    ========================================================================== */
 
 import { soundMaster } from '../utils/sound_master.js';
-import { HistoryManager } from '../history.js'; // Nếu có
+import { historyManager } from '../utils/history.js';
 
-export class GroupGeneratorModule {
+export default class GroupsModule {
     constructor() {
-        this.names = [];
+        this.container = null;
     }
 
-    // Hàm xáo trộn danh sách (Fisher-Yates Shuffle)
-    shuffle(array) {
-        const arr = [...array];
-        for (let i = arr.length - 1; i > 0; i--) {
+    render(container) {
+        this.container = container;
+        this.container.innerHTML = `
+            <div class="module-card">
+                <h2 class="module-title">Group Generator</h2>
+                <p class="module-desc">Phân chia danh sách thành các nhóm ngẫu nhiên theo nhiều tùy chọn linh hoạt.</p>
+                
+                <div class="groups-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <!-- LEFT PANEL: INPUT & SETTINGS -->
+                    <div class="groups-panel">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-muted, #aaa);">
+                                Danh sách tên (Mỗi tên 1 dòng):
+                            </label>
+                            <textarea id="group-names-input" class="form-input" rows="8" placeholder="Nguyễn Văn A&#10;Trần Thị B&#10;Lê Văn C..." style="width: 100%; resize: vertical;"></textarea>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-muted, #aaa);">Chế độ chia:</label>
+                            <select id="group-mode" class="form-input" style="width: 100%;">
+                                <option value="by_groups">Chia theo SỐ LƯỢNG NHÓM</option>
+                                <option value="by_size">Chia theo SỐ NGƯỜI / NHÓM</option>
+                                <option value="unique_names">Chia KHÔNG TRÙNG TÊN trong nhóm</option>
+                                <option value="same_names">GOM TÊN GIỐNG NHAU vào chung nhóm</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="group-count-group" style="margin-bottom: 15px;">
+                            <label id="group-count-label" style="display: block; margin-bottom: 5px; color: var(--text-muted, #aaa);">Số lượng nhóm:</label>
+                            <input type="number" id="group-count-val" class="form-input" value="2" min="1" max="100" style="width: 100%;">
+                        </div>
+
+                        <div class="form-group" id="remainder-group" style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-muted, #aaa);">Xử lý số dư (nếu lẻ):</label>
+                            <select id="group-remainder" class="form-input" style="width: 100%;">
+                                <option value="distribute">Rải đều người thừa vào các nhóm đầu</option>
+                                <option value="extra">Tạo thêm 1 nhóm phụ cho phần dư</option>
+                            </select>
+                        </div>
+
+                        <button id="btn-gen-groups" class="btn-primary" style="width: 100%;">👥 Chia Nhóm Ngẫu Nhiên</button>
+                    </div>
+
+                    <!-- RIGHT PANEL: RESULTS -->
+                    <div class="groups-results-panel">
+                        <h3 style="margin-top: 0; color: var(--text-main, #fff);">Kết quả chia nhóm</h3>
+                        <div id="groups-output-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; max-height: 480px; overflow-y: auto;">
+                            <div style="color: var(--text-muted, #aaa); font-style: italic;">Chưa có dữ liệu. Hãy nhập danh sách và bấm "Chia Nhóm".</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.bindEvents();
+    }
+
+    bindEvents() {
+        const btnGen = this.container.querySelector('#btn-gen-groups');
+        const modeSelect = this.container.querySelector('#group-mode');
+        const countGroup = this.container.querySelector('#group-count-group');
+        const countLabel = this.container.querySelector('#group-count-label');
+        const remainderGroup = this.container.querySelector('#remainder-group');
+
+        modeSelect?.addEventListener('change', (e) => {
+            const mode = e.target.value;
+            if (mode === 'by_groups') {
+                countGroup.style.display = 'block';
+                remainderGroup.style.display = 'block';
+                countLabel.textContent = 'Số lượng nhóm:';
+            } else if (mode === 'by_size') {
+                countGroup.style.display = 'block';
+                remainderGroup.style.display = 'block';
+                countLabel.textContent = 'Số người tối đa 1 nhóm:';
+            } else if (mode === 'unique_names') {
+                countGroup.style.display = 'none';
+                remainderGroup.style.display = 'none';
+            } else if (mode === 'same_names') {
+                countGroup.style.display = 'block';
+                remainderGroup.style.display = 'none';
+                countLabel.textContent = 'Số lượng nhóm mong muốn:';
+            }
+        });
+
+        btnGen?.addEventListener('click', () => this.generateGroups());
+    }
+
+    shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
+            [a[i], a[j]] = [a[j], a[i]];
         }
-        return arr;
+        return a;
     }
 
-    /**
-     * CHẾ ĐỘ 1: Chia theo số lượng nhóm (hoặc số người/nhóm) + Xử lý chẵn/lẻ
-     * @param {string[]} nameList - Danh sách tên
-     * @param {number} targetCount - Số nhóm (hoặc số người/nhóm)
-     * @param {'by_groups'|'by_size'} mode - Chia theo số nhóm hay quy mô nhóm
-     * @param {'distribute'|'extra'} remainderMode - 'distribute': rải đều dư; 'extra': tạo nhóm phụ
-     */
-    generateStandardGroups(nameList, targetCount, mode = 'by_groups', remainderMode = 'distribute') {
-        const shuffled = this.shuffle(nameList.filter(n => n.trim() !== ''));
-        const total = shuffled.length;
-        if (total === 0 || targetCount <= 0) return [];
+    generateGroups() {
+        const text = this.container.querySelector('#group-names-input').value;
+        const names = text.split('\n').map(n => n.trim()).filter(n => n !== '');
 
-        let numGroups = mode === 'by_groups' ? targetCount : Math.ceil(total / targetCount);
-        numGroups = Math.min(numGroups, total); // Không thể chia nhiều nhóm hơn số người
+        if (names.length === 0) {
+            alert('Vui lòng nhập ít nhất 1 tên!');
+            return;
+        }
+
+        const mode = this.container.querySelector('#group-mode').value;
+        const targetVal = parseInt(this.container.querySelector('#group-count-val').value) || 2;
+        const remainderMode = this.container.querySelector('#group-remainder').value;
+
+        let resultGroups = [];
+
+        if (mode === 'by_groups' || mode === 'by_size') {
+            resultGroups = this.splitStandard(names, targetVal, mode, remainderMode);
+        } else if (mode === 'unique_names') {
+            resultGroups = this.splitUnique(names);
+        } else if (mode === 'same_names') {
+            resultGroups = this.splitSameNames(names, targetVal);
+        }
+
+        this.renderResults(resultGroups);
+        this.playSFX();
+
+        const logMsg = `${names.length} người -> ${resultGroups.length} nhóm`;
+        historyManager.addLog('Group Generator', logMsg);
+    }
+
+    splitStandard(names, targetVal, mode, remainderMode) {
+        const shuffled = this.shuffle(names);
+        const total = shuffled.length;
+        let numGroups = mode === 'by_groups' ? targetVal : Math.ceil(total / targetVal);
+        numGroups = Math.max(1, Math.min(numGroups, total));
 
         const groups = Array.from({ length: numGroups }, () => []);
 
         if (remainderMode === 'distribute') {
-            // Rải đều từng người vào từng nhóm theo vòng tròn
             shuffled.forEach((name, idx) => {
                 groups[idx % numGroups].push(name);
             });
         } else {
-            // Chia đúng size cơ bản, phần thừa đẩy vào nhóm cuối
             const baseSize = Math.floor(total / numGroups);
             let currentIdx = 0;
             for (let i = 0; i < numGroups; i++) {
@@ -52,100 +157,102 @@ export class GroupGeneratorModule {
                 currentIdx += size;
             }
         }
-
-        this.triggerSFX();
         return groups;
     }
 
-    /**
-     * CHẾ ĐỘ 2: Chia không trùng tên trong cùng 1 nhóm
-     */
-    generateUniqueGroups(nameList) {
-        const cleaned = nameList.map(n => n.trim()).filter(n => n !== '');
-        
-        // Thống kê tần suất xuất hiện của từng tên
+    splitUnique(names) {
         const nameMap = {};
-        cleaned.forEach(name => {
-            nameMap[name] = (nameMap[name] || 0) + 1;
-        });
+        names.forEach(n => nameMap[n] = (nameMap[n] || 0) + 1);
 
-        // Số nhóm tối thiểu bắt buộc phải bằng số lần xuất hiện nhiều nhất của 1 tên
-        const maxFrequency = Math.max(...Object.values(nameMap));
-        const groups = Array.from({ length: maxFrequency }, () => []);
+        const maxFreq = Math.max(...Object.values(nameMap));
+        const groups = Array.from({ length: maxFreq }, () => []);
 
-        // Phân bổ từng nhóm tên trùng vào các nhóm khác nhau
         Object.keys(nameMap).forEach(name => {
             const count = nameMap[name];
             for (let i = 0; i < count; i++) {
-                groups[i].push(name); // Mỗi nhóm i nhận 1 người tên này
+                groups[i].push(name);
             }
         });
 
-        // Xáo trộn nội bộ từng nhóm cho ngẫu nhiên
-        const finalGroups = groups.map(g => this.shuffle(g));
-
-        this.triggerSFX();
-        return finalGroups;
+        return groups.map(g => this.shuffle(g));
     }
 
-    /**
-     * CHẾ ĐỘ 3: Chia gom người trùng tên vào chung nhóm
-     */
-    generateSameNameGroups(nameList, targetGroupsCount) {
-        const cleaned = nameList.map(n => n.trim()).filter(n => n !== '');
-        
-        // Gom nhóm theo tên
+    splitSameNames(names, targetGroupsCount) {
         const buckets = {};
-        cleaned.forEach(name => {
-            if (!buckets[name]) buckets[name] = [];
-            buckets[name].push(name);
+        names.forEach(n => {
+            if (!buckets[n]) buckets[n] = [];
+            buckets[n].push(n);
         });
 
-        const groupBuckets = Object.values(buckets); // Mảng chứa các nhóm người cùng tên
-        const numGroups = Math.min(targetGroupsCount, groupBuckets.length);
+        const groupBuckets = Object.values(buckets);
+        const numGroups = Math.max(1, Math.min(targetGroupsCount, groupBuckets.length));
         const groups = Array.from({ length: numGroups }, () => []);
 
-        // Phân bổ các bucket vào nhóm để tổng số người cân bằng nhất có thể
-        groupBuckets.sort((a, b) => b.length - a.length); // Ưu tiên xếp cụm đông trước
+        groupBuckets.sort((a, b) => b.length - a.length);
 
         groupBuckets.forEach(bucket => {
-            // Tìm nhóm đang có ít người nhất để thả bucket vào
-            let minGroup = groups[0];
+            let minG = groups[0];
             for (let g of groups) {
-                if (g.length < minGroup.length) minGroup = g;
+                if (g.length < minG.length) minG = g;
             }
-            minGroup.push(...bucket);
+            minG.push(...bucket);
         });
 
-        this.triggerSFX();
         return groups;
     }
 
-    // Phát âm thanh xáo bài / chia nhóm
-    triggerSFX() {
-        const ctx = soundMaster.getContext();
-        const output = soundMaster.getOutputNode();
+    renderResults(groups) {
+        const grid = this.container.querySelector('#groups-output-grid');
+        grid.innerHTML = '';
 
-        // Tạo tiếng Raspy/Shuffle nhẹ bằng Noise
-        for (let i = 0; i < 3; i++) {
-            setTimeout(() => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
+        groups.forEach((group, idx) => {
+            const card = document.createElement('div');
+            card.style.cssText = `
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 12px;
+            `;
 
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(150 + Math.random() * 200, ctx.currentTime);
+            const membersList = group.map(m => `<li style="margin-bottom: 4px; color: var(--text-main, #eee);">${m}</li>`).join('');
 
-                gain.gain.setValueAtTime(0.08, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+            card.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 8px; color: #10b981; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">
+                    Nhóm ${idx + 1} (${group.length})
+                </div>
+                <ul style="margin: 0; padding-left: 18px; font-size: 0.9em;">
+                    ${membersList}
+                </ul>
+            `;
+            grid.appendChild(card);
+        });
+    }
 
-                osc.connect(gain);
-                gain.connect(output);
+    playSFX() {
+        try {
+            const ctx = soundMaster.getContext();
+            const output = soundMaster.getOutputNode();
 
-                osc.start();
-                osc.stop(ctx.currentTime + 0.05);
-            }, i * 50);
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(200 + i * 80, ctx.currentTime);
+
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+
+                    osc.connect(gain);
+                    gain.connect(output);
+
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.06);
+                }, i * 40);
+            }
+        } catch (e) {
+            console.warn('SFX Error:', e);
         }
     }
 }
-
-export const groupGenerator = new GroupGeneratorModule();
