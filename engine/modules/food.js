@@ -5,7 +5,7 @@
 import { soundMaster } from '../utils/sound_master.js';
 import { historyManager } from '../history.js';
 
-// Fallback data nếu fetch /data/food_data.json gặp lỗi
+// Fallback data if fetching /data/food_data.json fails
 const FALLBACK_FOODS = [
     { name: "Cơm tấm", sub: "Sườn bì chả • Việt Nam", price: 45, quip: "Sườn có thể gãy. Kèo này thì không." },
     { name: "Phở bò", sub: "Tái nạm • Việt Nam", price: 55, quip: "Đời có thể nhạt. Nước phở thì không." },
@@ -18,11 +18,11 @@ const LOG_PRICE_SPREAD = 0.35;
 const TICK_SECONDS = [0,.063,.125,.188,.250,.313,.375,.438,.500,.563,.625,.688,.750,.813,.875,.938,1,1.063,1.125,1.188,1.250,1.313,1.375,1.483,1.620,1.701,1.786,1.872,2.003,2.154,2.313,2.466,2.615,2.773,2.941,3.104,3.339,3.630,3.953,4.385,5.004];
 
 function priceRarity(priceInThousands) {
-    if (priceInThousands <= 40) return { label: "Phổ Thông", color: "#b0c3d9" };
-    if (priceInThousands <= 65) return { label: "Đặc Biệt", color: "#5e98d9" };
-    if (priceInThousands <= 100) return { label: "Hiếm", color: "#4b69ff" };
-    if (priceInThousands <= 130) return { label: "Cực Hiếm", color: "#d32ce6" };
-    return { label: "Huyền Thoại", color: "#eb4b4b" };
+    if (priceInThousands <= 40) return { label: "Common", color: "#b0c3d9" };
+    if (priceInThousands <= 65) return { label: "Rare", color: "#5e98d9" };
+    if (priceInThousands <= 100) return { label: "Epic", color: "#4b69ff" };
+    if (priceInThousands <= 130) return { label: "Legendary", color: "#d32ce6" };
+    return { label: "Mythic", color: "#eb4b4b" };
 }
 
 function chooseWeightedFood(population, target = TARGET_LUNCH_PRICE) {
@@ -69,19 +69,19 @@ export default class FoodPickerModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">🍲 Food Picker (Gacha CS:GO)</h2>
-                <p class="module-desc">Dữ liệu nạp từ <code>/data/food_data.json</code> • Thuật toán cân bằng ngân sách 50k.</p>
+                <p class="module-desc">Data loaded from <code>/data/food_data.json</code> • Budget balancing algorithm for 50k.</p>
 
                 <div class="food-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                     <div class="food-panel">
                         <div class="form-group" style="margin-bottom: 15px;">
-                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Mức giá mục tiêu (k VNĐ):</label>
+                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Target price (k VND):</label>
                             <input type="number" id="target-price" class="form-input" value="50" min="20" max="200" style="width: 100%; padding: 10px;" />
                         </div>
 
-                        <div id="data-status" style="font-size: 0.85rem; color: #fbbf24; margin-bottom: 10px;">⏳ Đang tải danh sách món ăn...</div>
+                        <div id="data-status" style="font-size: 0.85rem; color: #fbbf24; margin-bottom: 10px;">⏳ Loading food list...</div>
 
                         <button id="btn-open-case" class="btn-primary" disabled style="width: 100%; padding: 14px; font-size: 1.1rem; background: #10b981; font-weight: bold; opacity: 0.6; cursor: not-allowed;">
-                            🎰 QUAY MÓN NGẪU NHIÊN
+                            🎰 SPIN RANDOM LUNCH
                         </button>
                     </div>
 
@@ -100,7 +100,7 @@ export default class FoodPickerModule {
                     ">
                         <div id="rarity-badge" style="font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; color: #888;">---</div>
                         <div id="food-title" style="font-size: 1.8rem; font-weight: bold; color: #fff; margin-bottom: 4px;">? ? ?</div>
-                        <div id="food-sub" style="font-size: 0.9rem; color: #aaa; margin-bottom: 8px;">Ấn nút để mở hòm bữa trưa</div>
+                        <div id="food-sub" style="font-size: 0.9rem; color: #aaa; margin-bottom: 8px;">Press the button to open the lunch case</div>
                         <div id="food-price" style="font-size: 1.1rem; font-weight: bold; color: #10b981; margin-bottom: 12px;"></div>
                         <div id="food-quip" style="font-size: 0.85rem; font-style: italic; color: #d1d5db; max-width: 80%;"></div>
                     </div>
@@ -131,14 +131,14 @@ export default class FoodPickerModule {
             this.foods = Array.isArray(loadedFoods) ? loadedFoods : [];
 
             if (statusEl) {
-                statusEl.textContent = `✅ Đã tải ${this.foods.length} món từ ../data/db_food.json`;
+                statusEl.textContent = `✅ Loaded ${this.foods.length} dishes`;
                 statusEl.style.color = '#10b981';
             }
         } catch (err) {
-            console.warn('Không tải được ../data/db_food.json, chuyển sang data dự phòng:', err);
+            console.warn('Could not load ../data/db_food.json, using fallback data instead:', err);
             this.foods = FALLBACK_FOODS;
             if (statusEl) {
-                statusEl.textContent = `⚠️ Đang dùng dữ liệu mặc định (${this.foods.length} món)`;
+                statusEl.textContent = `⚠️ Using default data (${this.foods.length} dishes)`;
                 statusEl.style.color = '#f59e0b';
             }
         }
@@ -171,7 +171,7 @@ export default class FoodPickerModule {
         const badgeEl = this.container.querySelector('#rarity-badge');
 
         card.style.borderColor = "#333";
-        badgeEl.textContent = "Đang mở hòm...";
+        badgeEl.textContent = "Opening the case...";
         badgeEl.style.color = "#888";
         priceEl.textContent = "";
         quipEl.textContent = "";
@@ -189,7 +189,7 @@ export default class FoodPickerModule {
         setTimeout(() => {
             titleEl.textContent = selectedFood.name;
             subEl.textContent = selectedFood.sub || '';
-            priceEl.textContent = selectedFood.price ? `💵 ${selectedFood.price}.000 VNĐ` : '';
+            priceEl.textContent = selectedFood.price ? `💵 ${selectedFood.price}.000 VND` : '';
             quipEl.textContent = selectedFood.quip ? `"${selectedFood.quip}"` : '';
             
             badgeEl.textContent = `★ ${rarity.label}`;
