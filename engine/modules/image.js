@@ -16,7 +16,7 @@ export default class ImagePlaceholderModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Image Placeholder</h2>
-                <p class="module-desc">Tạo ảnh placeholder ngẫu nhiên với kích thước tùy chỉnh từ Lorem Picsum API.</p>
+                <p class="module-desc">Generate random placeholder images with custom sizes using the Lorem Picsum API..</p>
 
                 <div class="img-workspace" style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-top: 20px;">
                     <!-- CONTROL PANEL -->
@@ -78,7 +78,7 @@ export default class ImagePlaceholderModule {
                         position: relative;
                         overflow: hidden;
                     ">
-                        <div id="img-loader" style="display: none; color: #10b981; font-weight: 500;">⏳ Đang tải ảnh...</div>
+                        <div id="img-loader" style="display: none; color: #10b981; font-weight: 500;">⏳ Loading...</div>
                         <img id="img-preview" src="" alt="Placeholder Preview" style="
                             max-width: 100%; 
                             max-height: 400px; 
