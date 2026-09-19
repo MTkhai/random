@@ -22,17 +22,32 @@ export default class CardDrawerModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Card Drawer</h2>
-                <p class="module-desc">Rút ngẫu nhiên các lá bài từ bộ bài Tây 52 lá chuẩn.</p>
+                <p class="module-desc">Rút ngẫu nhiên các lá bài từ bộ bài Tây, Tarot hoặc bộ bài số tùy chỉnh.</p>
 
                 <div class="card-toolbar" style="display: flex; gap: 16px; margin: 20px 0; align-items: center; flex-wrap: wrap;">
                     <div class="form-group" style="margin: 0;">
-                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em; margin-right: 8px;">Số lượng rút:</label>
+                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em; margin-right: 6px;">Loại bộ bài:</label>
+                        <select id="deck-type" class="form-input" style="padding: 8px 12px;">
+                            <option value="poker52" selected>Bài Tây chuẩn (52 lá)</option>
+                            <option value="tarot78">Bộ bài Tarot (78 lá)</option>
+                            <option value="custom">Bộ bài số tùy chỉnh</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="custom-deck-group" style="margin: 0; display: none; align-items: center; gap: 6px;">
+                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em;">Tổng số lá:</label>
+                        <input type="number" id="custom-deck-size" class="form-input" value="45" min="1" max="500" style="width: 70px; padding: 6px 10px;">
+                    </div>
+
+                    <div class="form-group" style="margin: 0;">
+                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em; margin-right: 6px;">Số lá rút:</label>
                         <select id="card-count" class="form-input" style="padding: 8px 12px;">
                             <option value="1">1 lá</option>
                             <option value="2">2 lá</option>
                             <option value="3">3 lá</option>
-                            <option value="4">4 lá</option>
-                            <option value="5" selected>5 lá</option>
+                            <option value="4" selected>4 lá</option>
+                            <option value="5">5 lá</option>
+                            <option value="6">6 lá</option>
                         </select>
                     </div>
 
@@ -63,21 +78,100 @@ export default class CardDrawerModule {
 
     bindEvents() {
         const btnDraw = this.container.querySelector('#btn-draw-cards');
+        const deckType = this.container.querySelector('#deck-type');
+        const customGroup = this.container.querySelector('#custom-deck-group');
+
+        deckType?.addEventListener('change', (e) => {
+            if (e.target.value === 'custom') {
+                customGroup.style.display = 'flex';
+            } else {
+                customGroup.style.display = 'none';
+            }
+        });
+
         btnDraw?.addEventListener('click', () => this.drawCards());
     }
 
+    generateDeck(type) {
+        let deck = [];
+
+        if (type === 'poker52') {
+            this.suits.forEach(suit => {
+                this.values.forEach(val => {
+                    deck.push({ 
+                        value: val, 
+                        suit: suit.symbol, 
+                        color: suit.color, 
+                        label: `${val}${suit.symbol}` 
+                    });
+                });
+            });
+        } else if (type === 'tarot78') {
+            // Tarot Major Arcana & Minor Arcana
+            const majorArcana = [
+                'The Fool', 'The Magician', 'The High Priestess', 'The Empress', 'The Emperor',
+                'The Hierophant', 'The Lovers', 'The Chariot', 'Strength', 'The Hermit',
+                'Wheel of Fortune', 'Justice', 'The Hanged Man', 'Death', 'Temperance',
+                'The Devil', 'The Tower', 'The Star', 'The Moon', 'The Sun', 'Judgement', 'The World'
+            ];
+            majorArcana.forEach((name, idx) => {
+                deck.push({
+                    value: idx.toString(),
+                    suit: '✨',
+                    color: '#8b5cf6',
+                    label: name,
+                    isTarot: true
+                });
+            });
+
+            const tarotSuits = [
+                { symbol: '🗡️', color: '#3b82f6', name: 'Swords' },
+                { symbol: '🏆', color: '#eab308', name: 'Cups' },
+                { symbol: '🪄', color: '#ef4444', name: 'Wands' },
+                { symbol: '🪙', color: '#10b981', name: 'Pentacles' }
+            ];
+            const tarotValues = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Page', 'Knight', 'Queen', 'King'];
+
+            tarotSuits.forEach(suit => {
+                tarotValues.forEach(val => {
+                    deck.push({
+                        value: val,
+                        suit: suit.symbol,
+                        color: suit.color,
+                        label: `${val} of ${suit.name}`,
+                        isTarot: true
+                    });
+                });
+            });
+        } else {
+            // Custom Size Deck (Ví dụ: 1 đến N)
+            const size = parseInt(this.container.querySelector('#custom-deck-size').value) || 45;
+            for (let i = 1; i <= size; i++) {
+                deck.push({
+                    value: `#${i}`,
+                    suit: '🎴',
+                    color: '#10b981',
+                    label: `Lá số ${i}`,
+                    isCustom: true
+                });
+            }
+        }
+
+        return deck;
+    }
+
     drawCards() {
+        const type = this.container.querySelector('#deck-type').value;
         const count = parseInt(this.container.querySelector('#card-count').value) || 1;
         const allowDuplicate = this.container.querySelector('#card-allow-duplicate').checked;
         const displayContainer = this.container.querySelector('#cards-display-container');
 
-        // Tạo full 52 lá bài
-        let fullDeck = [];
-        this.suits.forEach(suit => {
-            this.values.forEach(val => {
-                fullDeck.push({ value: val, suit: suit.symbol, color: suit.color, suitName: suit.name });
-            });
-        });
+        let fullDeck = this.generateDeck(type);
+
+        if (count > fullDeck.length && !allowDuplicate) {
+            alert(`Số lượng lá rút (${count}) lớn hơn tổng số lá của bộ bài (${fullDeck.length})! Vui lòng tích chọn "Cho phép rút trùng lá".`);
+            return;
+        }
 
         let drawnCards = [];
 
@@ -98,7 +192,7 @@ export default class CardDrawerModule {
         displayContainer.innerHTML = '';
         this.playCardShuffleSFX();
 
-        // Render hiệu ứng từng lá bài
+        // Render từng lá bài
         drawnCards.forEach((card, idx) => {
             const cardEl = document.createElement('div');
             cardEl.style.cssText = `
@@ -110,7 +204,7 @@ export default class CardDrawerModule {
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
-                padding: 12px;
+                padding: 10px;
                 color: ${card.color};
                 font-family: Arial, sans-serif;
                 position: relative;
@@ -120,29 +214,36 @@ export default class CardDrawerModule {
                 user-select: none;
             `;
 
-            cardEl.innerHTML = `
-                <div style="font-weight: bold; font-size: 1.2rem; line-height: 1;">
-                    ${card.value}<br><span style="font-size: 1rem;">${card.suit}</span>
-                </div>
-                <div style="font-size: 2.5rem; text-align: center; align-self: center;">
-                    ${card.suit}
-                </div>
-                <div style="font-weight: bold; font-size: 1.2rem; line-height: 1; text-align: right; transform: rotate(180deg);">
-                    ${card.value}<br><span style="font-size: 1rem;">${card.suit}</span>
-                </div>
-            `;
+            if (card.isTarot || card.isCustom) {
+                cardEl.innerHTML = `
+                    <div style="font-weight: bold; font-size: 0.85rem; word-break: break-word;">${card.value}</div>
+                    <div style="font-size: 2.2rem; text-align: center;">${card.suit}</div>
+                    <div style="font-size: 0.75rem; text-align: center; color: #475569; font-weight: 600;">${card.label}</div>
+                `;
+            } else {
+                cardEl.innerHTML = `
+                    <div style="font-weight: bold; font-size: 1.2rem; line-height: 1;">
+                        ${card.value}<br><span style="font-size: 1rem;">${card.suit}</span>
+                    </div>
+                    <div style="font-size: 2.5rem; text-align: center; align-self: center;">
+                        ${card.suit}
+                    </div>
+                    <div style="font-weight: bold; font-size: 1.2rem; line-height: 1; text-align: right; transform: rotate(180deg);">
+                        ${card.value}<br><span style="font-size: 1rem;">${card.suit}</span>
+                    </div>
+                `;
+            }
 
             displayContainer.appendChild(cardEl);
 
-            // Xuất hiện lần lượt
             setTimeout(() => {
                 cardEl.style.opacity = '1';
                 cardEl.style.transform = 'translateY(0) scale(1)';
             }, idx * 100);
         });
 
-        // Lưu log
-        const logText = drawnCards.map(c => `${c.value}${c.suit}`).join(', ');
+        // Lưu Log
+        const logText = drawnCards.map(c => c.label).join(', ');
         historyManager.addLog('Card Drawer', logText);
     }
 
