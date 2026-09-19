@@ -16,25 +16,25 @@ export default class ImagePlaceholderModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Image Placeholder</h2>
-                <p class="module-desc">Generate random placeholder images with custom sizes using the Lorem Picsum API..</p>
+                <p class="module-desc">Generate random placeholder images with custom sizes using the Lorem Picsum API.</p>
 
                 <div class="img-workspace" style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-top: 20px;">
                     <!-- CONTROL PANEL -->
                     <div class="control-panel" style="display: flex; flex-direction: column; gap: 16px;">
                         <div style="display: flex; gap: 12px;">
                             <div class="form-group" style="flex: 1; margin: 0;">
-                                <label style="display: block; margin-bottom: 6px; color: var(--text-muted, #aaa); font-size: 0.9em;">Chiều rộng (px):</label>
+                                <label style="display: block; margin-bottom: 6px; color: var(--text-muted, #aaa); font-size: 0.9em;">Width (px):</label>
                                 <input type="number" id="img-width" class="form-input" value="600" min="50" max="2000" style="width: 100%; padding: 8px 12px;">
                             </div>
                             <div class="form-group" style="flex: 1; margin: 0;">
-                                <label style="display: block; margin-bottom: 6px; color: var(--text-muted, #aaa); font-size: 0.9em;">Chiều cao (px):</label>
+                                <label style="display: block; margin-bottom: 6px; color: var(--text-muted, #aaa); font-size: 0.9em;">Height (px):</label>
                                 <input type="number" id="img-height" class="form-input" value="400" min="50" max="2000" style="width: 100%; padding: 8px 12px;">
                             </div>
                         </div>
 
                         <!-- QUICK RATIO PRESETS -->
                         <div>
-                            <label style="display: block; margin-bottom: 6px; color: var(--text-muted, #aaa); font-size: 0.85em;">Tỷ lệ nhanh:</label>
+                            <label style="display: block; margin-bottom: 6px; color: var(--text-muted, #aaa); font-size: 0.85em;">Quick ratios:</label>
                             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                                 <button class="btn-preset btn-secondary" data-w="600" data-h="400" style="padding: 4px 8px; font-size: 0.8em; border-radius: 4px;">3:2 (600x400)</button>
                                 <button class="btn-preset btn-secondary" data-w="800" data-h="800" style="padding: 4px 8px; font-size: 0.8em; border-radius: 4px;">1:1 (800x800)</button>
@@ -45,19 +45,19 @@ export default class ImagePlaceholderModule {
                         <!-- OPTIONS -->
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="display: flex; align-items: center; gap: 8px; color: var(--text-muted, #aaa); font-size: 0.9em; cursor: pointer;">
-                                <input type="checkbox" id="img-grayscale"> Trắng đen (Grayscale)
+                                <input type="checkbox" id="img-grayscale"> Black and white (Grayscale)
                             </label>
                             <label style="display: flex; align-items: center; gap: 8px; color: var(--text-muted, #aaa); font-size: 0.9em; cursor: pointer;">
-                                <input type="checkbox" id="img-blur"> Làm mờ (Blur)
+                                <input type="checkbox" id="img-blur"> Blur
                             </label>
                         </div>
 
-                        <button id="btn-gen-image" class="btn-primary" style="padding: 12px; margin-top: 10px;">🖼️ generate new picture</button>
+                        <button id="btn-gen-image" class="btn-primary" style="padding: 12px; margin-top: 10px;">🖼️ Generate New Picture</button>
 
                         <!-- ACTION BUTTONS -->
                         <div style="display: flex; gap: 8px; flex-direction: column; margin-top: 10px;">
                             <button id="btn-copy-url" class="btn-secondary" style="padding: 8px 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 6px; cursor: pointer; text-align: center;">
-                                🔗 Copy URL
+                                🔗 Copy Image URL
                             </button>
                             <a id="btn-open-tab" href="#" target="_blank" class="btn-secondary" style="padding: 8px 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 6px; text-decoration: none; text-align: center;">
                                 ↗️ Open in New Tab
@@ -116,8 +116,8 @@ export default class ImagePlaceholderModule {
         btnCopy?.addEventListener('click', () => {
             if (!this.currentUrl) return;
             navigator.clipboard.writeText(this.currentUrl);
-            btnCopy.textContent = '✅ Đã Copy URL!';
-            setTimeout(() => btnCopy.textContent = '🔗 Copy URL Ảnh', 1200);
+            btnCopy.textContent = '✅ URL Copied!';
+            setTimeout(() => btnCopy.textContent = '🔗 Copy Image URL', 1200);
         });
     }
 
@@ -131,13 +131,13 @@ export default class ImagePlaceholderModule {
         const img = this.container.querySelector('#img-preview');
         const openTabBtn = this.container.querySelector('#btn-open-tab');
 
-        // Xây dựng URL từ Picsum
+        // Build URL from Picsum
         let url = `https://picsum.photos/${width}/${height}`;
         let params = [];
 
         if (isGrayscale) params.push('grayscale');
         if (isBlur) params.push('blur=2');
-        // Cache buster bằng timestamp
+        // Cache buster using timestamp
         params.push(`random=${Date.now()}`);
 
         if (params.length > 0) {
@@ -162,7 +162,7 @@ export default class ImagePlaceholderModule {
             this.playSuccessSFX();
         };
 
-        // Lưu History Log
+        // Save History Log
         historyManager.addLog('Image Placeholder', `${width}x${height} px`);
     }
 
