@@ -126,7 +126,7 @@ export default class RandomQuotesModule {
             textEl.style.opacity = '1';
         }
 
-        historyManager.addLog('Random Quotes', `${this.currentQuote.author}`);
+        historyManager.addLog('Random Quotes', `"${this.currentQuote.text}" — ${this.currentQuote.author}`);
     }
 
     playPageTurnSFX() {
