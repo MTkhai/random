@@ -117,16 +117,25 @@ export default class FoodPickerModule {
         const btnOpen = this.container.querySelector('#btn-open-case');
 
         try {
-            const res = await fetch('../data/food_data.json');
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-            this.foods = await res.json();
-            
+            let loadedFoods = null;
+
+            try {
+                const jsonModule = await import('../data/db_food.json', { with: { type: 'json' } });
+                loadedFoods = jsonModule.default ?? jsonModule;
+            } catch (importErr) {
+                const res = await fetch('../data/food_data.json');
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                loadedFoods = await res.json();
+            }
+
+            this.foods = Array.isArray(loadedFoods) ? loadedFoods : [];
+
             if (statusEl) {
-                statusEl.textContent = `✅ Đã tải ${this.foods.length} món từ ../data/food_data.json`;
+                statusEl.textContent = `✅ Đã tải ${this.foods.length} món từ ../data/db_food.json`;
                 statusEl.style.color = '#10b981';
             }
         } catch (err) {
-            console.warn('Không fetch được ../data/food_data.json, chuyển sang data dự phòng:', err);
+            console.warn('Không tải được ../data/db_food.json, chuyển sang data dự phòng:', err);
             this.foods = FALLBACK_FOODS;
             if (statusEl) {
                 statusEl.textContent = `⚠️ Đang dùng dữ liệu mặc định (${this.foods.length} món)`;
