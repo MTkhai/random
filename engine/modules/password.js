@@ -21,7 +21,7 @@ export default class PasswordGeneratorModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Password Generator</h2>
-                <p class="module-desc">Tạo mật khẩu ngẫu nhiên, an toàn và tùy chỉnh theo nhu cầu bảo mật.</p>
+                <p class="module-desc">Generate a random, secure password tailored to your security needs.</p>
 
                 <!-- DISPLAY RESULT -->
                 <div class="pass-display-box" style="
@@ -60,8 +60,8 @@ export default class PasswordGeneratorModule {
                 <!-- STRENGTH METER -->
                 <div style="margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85em; color: var(--text-muted, #aaa);">
-                        <span>Độ mạnh mật khẩu:</span>
-                        <span id="pass-strength-label" style="font-weight: 600; color: #ef4444;">Yếu</span>
+                        <span>Password strength:</span>
+                        <span id="pass-strength-label" style="font-weight: 600; color: #ef4444;">Weak</span>
                     </div>
                     <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
                         <div id="pass-strength-bar" style="height: 100%; width: 25%; background: #ef4444; transition: all 0.3s ease;"></div>
@@ -73,7 +73,7 @@ export default class PasswordGeneratorModule {
                     <!-- LENGTH SLIDER -->
                     <div class="form-group" style="margin: 0;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <label style="color: var(--text-muted, #aaa); font-size: 0.9em;">Độ dài mật khẩu:</label>
+                            <label style="color: var(--text-muted, #aaa); font-size: 0.9em;">Password length:</label>
                             <span id="pass-length-val" style="font-weight: bold; color: #10b981;">16</span>
                         </div>
                         <input type="range" id="pass-length" min="6" max="64" value="16" style="width: 100%; cursor: pointer;">
@@ -82,20 +82,20 @@ export default class PasswordGeneratorModule {
                     <!-- CHECKBOX OPTIONS -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
                         <label style="display: flex; align-items: center; gap: 8px; color: var(--text-muted, #aaa); font-size: 0.9em; cursor: pointer;">
-                            <input type="checkbox" id="chk-uppercase" checked> Chữ hoa (A-Z)
+                            <input type="checkbox" id="chk-uppercase" checked> Uppercase (A-Z)
                         </label>
                         <label style="display: flex; align-items: center; gap: 8px; color: var(--text-muted, #aaa); font-size: 0.9em; cursor: pointer;">
-                            <input type="checkbox" id="chk-lowercase" checked> Chữ thường (a-z)
+                            <input type="checkbox" id="chk-lowercase" checked> Lowercase (a-z)
                         </label>
                         <label style="display: flex; align-items: center; gap: 8px; color: var(--text-muted, #aaa); font-size: 0.9em; cursor: pointer;">
-                            <input type="checkbox" id="chk-numbers" checked> Chữ số (0-9)
+                            <input type="checkbox" id="chk-numbers" checked> Numbers (0-9)
                         </label>
                         <label style="display: flex; align-items: center; gap: 8px; color: var(--text-muted, #aaa); font-size: 0.9em; cursor: pointer;">
-                            <input type="checkbox" id="chk-symbols" checked> Ký tự đặc biệt (!@#$)
+                            <input type="checkbox" id="chk-symbols" checked> Special characters (!@#$)
                         </label>
                     </div>
 
-                    <button id="btn-gen-pass" class="btn-primary" style="padding: 12px; margin-top: 12px; font-size: 1rem;">🔑 Tạo Mật Khẩu</button>
+                    <button id="btn-gen-pass" class="btn-primary" style="padding: 12px; margin-top: 12px; font-size: 1rem;">🔑 Generate Password</button>
                 </div>
             </div>
         `;
@@ -126,7 +126,7 @@ export default class PasswordGeneratorModule {
             if (!passText || passText === '- - - - - - - -') return;
 
             navigator.clipboard.writeText(passText);
-            btnCopy.textContent = '✅ Đã Copy!';
+            btnCopy.textContent = '✅ Copied!';
             setTimeout(() => btnCopy.textContent = '📋 Copy', 1200);
         });
     }
@@ -147,12 +147,12 @@ export default class PasswordGeneratorModule {
         const resultEl = this.container.querySelector('#pass-result');
 
         if (!availableChars) {
-            if (resultEl) resultEl.textContent = 'Vui lòng chọn ít nhất 1 ký tự!';
+            if (resultEl) resultEl.textContent = 'Please select at least 1 character!';
             this.updateStrength(0);
             return;
         }
 
-        // Dùng Crypto API để tạo số ngẫu nhiên an toàn (Cryptographically secure)
+        // Use the Crypto API to generate secure random values (cryptographically secure)
         let password = '';
         const array = new Uint32Array(length);
         window.crypto.getRandomValues(array);
@@ -166,8 +166,8 @@ export default class PasswordGeneratorModule {
         this.updateStrength(length, [useUpper, useLower, useNum, useSym].filter(Boolean).length);
         this.playSuccessSFX();
 
-        // Lưu log (ẩn mật khẩu vì lý do bảo mật)
-        historyManager.addLog('Password Generator', `Tạo mật khẩu ${length} ký tự`);
+        // Save log (hide password for security reasons)
+        historyManager.addLog('Password Generator', `Create password with ${length} characters`);
     }
 
     updateStrength(length, typeCount) {
@@ -184,27 +184,27 @@ export default class PasswordGeneratorModule {
         if (typeCount === 4 && length >= 12) score += 1;
 
         if (score <= 1) {
-            label.textContent = 'Rất Yếu';
+            label.textContent = 'Very Weak';
             label.style.color = '#ef4444';
             bar.style.width = '20%';
             bar.style.background = '#ef4444';
         } else if (score === 2) {
-            label.textContent = 'Yếu';
+            label.textContent = 'Weak';
             label.style.color = '#f97316';
             bar.style.width = '40%';
             bar.style.background = '#f97316';
         } else if (score === 3) {
-            label.textContent = 'Trung Bình';
+            label.textContent = 'Average';
             label.style.color = '#eab308';
             bar.style.width = '60%';
             bar.style.background = '#eab308';
         } else if (score === 4) {
-            label.textContent = 'Mạnh';
+            label.textContent = 'Strong';
             label.style.color = '#3b82f6';
             bar.style.width = '80%';
             bar.style.background = '#3b82f6';
         } else {
-            label.textContent = 'Cực Kỳ An Toàn';
+            label.textContent = 'Extremely Secure';
             label.style.color = '#10b981';
             bar.style.width = '100%';
             bar.style.background = '#10b981';
