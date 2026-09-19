@@ -123,7 +123,7 @@ export default class FoodPickerModule {
                 const jsonModule = await import('../data/db_food.json', { with: { type: 'json' } });
                 loadedFoods = jsonModule.default ?? jsonModule;
             } catch (importErr) {
-                const res = await fetch('../data/food_data.json');
+                const res = await fetch('../data/db_food.json');
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                 loadedFoods = await res.json();
             }
