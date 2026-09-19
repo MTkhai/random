@@ -68,7 +68,7 @@ export default class FoodPickerModule {
         this.container = container;
         this.container.innerHTML = `
             <div class="module-card">
-                <h2 class="module-title">🍲 Food Picker (Gacha CS:GO)</h2>
+                <h2 class="module-title">🍲 Food Picker</h2>
                 <p class="module-desc">Data loaded from <code>/data/food_data.json</code> • Budget balancing algorithm for 50k.</p>
 
                 <div class="food-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
