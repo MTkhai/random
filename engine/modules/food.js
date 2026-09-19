@@ -117,16 +117,16 @@ export default class FoodPickerModule {
         const btnOpen = this.container.querySelector('#btn-open-case');
 
         try {
-            const res = await fetch('/data/food_data.json');
+            const res = await fetch('../data/food_data.json');
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
             this.foods = await res.json();
             
             if (statusEl) {
-                statusEl.textContent = `✅ Đã tải ${this.foods.length} món từ /data/food_data.json`;
+                statusEl.textContent = `✅ Đã tải ${this.foods.length} món từ ../data/food_data.json`;
                 statusEl.style.color = '#10b981';
             }
         } catch (err) {
-            console.warn('Không fetch được /data/food_data.json, chuyển sang data dự phòng:', err);
+            console.warn('Không fetch được ../data/food_data.json, chuyển sang data dự phòng:', err);
             this.foods = FALLBACK_FOODS;
             if (statusEl) {
                 statusEl.textContent = `⚠️ Đang dùng dữ liệu mặc định (${this.foods.length} món)`;
