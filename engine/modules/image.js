@@ -52,15 +52,15 @@ export default class ImagePlaceholderModule {
                             </label>
                         </div>
 
-                        <button id="btn-gen-image" class="btn-primary" style="padding: 12px; margin-top: 10px;">🖼️ Tạo Ảnh Mới</button>
+                        <button id="btn-gen-image" class="btn-primary" style="padding: 12px; margin-top: 10px;">🖼️ generate new picture</button>
 
                         <!-- ACTION BUTTONS -->
                         <div style="display: flex; gap: 8px; flex-direction: column; margin-top: 10px;">
                             <button id="btn-copy-url" class="btn-secondary" style="padding: 8px 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 6px; cursor: pointer; text-align: center;">
-                                🔗 Copy URL Ảnh
+                                🔗 Copy URL
                             </button>
                             <a id="btn-open-tab" href="#" target="_blank" class="btn-secondary" style="padding: 8px 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 6px; text-decoration: none; text-align: center;">
-                                ↗️ Mở trong Tab Mới
+                                ↗️ Open in New Tab
                             </a>
                         </div>
                     </div>
