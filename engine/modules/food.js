@@ -1,12 +1,9 @@
 /* ==========================================================================
-   MODULE: FOOD PICKER (Gacha CS:GO - Refactored & Bug-free)
+   MODULE: FOOD PICKER (CS:GO Gacha - Refactored & Bug-free)
    ========================================================================== */
 
 import { soundMaster } from '../utils/sound_master.js';
 import { historyManager } from '../history.js';
-
-const IMG_BASE_PATH = './data/img/';
-const DEFAULT_IMG = 'food-hd 0.webp';
 
 const FALLBACK_FOODS = [
     { id: "f1", name: "Cơm tấm", sub: "Sườn bì chả • Việt Nam", price: 45, quip: "Sườn có thể gãy. Kèo này thì không.", image: "food-hd 0.webp" },
@@ -23,7 +20,7 @@ const TICK_SECONDS = [0,.063,.125,.188,.250,.313,.375,.438,.500,.563,.625,.688,.
    HELPERS & DATA CLEANING
    -------------------------------------------------------------------------- */
 
-// [FIX 6]: Phân biệt rõ ràng price === 0 với null/undefined/NaN
+// Distinguish price === 0 from null/undefined/NaN
 function getFoodPrice(food) {
     if (typeof food?.price === 'number' && !isNaN(food.price)) {
         return food.price;
@@ -31,7 +28,7 @@ function getFoodPrice(food) {
     return 50;
 }
 
-// [FIX 2]: Lấy ID duy nhất (ưu tiên id -> fallback name chuẩn hóa)
+// Get unique ID (priority: id -> fallback normalized name)
 function getFoodId(food) {
     if (food.id !== undefined && food.id !== null) {
         return String(food.id);
@@ -50,11 +47,11 @@ function getRarityKey(priceInThousands) {
 function priceRarity(priceInThousands) {
     const key = getRarityKey(priceInThousands);
     switch (key) {
-        case "common": return { key: "common", label: "Phổ Thông", color: "#b0c3d9" };
-        case "uncommon": return { key: "uncommon", label: "Đặc Biệt", color: "#5e98d9" };
-        case "rare": return { key: "rare", label: "Hiếm", color: "#4b69ff" };
-        case "epic": return { key: "epic", label: "Cực Hiếm", color: "#d32ce6" };
-        case "legendary": return { key: "legendary", label: "Huyền Thoại", color: "#eb4b4b" };
+        case "common": return { key: "common", label: "Common", color: "#b0c3d9" };
+        case "uncommon": return { key: "uncommon", label: "Uncommon", color: "#5e98d9" };
+        case "rare": return { key: "rare", label: "Rare", color: "#4b69ff" };
+        case "epic": return { key: "epic", label: "Epic", color: "#d32ce6" };
+        case "legendary": return { key: "legendary", label: "Legendary", color: "#eb4b4b" };
     }
 }
 
@@ -70,15 +67,15 @@ function chooseWeightedFood(population, rawTarget = TARGET_LUNCH_PRICE) {
     const minPrice = Math.min(...prices);
     const maxPrice = Math.max(...prices);
 
-    // [FIX 1]: Clamp target vào đúng khoảng [minPrice, maxPrice] của danh sách hiện tại
+    // Clamp target to the range [minPrice, maxPrice] of current list
     const target = Math.max(minPrice, Math.min(maxPrice, rawTarget));
 
-    // Nếu tất cả món trong pool có cùng mức giá, random đều
+    // If all items in pool have the same price, select randomly
     if (minPrice === maxPrice) {
         return population[Math.floor(Math.random() * population.length)];
     }
 
-    // [FIX 7]: Mật độ giá (counts) dùng để cân bằng giữa các phân khúc giá khác nhau
+    // Price density (counts) balances probabilities across price tiers
     const counts = new Map();
     prices.forEach(p => counts.set(p, (counts.get(p) || 0) + 1));
     
@@ -98,7 +95,7 @@ function chooseWeightedFood(population, rawTarget = TARGET_LUNCH_PRICE) {
     let lo = -1, hi = 1;
     let guard = 0;
 
-    // [FIX 1]: Thêm điều kiện dừng guard loop để chống treo UI tuyệt đối
+    // Guard loop condition to prevent UI freezing
     while (mean(weights(lo)) > target && guard < 50) {
         lo *= 2;
         guard++;
@@ -130,7 +127,7 @@ export default class FoodPickerModule {
     constructor() {
         this.container = null;
         this.foods = [];
-        this.drawnFoodIds = new Set(); // [FIX 2]: Lưu Set theo ID/Key thay vì Name
+        this.drawnFoodIds = new Set(); // Store Set by ID/Key instead of Name
         this.isSpinning = false;
     }
 
@@ -138,37 +135,37 @@ export default class FoodPickerModule {
         this.container = container;
         this.container.innerHTML = `
             <div class="module-card">
-                <h2 class="module-title">🍲 Food Picker (Gacha CS:GO)</h2>
-                <p class="module-desc">Dữ liệu nạp từ <code>./data/db_food.json</code> • Thuật toán cân bằng ngân sách & gacha linh hoạt.</p>
+                <h2 class="module-title">🍲 Food Picker</h2>
+                <p class="module-desc">Loaded from <code>./data/db_food.json</code> • Budget balancing & flexible gacha algorithm.</p>
 
                 <div class="food-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                     <div class="food-panel">
                         <div class="form-group" style="margin-bottom: 12px;">
-                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Mức giá mục tiêu (k VNĐ):</label>
+                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Target Price (k VND):</label>
                             <input type="number" id="target-price" class="form-input" value="50" min="20" max="200" style="width: 100%; padding: 8px;" />
                         </div>
 
                         <div class="form-group" style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                             <input type="checkbox" id="chk-random-price" style="width: 16px; height: 16px; cursor: pointer;" />
-                            <label for="chk-random-price" style="color: #ddd; cursor: pointer; user-select: none;">🎲 Ngẫu nhiên hoàn toàn (Bỏ qua mức giá)</label>
+                            <label for="chk-random-price" style="color: #ddd; cursor: pointer; user-select: none;">🎲 Completely Random (Ignore Target Price)</label>
                         </div>
 
                         <div class="form-group" style="margin-bottom: 15px;">
-                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Lọc theo độ phẩm/hiếm:</label>
+                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Filter by Rarity:</label>
                             <select id="select-rarity" class="form-input" style="width: 100%; padding: 8px; background: #1e1e24; color: #fff; border: 1px solid #444; border-radius: 6px;">
-                                <option value="all">✨ Tất cả độ hiếm</option>
-                                <option value="common">⚪ Phổ Thông (<= 40k)</option>
-                                <option value="uncommon">🔵 Đặc Biệt (41k - 65k)</option>
-                                <option value="rare">🔷 Hiếm (66k - 100k)</option>
-                                <option value="epic">🟣 Cực Hiếm (101k - 130k)</option>
-                                <option value="legendary">🔴 Huyền Thoại (> 130k)</option>
+                                <option value="all">✨ All Rarities</option>
+                                <option value="common">⚪ Common (<= 40k)</option>
+                                <option value="uncommon">🔵 Uncommon (41k - 65k)</option>
+                                <option value="rare">🔷 Rare (66k - 100k)</option>
+                                <option value="epic">🟣 Epic (101k - 130k)</option>
+                                <option value="legendary">🔴 Legendary (> 130k)</option>
                             </select>
                         </div>
 
-                        <div id="data-status" style="font-size: 0.85rem; color: #fbbf24; margin-bottom: 10px;">⏳ Đang tải danh sách món ăn...</div>
+                        <div id="data-status" style="font-size: 0.85rem; color: #fbbf24; margin-bottom: 10px;">⏳ Loading food list...</div>
 
                         <button id="btn-open-case" class="btn-primary" disabled style="width: 100%; padding: 14px; font-size: 1.1rem; background: #10b981; font-weight: bold; opacity: 0.6; cursor: not-allowed; border: none; border-radius: 8px; color: #fff;">
-                            🎰 QUAY MÓN NGẪU NHIÊN
+                            🎰 SPIN RANDOM FOOD
                         </button>
                     </div>
 
@@ -188,25 +185,9 @@ export default class FoodPickerModule {
                         overflow: hidden;
                     ">
                         <div id="rarity-badge" style="font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; color: #888;">---</div>
-                        
-                        <div id="food-img-container" style="
-                            width: 110px; 
-                            height: 110px; 
-                            border-radius: 50%; 
-                            overflow: hidden; 
-                            margin-bottom: 12px; 
-                            border: 3px solid #444; 
-                            background: #111;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-                        ">
-                            <img id="food-img" src="${IMG_BASE_PATH}${DEFAULT_IMG}" alt="Food Icon" style="width: 100%; height: 100%; object-fit: cover;" />
-                        </div>
 
                         <div id="food-title" style="font-size: 1.6rem; font-weight: bold; color: #fff; margin-bottom: 4px;">? ? ?</div>
-                        <div id="food-sub" style="font-size: 0.85rem; color: #aaa; margin-bottom: 8px;">Ấn nút để mở hòm bữa trưa</div>
+                        <div id="food-sub" style="font-size: 0.85rem; color: #aaa; margin-bottom: 8px;">Click button to open lunch case</div>
                         <div id="food-price" style="font-size: 1.1rem; font-weight: bold; color: #10b981; margin-bottom: 8px;"></div>
                         <div id="food-quip" style="font-size: 0.85rem; font-style: italic; color: #d1d5db; max-width: 85%;"></div>
                     </div>
@@ -228,14 +209,14 @@ export default class FoodPickerModule {
             this.foods = await res.json();
             
             if (statusEl) {
-                statusEl.textContent = `✅ Đã tải ${this.foods.length} món từ ./data/db_food.json`;
+                statusEl.textContent = `✅ Loaded ${this.foods.length} items`;
                 statusEl.style.color = '#10b981';
             }
         } catch (err) {
-            console.warn('Không fetch được ./data/db_food.json, dùng data dự phòng:', err);
+            console.warn('Failed to fetch ./data/db_food.json, using fallback data:', err);
             this.foods = FALLBACK_FOODS;
             if (statusEl) {
-                statusEl.textContent = `⚠️ Đang dùng dữ liệu mặc định (${this.foods.length} món)`;
+                statusEl.textContent = `⚠️ Using default fallback data (${this.foods.length} items)`;
                 statusEl.style.color = '#f59e0b';
             }
         }
@@ -259,7 +240,7 @@ export default class FoodPickerModule {
             }
         });
 
-        // [FIX 5]: Clamp giá trị input ngay khi thay đổi giá trị
+        // Clamp input value on change
         targetPriceInput?.addEventListener('change', () => {
             let val = parseFloat(targetPriceInput.value) || 50;
             val = Math.max(20, Math.min(200, val));
@@ -275,7 +256,6 @@ export default class FoodPickerModule {
         const rarityFilter = this.container.querySelector('#select-rarity').value;
         const isRandomPrice = this.container.querySelector('#chk-random-price').checked;
         
-        // [FIX 5]: Validate & Clamp targetPrice cẩn thận trong JS
         let rawTarget = parseFloat(this.container.querySelector('#target-price').value) || 50;
         const targetPrice = Math.max(20, Math.min(200, rawTarget));
 
@@ -285,13 +265,13 @@ export default class FoodPickerModule {
         }
 
         if (eligibleFoods.length === 0) {
-            alert('Không tìm thấy món nào phù hợp với bộ lọc độ hiếm này!');
+            alert('No food items found matching this rarity filter!');
             return;
         }
 
         let availableFoods = eligibleFoods.filter(f => !this.drawnFoodIds.has(getFoodId(f)));
 
-        // [FIX 3]: Chỉ xỏa trạng thái "đã quay" của riêng bộ lọc hiện tại, không làm ảnh hưởng bộ lọc khác
+        // Reset drawn status only for current filter if pool runs out
         if (availableFoods.length === 0) {
             eligibleFoods.forEach(f => this.drawnFoodIds.delete(getFoodId(f)));
             availableFoods = eligibleFoods;
@@ -312,8 +292,6 @@ export default class FoodPickerModule {
         const rarity = priceRarity(finalPrice);
 
         const card = this.container.querySelector('#case-display');
-        const imgEl = this.container.querySelector('#food-img');
-        const imgContainer = this.container.querySelector('#food-img-container');
         const titleEl = this.container.querySelector('#food-title');
         const subEl = this.container.querySelector('#food-sub');
         const priceEl = this.container.querySelector('#food-price');
@@ -321,21 +299,16 @@ export default class FoodPickerModule {
         const badgeEl = this.container.querySelector('#rarity-badge');
 
         card.style.borderColor = "#333";
-        imgContainer.style.borderColor = "#444";
-        badgeEl.textContent = "Đang mở hòm...";
+        badgeEl.textContent = "Opening case...";
         badgeEl.style.color = "#888";
         priceEl.textContent = "";
         quipEl.textContent = "";
 
-        // [FIX 4]: Animation dùng availableFoods thay vì eligibleFoods để đồng bộ cảm giác gacha
         TICK_SECONDS.forEach((sec, idx) => {
             setTimeout(() => {
                 const randomSample = availableFoods[Math.floor(Math.random() * availableFoods.length)];
                 titleEl.textContent = randomSample.name;
                 subEl.textContent = randomSample.sub || '';
-                
-                const sampleImg = randomSample.image || randomSample.img || DEFAULT_IMG;
-                imgEl.src = `${IMG_BASE_PATH}${sampleImg}`;
 
                 this.playTickSFX(idx / TICK_SECONDS.length);
             }, sec * 1000);
@@ -345,16 +318,12 @@ export default class FoodPickerModule {
         setTimeout(() => {
             titleEl.textContent = selectedFood.name;
             subEl.textContent = selectedFood.sub || '';
-            priceEl.textContent = `💵 ${finalPrice}.000 VNĐ`;
+            priceEl.textContent = `💵 ${finalPrice},000 VND`;
             quipEl.textContent = selectedFood.quip ? `"${selectedFood.quip}"` : '';
-            
-            const finalImg = selectedFood.image || selectedFood.img || DEFAULT_IMG;
-            imgEl.src = `${IMG_BASE_PATH}${finalImg}`;
 
             badgeEl.textContent = `★ ${rarity.label}`;
             badgeEl.style.color = rarity.color;
             card.style.borderColor = rarity.color;
-            imgContainer.style.borderColor = rarity.color;
 
             this.playDropSFX();
             historyManager.addLog('Food Picker', `${selectedFood.name} (${finalPrice}k)`);
