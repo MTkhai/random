@@ -6,10 +6,10 @@ import { soundMaster } from '../utils/sound_master.js';
 import { historyManager } from '../history.js';
 
 const FALLBACK_FOODS = [
-    { id: "f1", name: "Cơm tấm", sub: "Sườn bì chả • Việt Nam", price: 45, quip: "Sườn có thể gãy. Kèo này thì không.", image: "food-hd 0.webp" },
-    { id: "f2", name: "Phở bò", sub: "Tái nạm • Việt Nam", price: 55, quip: "Đời có thể nhạt. Nước phở thì không.", image: "food-hd 1.webp" },
-    { id: "f3", name: "Bánh mì", sub: "Thịt nướng • Việt Nam", price: 25, quip: "Vũ khí cận chiến của dân văn phòng.", image: "food-hd 2.webp" },
-    { id: "f4", name: "Bún chả", sub: "Chả nướng • Việt Nam", price: 50, quip: "Một pha gắp chả đi vào lòng người.", image: "food-hd 3.webp" }
+    { id: "f1", name: "Broken Rice", sub: "Pork Chop & Rice • Vietnam", price: 45, quip: "Ribs may break. This choice won't." },
+    { id: "f2", name: "Beef Pho", sub: "Rare & Flank • Vietnam", price: 55, quip: "Life can be bland. Pho broth is not." },
+    { id: "f3", name: "Banh Mi", sub: "Grilled Pork • Vietnam", price: 25, quip: "The melee weapon of office workers." },
+    { id: "f4", name: "Bun Cha", sub: "Grilled Pork Patties • Vietnam", price: 50, quip: "A legendary noodle dip." }
 ];
 
 const TARGET_LUNCH_PRICE = 50;

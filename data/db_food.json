@@ -1,183 +1,183 @@
 [
   {
-    "name": "Cơm tấm",
-    "sub": "Sườn bì chả • Việt Nam",
+    "name": "Broken Rice",
+    "sub": "Char siu pork & shredded pork • Vietnam",
     "price": 45,
     "image": 0,
-    "quip": "Sườn có thể gãy. Kèo này thì không."
+    "quip": "The pork can crack. This deal won't."
   },
   {
-    "name": "Phở bò",
-    "sub": "Tái nạm • Việt Nam",
+    "name": "Beef Pho",
+    "sub": "Rare beef • Vietnam",
     "price": 55,
     "image": 1,
-    "quip": "Đời có thể nhạt. Nước phở thì không."
+    "quip": "Life may be bland. Pho broth never is."
   },
   {
-    "name": "Bánh mì",
-    "sub": "Thịt nướng • Việt Nam",
+    "name": "Vietnamese Sandwich",
+    "sub": "Grilled meat • Vietnam",
     "price": 25,
     "image": 2,
-    "quip": "Vũ khí cận chiến của dân văn phòng."
+    "quip": "The office worker's close-range weapon."
   },
   {
-    "name": "Bún chả",
-    "sub": "Chả nướng • Việt Nam",
+    "name": "Bun Cha",
+    "sub": "Grilled pork patties • Vietnam",
     "price": 50,
     "image": 3,
-    "quip": "Một pha gắp chả đi vào lòng người."
+    "quip": "One pick of pork and it’s in your heart."
   },
   {
-    "name": "Sushi cá hồi",
-    "sub": "Cá hồi • Nhật Bản",
+    "name": "Salmon Sushi",
+    "sub": "Salmon • Japan",
     "price": 150,
     "image": 4,
-    "quip": "Legendary drop. Ví bạn vừa disconnect."
+    "quip": "Legendary drop. Your wallet just disconnected."
   },
   {
     "name": "Pizza",
-    "sub": "Phô mai • Ý",
+    "sub": "Cheese • Italy",
     "price": 100,
     "image": 5,
-    "quip": "Một miếng cho bạn. Phần còn lại cũng vậy."
+    "quip": "One slice for you. The rest is the same."
   },
   {
-    "name": "Gà rán",
-    "sub": "Giòn cay • Quốc tế",
+    "name": "Fried Chicken",
+    "sub": "Crispy & spicy • International",
     "price": 65,
     "image": 6,
     "quip": "Winner winner, chicken lunch."
   },
   {
-    "name": "Cơm chay",
-    "sub": "Đậu hũ & rau • Việt Nam",
+    "name": "Vegetarian Rice",
+    "sub": "Tofu & vegetables • Vietnam",
     "price": 35,
     "image": 7,
     "veg": true,
-    "quip": "Ăn chay nhưng chiến hết mình."
+    "quip": "Vegetarian, but fully committed."
   },
   {
     "name": "Bibimbap",
-    "sub": "Cơm trộn • Hàn Quốc",
+    "sub": "Mixed rice • Korea",
     "price": 85,
     "image": 8,
-    "quip": "Trộn cơm. Đừng trộn deadline."
+    "quip": "Mix the rice. Don’t mix deadlines."
   },
   {
-    "name": "Cơm gà Hội An",
-    "sub": "Món ăn trưa",
+    "name": "Hoi An Chicken Rice",
+    "sub": "Lunch dish",
     "price": 45,
     "image": 9,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Bún bò Huế",
-    "sub": "Món ăn trưa",
+    "name": "Hue Beef Noodle Soup",
+    "sub": "Lunch dish",
     "price": 50,
     "image": 10,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Hủ tiếu",
-    "sub": "Món ăn trưa",
+    "name": "Hu Tieu",
+    "sub": "Lunch dish",
     "price": 40,
     "image": 11,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Mì Quảng",
-    "sub": "Món ăn trưa",
+    "name": "Mi Quang",
+    "sub": "Lunch dish",
     "price": 45,
     "image": 12,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Bún thịt nướng",
-    "sub": "Món ăn trưa",
+    "name": "Grilled Pork Vermicelli",
+    "sub": "Lunch dish",
     "price": 40,
     "image": 13,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Bánh cuốn",
-    "sub": "Món ăn trưa",
+    "name": "Banh Cuon",
+    "sub": "Lunch dish",
     "price": 35,
     "image": 14,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Bún đậu mắm tôm",
-    "sub": "Món ăn trưa",
+    "name": "Bun Dau Mam Tom",
+    "sub": "Lunch dish",
     "price": 55,
     "image": 15,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Cơm rang dưa bò",
-    "sub": "Món ăn trưa",
+    "name": "Beef Fried Rice",
+    "sub": "Lunch dish",
     "price": 50,
     "image": 16,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Bò lúc lắc",
-    "sub": "Món ăn trưa",
+    "name": "Beef Pepper Steak",
+    "sub": "Lunch dish",
     "price": 85,
     "image": 17,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Bánh xèo",
-    "sub": "Món ăn trưa",
+    "name": "Banh Xeo",
+    "sub": "Lunch dish",
     "price": 50,
     "image": 18,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Bánh đa cua",
-    "sub": "Món ăn trưa",
+    "name": "Crab Noodle Soup",
+    "sub": "Lunch dish",
     "price": 45,
     "image": 19,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Mì xào bò",
-    "sub": "Món ăn trưa",
+    "name": "Beef Stir-Fried Noodles",
+    "sub": "Lunch dish",
     "price": 45,
     "image": 20,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Bún cá",
-    "sub": "Món ăn trưa",
+    "name": "Fish Noodle Soup",
+    "sub": "Lunch dish",
     "price": 40,
     "image": 21,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Gỏi cuốn",
-    "sub": "Món ăn trưa",
+    "name": "Fresh Spring Rolls",
+    "sub": "Lunch dish",
     "price": 35,
     "image": 22,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Cháo sườn",
-    "sub": "Món ăn trưa",
+    "name": "Pork Congee",
+    "sub": "Lunch dish",
     "price": 25,
     "image": 23,
     "veg": false,
@@ -185,7 +185,7 @@
   },
   {
     "name": "Ramen",
-    "sub": "Món ăn trưa",
+    "sub": "Lunch dish",
     "price": 100,
     "image": 24,
     "veg": false,
@@ -193,15 +193,15 @@
   },
   {
     "name": "Udon",
-    "sub": "Món ăn trưa",
+    "sub": "Lunch dish",
     "price": 85,
     "image": 25,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Cơm cà ri Nhật",
-    "sub": "Món ăn trưa",
+    "name": "Japanese Curry Rice",
+    "sub": "Lunch dish",
     "price": 90,
     "image": 26,
     "veg": false,
@@ -209,23 +209,23 @@
   },
   {
     "name": "Tteokbokki",
-    "sub": "Món ăn trưa",
+    "sub": "Lunch dish",
     "price": 65,
     "image": 27,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Burger bò",
-    "sub": "Món ăn trưa",
+    "name": "Beef Burger",
+    "sub": "Lunch dish",
     "price": 65,
     "image": 28,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Mì Ý bò bằm",
-    "sub": "Món ăn trưa",
+    "name": "Bolognese Pasta",
+    "sub": "Lunch dish",
     "price": 80,
     "image": 29,
     "veg": false,
@@ -233,385 +233,385 @@
   },
   {
     "name": "Pad Thai",
-    "sub": "Món ăn trưa",
+    "sub": "Lunch dish",
     "price": 75,
     "image": 30,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Mì Tom Yum",
-    "sub": "Món ăn trưa",
+    "name": "Tom Yum Noodles",
+    "sub": "Lunch dish",
     "price": 80,
     "image": 31,
     "veg": false,
     "quip": ""
   },
   {
-    "name": "Lẩu nấm chay",
-    "sub": "Chay",
+    "name": "Vegetarian Mushroom Hotpot",
+    "sub": "Vegetarian",
     "price": 120,
     "image": 32,
     "veg": true,
     "quip": ""
   },
   {
-    "name": "Mì nấm chay",
-    "sub": "Chay",
+    "name": "Vegetarian Mushroom Noodles",
+    "sub": "Vegetarian",
     "price": 40,
     "image": 33,
     "veg": true,
     "quip": ""
   },
   {
-    "name": "Bánh mì chay",
-    "sub": "Chay",
+    "name": "Vegetarian Banh Mi",
+    "sub": "Vegetarian",
     "price": 25,
     "image": 34,
     "veg": true,
     "quip": ""
   },
   {
-    "name": "Gỏi cuốn chay",
-    "sub": "Chay",
+    "name": "Vegetarian Spring Rolls",
+    "sub": "Vegetarian",
     "price": 35,
     "image": 35,
     "veg": true,
     "quip": ""
   },
   {
-    "name": "Cơm bình dân",
+    "name": "Budget Rice",
     "price": 40,
     "image": 36,
-    "sub": "Chọn món mặn, rau & canh",
+    "sub": "Choose savory dishes, vegetables & soup",
     "quip": ""
   },
   {
-    "name": "Cơm gà xối mỡ",
+    "name": "Crispy Chicken Rice",
     "price": 55,
     "image": 39,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Bún riêu",
+    "name": "Crab Noodle Soup",
     "price": 45,
     "image": 42,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Bánh canh cua",
+    "name": "Crab Noodle Soup",
     "price": 60,
     "image": 43,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Bò né",
+    "name": "Beef Omelet",
     "price": 75,
     "image": 44,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm gà teriyaki",
+    "name": "Teriyaki Chicken Rice",
     "price": 85,
     "image": 45,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm heo chiên xù",
+    "name": "Crispy Pork Rice",
     "price": 95,
     "image": 46,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm chiên hải sản",
+    "name": "Seafood Fried Rice",
     "price": 85,
     "image": 47,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Mì vịt tiềm",
+    "name": "Duck Noodle Soup",
     "price": 95,
     "image": 48,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
     "name": "Kimbap",
     "price": 70,
     "image": 49,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Mì trộn Hàn Quốc",
+    "name": "Korean Mixed Noodles",
     "price": 75,
     "image": 50,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Salad ức gà",
+    "name": "Chicken Salad",
     "price": 85,
     "image": 51,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Mì Ý sốt kem bacon",
+    "name": "Creamy Bacon Pasta",
     "price": 115,
     "image": 52,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Lasagna bò",
+    "name": "Beef Lasagna",
     "price": 125,
     "image": 53,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Burger bò phô mai & khoai tây",
+    "name": "Beef Burger with Cheese & Fries",
     "price": 120,
     "image": 54,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Pizza pepperoni",
+    "name": "Pepperoni Pizza",
     "price": 120,
     "image": 55,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm bò gyudon",
+    "name": "Beef Gyudon Rice",
     "price": 110,
     "image": 56,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm cá saba nướng",
+    "name": "Grilled Saba Fish Rice",
     "price": 110,
     "image": 57,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Mì soba Nhật",
+    "name": "Japanese Soba Noodles",
     "price": 110,
     "image": 58,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm cà ri Thái",
+    "name": "Thai Curry Rice",
     "price": 110,
     "image": 59,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Salad cá ngừ",
+    "name": "Tuna Salad",
     "price": 110,
     "image": 60,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Salad quinoa đậu gà",
+    "name": "Chicken Quinoa Salad",
     "price": 115,
     "image": 61,
     "veg": true,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Bò bít tết",
+    "name": "Beef Steak",
     "price": 180,
     "image": 62,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cá hồi áp chảo",
+    "name": "Pan-Seared Salmon",
     "price": 190,
     "image": 63,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm lươn Nhật",
+    "name": "Japanese Eel Rice",
     "price": 180,
     "image": 64,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm bò nướng Hàn",
+    "name": "Korean Beef Rice",
     "price": 150,
     "image": 65,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Cơm cá hồi teriyaki",
+    "name": "Teriyaki Salmon Rice",
     "price": 150,
     "image": 66,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Poke cá hồi",
+    "name": "Salmon Poke Bowl",
     "price": 160,
     "image": 67,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Sườn nướng BBQ",
+    "name": "BBQ Pork Ribs",
     "price": 230,
     "image": 68,
-    "sub": "Kèm cơm hoặc khoai tây • Phần một người",
+    "sub": "With rice or fries • One serving",
     "quip": ""
   },
   {
-    "name": "Pizza hải sản",
+    "name": "Seafood Pizza",
     "price": 160,
     "image": 69,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Mì Ý hải sản",
+    "name": "Seafood Pasta",
     "price": 160,
     "image": 70,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Lẩu bò cá nhân",
+    "name": "Personal Beef Hotpot",
     "price": 160,
     "image": 71,
-    "sub": "Phần ăn trưa / người",
+    "sub": "Lunch portion / person",
     "quip": ""
   },
   {
-    "name": "Phở gà",
+    "name": "Chicken Pho",
     "price": 55,
-    "sub": "Tô thường • Việt Nam",
+    "sub": "Regular bowl • Vietnam",
     "veg": false,
     "image": 72,
     "quip": ""
   },
   {
-    "name": "Phở cuốn",
+    "name": "Pho Rolls",
     "price": 70,
-    "sub": "Phần 10 cuốn • Việt Nam",
+    "sub": "10 rolls • Vietnam",
     "veg": false,
     "image": 73,
     "quip": ""
   },
   {
-    "name": "Bún mọc",
+    "name": "Bun Moc",
     "price": 45,
-    "sub": "Tô thường • Việt Nam",
+    "sub": "Regular bowl • Vietnam",
     "veg": false,
     "image": 74,
     "quip": ""
   },
   {
-    "name": "Bún măng vịt",
+    "name": "Duck Bamboo Shoot Noodles",
     "price": 60,
-    "sub": "Tô có thịt vịt • Việt Nam",
+    "sub": "Bowl with duck • Vietnam",
     "veg": false,
     "image": 75,
     "quip": ""
   },
   {
-    "name": "Bún bò Nam Bộ",
+    "name": "Southern Beef Bun",
     "price": 60,
-    "sub": "Bún trộn bò • Việt Nam",
+    "sub": "Beef noodle salad • Vietnam",
     "veg": false,
     "image": 76,
     "quip": ""
   },
   {
-    "name": "Bún mắm",
+    "name": "Bun Mam",
     "price": 65,
-    "sub": "Tô hải sản • Việt Nam",
+    "sub": "Seafood bowl • Vietnam",
     "veg": false,
     "image": 77,
     "quip": ""
   },
   {
-    "name": "Bún chay",
+    "name": "Vegetarian Bun",
     "price": 35,
-    "sub": "Đậu hũ & rau • Việt Nam",
+    "sub": "Tofu & vegetables • Vietnam",
     "veg": true,
     "image": 78,
     "quip": ""
   },
   {
-    "name": "Bánh canh giò heo",
+    "name": "Pork Bone Noodle Soup",
     "price": 50,
-    "sub": "Tô thường • Việt Nam",
+    "sub": "Regular bowl • Vietnam",
     "veg": false,
     "image": 79,
     "quip": ""
   },
   {
-    "name": "Miến gà",
+    "name": "Chicken Glass Noodles",
     "price": 55,
-    "sub": "Tô thường • Việt Nam",
+    "sub": "Regular bowl • Vietnam",
     "veg": false,
     "image": 80,
     "quip": ""
   },
   {
-    "name": "Miến lươn",
+    "name": "Eel Glass Noodles",
     "price": 65,
-    "sub": "Tô thường • Việt Nam",
+    "sub": "Regular bowl • Vietnam",
     "veg": false,
     "image": 81,
     "quip": ""
   },
   {
-    "name": "Cháo vịt",
+    "name": "Duck Congee",
     "price": 55,
-    "sub": "Phần có thịt vịt • Việt Nam",
+    "sub": "Duck portion • Vietnam",
     "veg": false,
     "image": 82,
     "quip": ""
   },
   {
-    "name": "Cháo lòng",
+    "name": "Offal Congee",
     "price": 40,
-    "sub": "Phần có lòng • Việt Nam",
+    "sub": "With organ meat • Vietnam",
     "veg": false,
     "image": 83,
     "quip": ""
   },
   {
-    "name": "Bánh hỏi heo quay",
+    "name": "Roast Pork Banh Hoi",
     "price": 50,
-    "sub": "Một phần • Việt Nam",
+    "sub": "One portion • Vietnam",
     "veg": false,
     "image": 84,
     "quip": ""
   },
   {
-    "name": "Nem nướng",
+    "name": "Grilled Nem",
     "price": 55,
-    "sub": "Phần cuốn đủ bữa • Việt Nam",
+    "sub": "Enough for a full meal • Vietnam",
     "veg": false,
     "image": 85,
     "quip": ""
@@ -619,159 +619,159 @@
   {
     "name": "Dimsum",
     "price": 130,
-    "sub": "Khoảng 3 xửng / người",
+    "sub": "About 3 trays / person",
     "veg": false,
     "image": 86,
     "quip": ""
   },
   {
-    "name": "Mì hoành thánh",
+    "name": "Wontons Noodles",
     "price": 60,
-    "sub": "Tô mì & hoành thánh",
+    "sub": "Noodles & wontons",
     "veg": false,
     "image": 87,
     "quip": ""
   },
   {
-    "name": "Mì bò Đài Loan",
+    "name": "Taiwan Beef Noodles",
     "price": 85,
-    "sub": "Bò hầm & mì • Đài Loan",
+    "sub": "Braised beef & noodles • Taiwan",
     "veg": false,
     "image": 88,
     "quip": ""
   },
   {
-    "name": "Mì xào giòn",
+    "name": "Crispy Noodles",
     "price": 70,
-    "sub": "Hải sản & rau củ",
+    "sub": "Seafood & vegetables",
     "veg": false,
     "image": 89,
     "quip": ""
   },
   {
-    "name": "Cơm niêu Singapore",
+    "name": "Singaporean Rice Pot",
     "price": 85,
-    "sub": "Một niêu / người",
+    "sub": "One pot / person",
     "veg": false,
     "image": 90,
     "quip": ""
   },
   {
-    "name": "Cơm gà Hải Nam",
+    "name": "Hainan Chicken Rice",
     "price": 75,
-    "sub": "Gà luộc & cơm thơm",
+    "sub": "Steamed chicken & fragrant rice",
     "veg": false,
     "image": 91,
     "quip": ""
   },
   {
-    "name": "Cơm gà trứng Nhật",
+    "name": "Japanese Chicken & Egg Rice",
     "price": 100,
-    "sub": "Oyakodon • Nhật Bản",
+    "sub": "Oyakodon • Japan",
     "veg": false,
     "image": 92,
     "quip": ""
   },
   {
-    "name": "Cơm tempura",
+    "name": "Tempura Rice",
     "price": 130,
-    "sub": "Tendon • Nhật Bản",
+    "sub": "Tendon • Japan",
     "veg": false,
     "image": 93,
     "quip": ""
   },
   {
-    "name": "Mì cay Hàn Quốc",
+    "name": "Korean Spicy Noodles",
     "price": 65,
-    "sub": "Một tô • Hàn Quốc",
+    "sub": "One bowl • Korea",
     "veg": false,
     "image": 94,
     "quip": ""
   },
   {
-    "name": "Mì tương đen",
+    "name": "Black Bean Noodles",
     "price": 70,
-    "sub": "Jajangmyeon • Hàn Quốc",
+    "sub": "Jajangmyeon • Korea",
     "veg": false,
     "image": 95,
     "quip": ""
   },
   {
-    "name": "Mì lạnh Hàn Quốc",
+    "name": "Korean Cold Noodles",
     "price": 95,
-    "sub": "Naengmyeon • Hàn Quốc",
+    "sub": "Naengmyeon • Korea",
     "veg": false,
     "image": 96,
     "quip": ""
   },
   {
-    "name": "Canh kimchi kèm cơm",
+    "name": "Kimchi Soup with Rice",
     "price": 85,
-    "sub": "Kimchi jjigae • Hàn Quốc",
+    "sub": "Kimchi jjigae • Korea",
     "veg": false,
     "image": 97,
     "quip": ""
   },
   {
-    "name": "Canh đậu hũ non kèm cơm",
+    "name": "Soft Tofu Soup with Rice",
     "price": 85,
-    "sub": "Sundubu jjigae • Hàn Quốc",
+    "sub": "Sundubu jjigae • Korea",
     "veg": false,
     "image": 98,
     "quip": ""
   },
   {
-    "name": "Gà phô mai Hàn Quốc",
+    "name": "Korean Cheese Chicken",
     "price": 120,
-    "sub": "Phần một người",
+    "sub": "One serving",
     "veg": false,
     "image": 99,
     "quip": ""
   },
   {
-    "name": "Cơm chiên kimchi",
+    "name": "Kimchi Fried Rice",
     "price": 65,
-    "sub": "Kimchi bokkeumbap • Hàn Quốc",
+    "sub": "Kimchi bokkeumbap • Korea",
     "veg": false,
     "image": 100,
     "quip": ""
   },
   {
-    "name": "Lẩu Thái một người",
+    "name": "Thai Hotpot for One",
     "price": 130,
-    "sub": "Kèm bún hoặc mì",
+    "sub": "With vermicelli or noodles",
     "veg": false,
     "image": 101,
     "quip": ""
   },
   {
-    "name": "Lẩu sukiyaki một người",
+    "name": "Sukiyaki Hotpot for One",
     "price": 220,
-    "sub": "Thịt, rau & mì • Nhật Bản",
+    "sub": "Meat, vegetables & noodles • Japan",
     "veg": false,
     "image": 102,
     "quip": ""
   },
   {
-    "name": "Cà ri Ấn Độ & naan",
+    "name": "Indian Curry & Naan",
     "price": 220,
-    "sub": "Cà ri gà kèm bánh naan",
+    "sub": "Chicken curry with naan",
     "veg": false,
     "image": 103,
     "quip": ""
   },
   {
-    "name": "Cơm biryani",
+    "name": "Biryani Rice",
     "price": 190,
-    "sub": "Cơm gia vị & gà • Ấn Độ",
+    "sub": "Spiced rice & chicken • India",
     "veg": false,
     "image": 104,
     "quip": ""
   },
   {
-    "name": "Bánh xèo Nhật",
+    "name": "Japanese Pancake",
     "price": 110,
-    "sub": "Okonomiyaki • Nhật Bản",
+    "sub": "Okonomiyaki • Japan",
     "veg": false,
     "image": 105,
     "quip": ""
@@ -779,21 +779,21 @@
   {
     "name": "Sandwich",
     "price": 80,
-    "sub": "Phần bánh kẹp đủ bữa",
+    "sub": "A hearty sandwich portion",
     "veg": false,
     "image": 106,
     "quip": ""
   },
   {
-    "name": "Bánh mì kebab",
+    "name": "Kebab Sandwich",
     "price": 35,
-    "sub": "Doner kebab • Thổ Nhĩ Kỳ",
+    "sub": "Doner kebab • Turkey",
     "veg": false,
     "image": 107,
     "quip": ""
   },
   {
-    "name": "Bánh cuộn gà",
+    "name": "Chicken Wrap",
     "price": 95,
     "sub": "Chicken wrap",
     "veg": false,
@@ -803,7 +803,7 @@
   {
     "name": "Burrito",
     "price": 150,
-    "sub": "Cuộn cơm, đậu & thịt • Mexico",
+    "sub": "Rice, beans & meat wrap • Mexico",
     "veg": false,
     "image": 109,
     "quip": ""
@@ -811,7 +811,7 @@
   {
     "name": "Taco",
     "price": 150,
-    "sub": "Phần 3 bánh • Mexico",
+    "sub": "3 tacos • Mexico",
     "veg": false,
     "image": 110,
     "quip": ""
@@ -819,55 +819,55 @@
   {
     "name": "Quesadilla",
     "price": 140,
-    "sub": "Phô mai & gà • Mexico",
+    "sub": "Cheese & chicken • Mexico",
     "veg": false,
     "image": 111,
     "quip": ""
   },
   {
-    "name": "Fish & chips",
+    "name": "Fish & Chips",
     "price": 170,
-    "sub": "Cá chiên & khoai tây",
+    "sub": "Fried fish & fries",
     "veg": false,
     "image": 112,
     "quip": ""
   },
   {
-    "name": "Gà nướng kèm khoai tây",
+    "name": "Grilled Chicken with Fries",
     "price": 140,
-    "sub": "Phần một người",
+    "sub": "One serving",
     "veg": false,
     "image": 113,
     "quip": ""
   },
   {
-    "name": "Mac & cheese",
+    "name": "Mac & Cheese",
     "price": 150,
-    "sub": "Nui phô mai • Phần chính",
+    "sub": "Pasta with cheese • Main portion",
     "veg": false,
     "image": 114,
     "quip": ""
   },
   {
-    "name": "Mì Ý pesto",
+    "name": "Pesto Pasta",
     "price": 170,
-    "sub": "Húng quế & gà • Ý",
+    "sub": "Basil & chicken • Italy",
     "veg": false,
     "image": 115,
     "quip": ""
   },
   {
-    "name": "Mì Ý cá hồi",
+    "name": "Salmon Cream Pasta",
     "price": 230,
-    "sub": "Sốt kem cá hồi • Ý",
+    "sub": "Creamy salmon sauce • Italy",
     "veg": false,
     "image": 116,
     "quip": ""
   },
   {
-    "name": "Cơm risotto",
+    "name": "Risotto Rice",
     "price": 260,
-    "sub": "Cơm Ý • Phần chính",
+    "sub": "Italian rice • Main portion",
     "veg": false,
     "image": 117,
     "quip": ""
@@ -875,101 +875,101 @@
   {
     "name": "Gnocchi",
     "price": 250,
-    "sub": "Bánh khoai tây kiểu Ý",
+    "sub": "Italian potato dumplings",
     "veg": false,
     "image": 118,
     "quip": ""
   },
   {
-    "name": "Falafel kèm pita",
+    "name": "Falafel with Pita",
     "price": 150,
-    "sub": "Đậu gà, rau & bánh pita",
+    "sub": "Chickpeas, vegetables & pita bread",
     "veg": true,
     "image": 119,
     "quip": ""
   },
   {
-    "name": "Nui xào bò",
+    "name": "Beef Stir-Fried Noodles",
     "price": 50,
-    "sub": "Nui, bò & rau • Việt Nam",
-    "quip": "Nui deadline lại. Ăn trước đã.",
+    "sub": "Noodles, beef & vegetables • Vietnam",
+    "quip": "The noodles are also past deadline. Eat now.",
     "image": 120
   },
   {
-    "name": "Cháo gà",
+    "name": "Chicken Congee",
     "price": 45,
-    "sub": "Gà xé & hành tiêu • Việt Nam",
-    "quip": "Một bát hồi máu giữa giờ làm.",
+    "sub": "Shredded chicken & scallions • Vietnam",
+    "quip": "One bowl to get through the workday.",
     "image": 121
   },
   {
-    "name": "Bò kho bánh mì",
+    "name": "Beef Stew with Bread",
     "price": 65,
-    "sub": "Bò hầm & bánh mì • Việt Nam",
-    "quip": "Chấm bánh mì. Đừng chấm công muộn.",
+    "sub": "Braised beef & bread • Vietnam",
+    "quip": "Dip the bread. Don't clock out late.",
     "image": 122
   },
   {
-    "name": "Xôi mặn",
+    "name": "Savory Sticky Rice",
     "price": 35,
-    "sub": "Gà, thịt hoặc chả • Việt Nam",
-    "quip": "Dẻo dai đến hết ca chiều.",
+    "sub": "Chicken, pork or pork sausage • Vietnam",
+    "quip": "Soft and chewy until the end of the afternoon shift.",
     "image": 123
   },
   {
-    "name": "Bánh mì chảo",
+    "name": "Skillet Bread",
     "price": 45,
-    "sub": "Trứng, pa tê & xúc xích • Việt Nam",
-    "quip": "Nóng hơn cả nhóm chat công ty.",
+    "sub": "Egg, pâté & sausages • Vietnam",
+    "quip": "Hotter than the company group chat.",
     "image": 124
   },
   {
-    "name": "Cơm xá xíu",
+    "name": "Char Siu Rice",
     "price": 55,
-    "sub": "Thịt xá xíu & cơm • Món Hoa",
-    "quip": "Xá xíu một chút. No cả buổi.",
+    "sub": "Char siu pork & rice • Chinese cuisine",
+    "quip": "A little char siu. Full all afternoon.",
     "image": 125
   },
   {
-    "name": "Cơm vịt quay",
+    "name": "Roast Duck Rice",
     "price": 75,
-    "sub": "Vịt quay & cơm • Món Hoa",
-    "quip": "Da giòn. Tinh thần cũng lên.",
+    "sub": "Roast duck & rice • Chinese cuisine",
+    "quip": "Crispy skin. Spirit rising too.",
     "image": 126
   },
   {
-    "name": "Mì xá xíu",
+    "name": "Char Siu Noodles",
     "price": 55,
-    "sub": "Mì trứng & thịt xá xíu • Món Hoa",
-    "quip": "Sợi mì dài hơn thời gian nghỉ trưa.",
+    "sub": "Egg noodles & char siu pork • Chinese cuisine",
+    "quip": "Noodles longer than your lunch break.",
     "image": 127
   },
   {
-    "name": "Mì udon xào",
+    "name": "Stir-Fried Udon",
     "price": 110,
-    "sub": "Hải sản & rau • Nhật Bản",
-    "quip": "Sợi to. Kèo thơm.",
+    "sub": "Seafood & vegetables • Japan",
+    "quip": "Thick noodles. Great flavor.",
     "image": 128
   },
   {
-    "name": "Burger gà & khoai tây",
+    "name": "Chicken Burger & Fries",
     "price": 80,
-    "sub": "Gà giòn & khoai tây • Quốc tế",
-    "quip": "Cắn một phát. Hết phân vân.",
+    "sub": "Crispy chicken & fries • International",
+    "quip": "One bite and all doubts disappear.",
     "image": 129
   },
   {
-    "name": "Mì Ý sốt cà chua & phô mai",
+    "name": "Tomato & Cheese Pasta",
     "price": 170,
-    "sub": "Cà chua & mascarpone • Ý",
-    "quip": "Sốt cà chua cứu một ngày nhạt nhẽo.",
+    "sub": "Tomato & mascarpone • Italy",
+    "quip": "Tomato sauce saves a bland day.",
     "image": 130
   },
   {
-    "name": "Miến xào",
+    "name": "Stir-Fried Glass Noodles",
     "price": 55,
-    "sub": "Thịt & rau • Việt Nam",
-    "quip": "Miến này không phải miếng mồi deadline.",
+    "sub": "Meat & vegetables • Vietnam",
+    "quip": "This noodle isn't a deadline snack.",
     "image": 131
   }
 ]
