@@ -96,10 +96,10 @@ export default class TimeInfoModule {
             const clockEl = this.container?.querySelector('#realtime-clock');
             const dateEl = this.container?.querySelector('#realtime-date');
 
-            if (clockEl) clockEl.textContent = now.toLocaleTimeString('vi-VN');
+            if (clockEl) clockEl.textContent = now.toLocaleTimeString('en-US');
             if (dateEl) {
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                dateEl.textContent = now.toLocaleDateString('vi-VN', options);
+                dateEl.textContent = now.toLocaleDateString('en-US', options);
             }
 
             // World Clocks
@@ -124,7 +124,7 @@ export default class TimeInfoModule {
         const timestamp = Math.floor(randomTime / 1000);
 
         const resEl = this.container.querySelector('#timestamp-result');
-        const readableDate = new Date(randomTime).toLocaleDateString('vi-VN');
+        const readableDate = new Date(randomTime).toLocaleDateString('en-US');
 
         if (resEl) {
             resEl.textContent = `${timestamp} (${readableDate})`;
