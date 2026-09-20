@@ -17,32 +17,31 @@ export default class ColorPaletteModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Color Palette Generator</h2>
-                <p class="module-desc">Tạo phối màu hài hòa ngẫu nhiên. Bấm 🔓 để khóa màu yêu thích, bấm vào mã màu để Copy.</p>
-                
+                <p class="module-desc">Create harmonious random color palettes. Click 🔓 to lock your favorite colors, or click a color code to copy it.</p>
+
                 <div class="palette-toolbar" style="display: flex; gap: 12px; margin: 20px 0; align-items: center; flex-wrap: wrap;">
                     <div class="form-group" style="margin: 0;">
                         <select id="palette-mode" class="form-input" style="padding: 8px 12px;">
-                            <option value="random">Ngẫu nhiên tự do (Random)</option>
-                            <option value="analogous">Tương đồng (Analogous)</option>
-                            <option value="monochromatic">Đơn sắc (Monochromatic)</option>
-                            <option value="complementary">Bổ túc trực tiếp (Complementary)</option>
-                            <option value="triadic">Bổ túc tam giác (Triadic)</option>
+                            <option value="random">Random</option>
+                            <option value="analogous">Analogous</option>
+                            <option value="monochromatic">Monochromatic</option>
+                            <option value="complementary">Complementary</option>
+                            <option value="triadic">Triadic</option>
                         </select>
                     </div>
 
                     <div class="form-group" style="margin: 0; display: flex; align-items: center; gap: 8px;">
-                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em;">Số màu:</label>
+                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em;">Colors:</label>
                         <select id="palette-count" class="form-input" style="padding: 8px;">
-                            <option value="4">4 màu</option>
-                            <option value="5" selected>5 màu</option>
-                            <option value="6">6 màu</option>
+                            <option value="4">4 colors</option>
+                            <option value="5" selected>5 colors</option>
+                            <option value="6">6 colors</option>
                         </select>
                     </div>
 
-                    <button id="btn-gen-palette" class="btn-primary" style="margin-left: auto;">🎨 Tạo Bảng Màu Baru (Space)</button>
+                    <button id="btn-gen-palette" class="btn-primary" style="margin-left: auto;">🎨 Generate Palette (Space)</button>
                 </div>
 
-                <!-- ĐÃ SỬA: Đổi grid sang flex để không bị nhảy dòng -->
                 <div id="palette-cards-container" style="display: flex; gap: 12px; height: 360px; margin-top: 15px; width: 100%;">
                 </div>
             </div>
@@ -149,8 +148,7 @@ export default class ColorPaletteModule {
         this.colors.forEach((col) => {
             const card = document.createElement('div');
             card.className = 'color-card';
-            
-            // ĐÃ SỬA: Thêm flex: 1 và min-width: 0 để 6 màu ép vừa đúng 1 hàng
+
             card.style.cssText = `
                 flex: 1;
                 min-width: 0;
@@ -197,7 +195,7 @@ export default class ColorPaletteModule {
                         backdrop-filter: blur(4px);
                         white-space: nowrap;
                     ">${col.hex.toUpperCase()}</div>
-                    <div style="font-size: 0.75em; color: ${textColor}; opacity: 0.8; margin-top: 4px;">Bấm để Copy</div>
+                    <div style="font-size: 0.75em; color: ${textColor}; opacity: 0.8; margin-top: 4px;">Click to Copy</div>
                 </div>
             `;
 
@@ -210,7 +208,7 @@ export default class ColorPaletteModule {
             card.querySelector('.hex-text').addEventListener('click', () => {
                 navigator.clipboard.writeText(col.hex.toUpperCase());
                 this.playCopySFX();
-                
+
                 const hexEl = card.querySelector('.hex-text');
                 const oldText = hexEl.textContent;
                 hexEl.textContent = 'COPIED!';

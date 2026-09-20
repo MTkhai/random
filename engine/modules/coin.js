@@ -19,8 +19,8 @@ export default class CoinModule {
                     </div>
                 </div>
                 <div class="coin-shadow" id="coin-shadow"></div>
-                <div class="coin-result-display" id="coin-result">Nhấn để Tung Xu!</div>
-                <button class="btn-primary" id="btn-flip-coin" style="max-width: 200px;">🪙 Tung Xu</button>
+                <div class="coin-result-display" id="coin-result">Click to Flip Coin!</div>
+                <button class="btn-primary" id="btn-flip-coin" style="max-width: 200px;">🪙 Flip Coin</button>
             </div>
         `;
         this.bindEvents();
@@ -38,17 +38,17 @@ export default class CoinModule {
         if (this.isFlipping) return;
         this.isFlipping = true;
 
-        sfxDice.playTick(); // Âm thanh búng xu
+        sfxDice.playTick(); // Coin flipping sound
 
         const coin = this.container.querySelector('#coin-element');
         const resultDisplay = this.container.querySelector('#coin-result');
         const btnFlip = this.container.querySelector('#btn-flip-coin');
 
         btnFlip.disabled = true;
-        resultDisplay.textContent = 'Đang tung...';
+        resultDisplay.textContent = 'Flipping...';
 
         const isHeads = Math.random() < 0.5;
-        const resultText = isHeads ? 'Heads (Mặt Ngửa)' : 'Tails (Mặt Sấp)';
+        const resultText = isHeads ? 'Heads (Heads Side)' : 'Tails (Tails Side)';
 
         const extraRounds = 10;
         const targetAngle = isHeads ? 0 : 180;

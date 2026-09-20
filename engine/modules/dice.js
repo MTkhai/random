@@ -20,15 +20,15 @@ export default class DiceModule {
         this.container.innerHTML = `
             <div class="dice-workspace">
                 <div class="dice-controls">
-                    <label style="color: var(--text-muted, #aaa);">Số lượng xúc xắc:</label>
+                    <label style="color: var(--text-muted, #aaa);">Number of dice:</label>
                     <select id="dice-count" class="dice-count-select">
-                        <option value="1">1 Xúc xắc</option>
-                        <option value="2">2 Xúc xắc</option>
-                        <option value="3">3 Xúc xắc</option>
+                        <option value="1">1 Die</option>
+                        <option value="2">2 Dice</option>
+                        <option value="3">3 Dice</option>
                     </select>
                 </div>
                 <div class="dice-container" id="dice-holder"></div>
-                <button class="btn-primary" id="btn-roll-dice" style="max-width: 220px;">🎲 Gieo Xúc Xắc</button>
+                <button class="btn-primary" id="btn-roll-dice" style="max-width: 220px;">🎲 Roll Dice</button>
             </div>
         `;
         this.updateDiceCount(1);

@@ -11,34 +11,34 @@ export default class NumberModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Number Generator</h2>
-                <p class="module-desc">Tạo số ngẫu nhiên trong khoảng tùy chỉnh với các tùy chọn nâng cao.</p>
+                <p class="module-desc">Generate random numbers within a custom range with advanced options.</p>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="num-min">Giá trị tối thiểu (Min)</label>
+                        <label for="num-min">Minimum value (Min)</label>
                         <input type="number" id="num-min" value="1" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label for="num-max">Giá trị tối đa (Max)</label>
+                        <label for="num-max">Maximum value (Max)</label>
                         <input type="number" id="num-max" value="100" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label for="num-count">Số lượng kết quả</label>
+                        <label for="num-count">Number of results</label>
                         <input type="number" id="num-count" value="1" min="1" max="100" class="form-input">
                     </div>
                 </div>
                 <div class="form-options">
                     <label class="checkbox-label">
                         <input type="checkbox" id="num-unique">
-                        <span>Không trùng lặp (Unique)</span>
+                        <span>No duplicates (Unique)</span>
                     </label>
                     <label class="checkbox-label">
                         <input type="checkbox" id="num-sort">
-                        <span>Sắp xếp tăng dần</span>
+                        <span>Sort ascending</span>
                     </label>
                 </div>
-                <button id="btn-gen-number" class="btn-primary">🚀 Tạo Số Ngẫu Nhiên</button>
+                <button id="btn-gen-number" class="btn-primary">🚀 Generate Random Numbers</button>
                 <div id="num-result-box" class="result-box hidden">
-                    <span class="result-label">Kết quả:</span>
+                    <span class="result-label">Result:</span>
                     <div id="num-result-value" class="result-value">--</div>
                 </div>
             </div>
@@ -59,14 +59,14 @@ export default class NumberModule {
         const isSort = this.container.querySelector('#num-sort').checked;
 
         if (min >= max) {
-            alert('Giá trị Min phải nhỏ hơn Max!');
+            alert('Min must be less than Max!');
             return;
         }
 
         count = Math.max(1, count);
 
         if (isUnique && count > (max - min + 1)) {
-            alert('Khoảng giá trị không đủ để tạo các số không trùng lặp!');
+            alert('The value range is not large enough to generate unique numbers!');
             return;
         }
 
@@ -86,7 +86,7 @@ export default class NumberModule {
             }
             resultValue.textContent = tempResults.join(', ');
 
-            sfxNumber.playTick(); // Âm nhảy số
+            sfxNumber.playTick(); // Number jump sound
             ticks++;
 
             if (ticks >= maxTicks) {
@@ -112,7 +112,7 @@ export default class NumberModule {
                 resultValue.textContent = resultStr;
                 btnGen.disabled = false;
 
-                sfxNumber.playResult(); // Âm kết quả
+                sfxNumber.playResult(); // Result sound
                 historyManager.addLog('Number Generator', resultStr);
             }
         }, 60);

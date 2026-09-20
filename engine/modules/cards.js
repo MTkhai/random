@@ -22,41 +22,41 @@ export default class CardDrawerModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Card Drawer</h2>
-                <p class="module-desc">Rút ngẫu nhiên các lá bài từ bộ bài Tây, Tarot hoặc bộ bài số tùy chỉnh.</p>
+                <p class="module-desc">Draw random cards from a standard deck, Tarot deck, or custom number deck.</p>
 
                 <div class="card-toolbar" style="display: flex; gap: 16px; margin: 20px 0; align-items: center; flex-wrap: wrap;">
                     <div class="form-group" style="margin: 0;">
-                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em; margin-right: 6px;">Loại bộ bài:</label>
+                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em; margin-right: 6px;">Deck type:</label>
                         <select id="deck-type" class="form-input" style="padding: 8px 12px;">
-                            <option value="poker52" selected>Bài Tây chuẩn (52 lá)</option>
-                            <option value="tarot78">Bộ bài Tarot (78 lá)</option>
-                            <option value="custom">Bộ bài số tùy chỉnh</option>
+                            <option value="poker52" selected>Standard 52-card deck</option>
+                            <option value="tarot78">Tarot deck (78 cards)</option>
+                            <option value="custom">Custom number deck</option>
                         </select>
                     </div>
 
                     <div class="form-group" id="custom-deck-group" style="margin: 0; display: none; align-items: center; gap: 6px;">
-                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em;">Tổng số lá:</label>
+                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em;">Total cards:</label>
                         <input type="number" id="custom-deck-size" class="form-input" value="45" min="1" max="500" style="width: 70px; padding: 6px 10px;">
                     </div>
 
                     <div class="form-group" style="margin: 0;">
-                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em; margin-right: 6px;">Số lá rút:</label>
+                        <label style="color: var(--text-muted, #aaa); font-size: 0.9em; margin-right: 6px;">Cards to draw:</label>
                         <select id="card-count" class="form-input" style="padding: 8px 12px;">
-                            <option value="1">1 lá</option>
-                            <option value="2">2 lá</option>
-                            <option value="3">3 lá</option>
-                            <option value="4" selected>4 lá</option>
-                            <option value="5">5 lá</option>
-                            <option value="6">6 lá</option>
+                            <option value="1">1 card</option>
+                            <option value="2">2 cards</option>
+                            <option value="3">3 cards</option>
+                            <option value="4" selected>4 cards</option>
+                            <option value="5">5 cards</option>
+                            <option value="6">6 cards</option>
                         </select>
                     </div>
 
                     <div class="form-group" style="margin: 0; display: flex; align-items: center; gap: 6px;">
                         <input type="checkbox" id="card-allow-duplicate" style="cursor: pointer;">
-                        <label for="card-allow-duplicate" style="color: var(--text-muted, #aaa); font-size: 0.9em; cursor: pointer;">Cho phép rút trùng lá</label>
+                        <label for="card-allow-duplicate" style="color: var(--text-muted, #aaa); font-size: 0.9em; cursor: pointer;">Allow duplicate draws</label>
                     </div>
 
-                    <button id="btn-draw-cards" class="btn-primary" style="margin-left: auto; padding: 10px 20px;">🎴 Rút Bài</button>
+                    <button id="btn-draw-cards" class="btn-primary" style="margin-left: auto; padding: 10px 20px;">🎴 Draw Cards</button>
                 </div>
 
                 <div id="cards-display-container" style="
@@ -68,7 +68,7 @@ export default class CardDrawerModule {
                     margin-top: 20px; 
                     flex-wrap: wrap;
                 ">
-                    <div style="color: var(--text-muted, #888); font-style: italic;">Bấm "Rút Bài" để bắt đầu...</div>
+                    <div style="color: var(--text-muted, #888); font-style: italic;">Click "Draw Cards" to begin...</div>
                 </div>
             </div>
         `;

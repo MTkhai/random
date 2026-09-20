@@ -15,53 +15,53 @@ export default class GroupModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Group Generator</h2>
-                <p class="module-desc">Chia nhóm ngẫu nhiên theo số lượng, kích thước hoặc ràng buộc trùng lặp tên.</p>
+                <p class="module-desc">Randomly split names into groups by count, size, or duplicate-name constraints.</p>
 
                 <div class="group-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px;">
                     <!-- INPUT PANEL -->
                     <div class="input-panel">
                         <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; color: var(--text-muted, #aaa); font-size: 0.9em;">Danh sách tên (mỗi tên 1 dòng):</label>
-                            <textarea id="group-names-input" class="form-input" rows="10" placeholder="An&#10;Bình&#10;Cường&#10;Dũng&#10;An&#10;Bình" style="width: 100%; resize: vertical; padding: 12px; font-family: inherit;"></textarea>
+                            <label style="display: block; margin-bottom: 8px; color: var(--text-muted, #aaa); font-size: 0.9em;">Name list (one name per line):</label>
+                            <textarea id="group-names-input" class="form-input" rows="10" placeholder="Alice&#10;Bob&#10;Charlie&#10;David&#10;Alice&#10;Bob" style="width: 100%; resize: vertical; padding: 12px; font-family: inherit;"></textarea>
                         </div>
 
                         <!-- MODES -->
                         <div class="form-group" style="margin-top: 16px;">
-                            <label style="display: block; margin-bottom: 8px; color: var(--text-muted, #aaa); font-size: 0.9em;">Chế độ chia nhóm:</label>
+                            <label style="display: block; margin-bottom: 8px; color: var(--text-muted, #aaa); font-size: 0.9em;">Group split mode:</label>
                             <select id="group-mode" class="form-input" style="width: 100%; padding: 10px;">
-                                <option value="by_groups">Theo số lượng nhóm mong muốn</option>
-                                <option value="by_size">Theo số người tối đa / nhóm</option>
-                                <option value="unique_names">Mỗi nhóm KHÔNG trùng tên nhau</option>
-                                <option value="same_names">Tên giống nhau PHẢI cùng 1 nhóm</option>
+                                <option value="by_groups">By desired number of groups</option>
+                                <option value="by_size">By maximum people per group</option>
+                                <option value="unique_names">Each group has no duplicate names</option>
+                                <option value="same_names">Same names must stay in the same group</option>
                             </select>
                         </div>
 
                         <!-- DYNAMIC CONFIG -->
                         <div id="config-target-container" class="form-group" style="margin-top: 16px;">
-                            <label id="config-target-label" style="display: block; margin-bottom: 8px; color: var(--text-muted, #aaa); font-size: 0.9em;">Số lượng nhóm:</label>
+                            <label id="config-target-label" style="display: block; margin-bottom: 8px; color: var(--text-muted, #aaa); font-size: 0.9em;">Number of groups:</label>
                             <input type="number" id="group-target-val" class="form-input" value="3" min="1" max="100" style="width: 100%; padding: 8px 12px;">
                         </div>
 
-                        <!-- REMAINDER CONFIG (Chỉ hiện khi chia theo số nhóm) -->
+                        <!-- REMAINDER CONFIG (Shown only when splitting by group count) -->
                         <div id="config-remainder-container" class="form-group" style="margin-top: 16px;">
-                            <label style="display: block; margin-bottom: 8px; color: var(--text-muted, #aaa); font-size: 0.9em;">Xử lý phần dư:</label>
+                            <label style="display: block; margin-bottom: 8px; color: var(--text-muted, #aaa); font-size: 0.9em;">Remainder handling:</label>
                             <select id="group-remainder-mode" class="form-input" style="width: 100%; padding: 10px;">
-                                <option value="distribute">Rải đều vào các nhóm (Ví dụ: 4, 3, 3)</option>
-                                <option value="extra">Tạo thêm 1 nhóm phụ cho phần dư</option>
+                                <option value="distribute">Distribute evenly across groups (e.g. 4, 3, 3)</option>
+                                <option value="extra">Create an extra group for the remainder</option>
                             </select>
                         </div>
 
-                        <button id="btn-split-groups" class="btn-primary" style="width: 100%; padding: 12px; margin-top: 20px; font-size: 1rem;">🎲 Chia Nhóm</button>
+                        <button id="btn-split-groups" class="btn-primary" style="width: 100%; padding: 12px; margin-top: 20px; font-size: 1rem;">🎲 Split Groups</button>
                     </div>
 
                     <!-- OUTPUT PANEL -->
                     <div class="output-panel" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; display: flex; flex-direction: column;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 style="font-size: 1.1rem; color: #10b981; margin: 0;">Kết Quả Chia Nhóm</h3>
-                            <button id="btn-copy-groups" class="btn-secondary" style="padding: 6px 12px; font-size: 0.85em; display: none;">📋 Copy Kết Quả</button>
+                            <h3 style="font-size: 1.1rem; color: #10b981; margin: 0;">Group Split Result</h3>
+                            <button id="btn-copy-groups" class="btn-secondary" style="padding: 6px 12px; font-size: 0.85em; display: none;">📋 Copy Result</button>
                         </div>
                         <div id="group-results" style="flex: 1; overflow-y: auto; max-height: 480px; display: flex; flex-direction: column; gap: 12px;">
-                            <div style="color: var(--text-muted, #888); text-align: center; margin-top: 40px; font-style: italic;">Nhập danh sách và nhấn "Chia Nhóm" để xem kết quả.</div>
+                            <div style="color: var(--text-muted, #888); text-align: center; margin-top: 40px; font-style: italic;">Enter a list and click "Split Groups" to see the result.</div>
                         </div>
                     </div>
                 </div>
@@ -93,8 +93,8 @@ export default class GroupModule {
 
             if (text) {
                 navigator.clipboard.writeText(text.trim());
-                btnCopy.textContent = '✅ Đã Copy!';
-                setTimeout(() => btnCopy.textContent = '📋 Copy Kết Quả', 1200);
+                btnCopy.textContent = '✅ Copied!';
+                setTimeout(() => btnCopy.textContent = '📋 Copy Result', 1200);
             }
         });
     }
@@ -107,18 +107,18 @@ export default class GroupModule {
 
         if (mode === 'by_groups') {
             targetContainer.style.display = 'block';
-            targetLabel.textContent = 'Số lượng nhóm mong muốn:';
+            targetLabel.textContent = 'Desired number of groups:';
             remainderContainer.style.display = 'block';
         } else if (mode === 'by_size') {
             targetContainer.style.display = 'block';
-            targetLabel.textContent = 'Số người tối đa / nhóm:';
+            targetLabel.textContent = 'Maximum people per group:';
             remainderContainer.style.display = 'none';
         } else if (mode === 'unique_names') {
             targetContainer.style.display = 'none';
             remainderContainer.style.display = 'none';
         } else if (mode === 'same_names') {
             targetContainer.style.display = 'block';
-            targetLabel.textContent = 'Số lượng nhóm mong muốn:';
+            targetLabel.textContent = 'Desired number of groups:';
             remainderContainer.style.display = 'none';
         }
     }
@@ -128,7 +128,7 @@ export default class GroupModule {
         const names = rawInput.split('\n').map(n => n.trim()).filter(n => n.length > 0);
 
         if (names.length === 0) {
-            alert('Vui lòng nhập ít nhất 1 tên!');
+            alert('Please enter at least 1 name!');
             return;
         }
 
@@ -138,7 +138,7 @@ export default class GroupModule {
 
         let groups = [];
 
-        // ROUTING THUẬT TOÁN ĐỘC LẬP
+        // INDEPENDENT ALGORITHM ROUTING
         switch (mode) {
             case 'by_groups':
                 groups = this.splitByGroupCount(names, targetVal, remainderMode);
@@ -156,10 +156,10 @@ export default class GroupModule {
 
         this.renderResults(groups);
         this.playSuccessSFX();
-        historyManager.addLog('Group Generator', `Chia ${names.length} người thành ${groups.length} nhóm (${mode})`);
+        historyManager.addLog('Group Generator', `Split ${names.length} people into ${groups.length} groups (${mode})`);
     }
 
-    // 1. THUẬT TOÁN 1: BY GROUP COUNT
+    // 1. ALGORITHM 1: BY GROUP COUNT
     splitByGroupCount(names, groupCount, remainderMode) {
         const shuffled = [...names].sort(() => Math.random() - 0.5);
         const total = shuffled.length;
@@ -172,7 +172,7 @@ export default class GroupModule {
             });
             return groups;
         } else {
-            // 'extra' mode: Tạo các nhóm chính có size cơ sở, phần dư gom vào 1 nhóm phụ riêng
+            // 'extra' mode: create main groups with a base size, and place the remainder in a separate extra group
             const baseSize = Math.floor(total / actualCount);
             const groups = [];
             let currentIdx = 0;
@@ -182,7 +182,7 @@ export default class GroupModule {
                 currentIdx += baseSize;
             }
 
-            // Phần dư dồn vào nhóm phụ thứ N+1
+            // Put the remainder into a extra group N+1
             if (currentIdx < total) {
                 groups.push(shuffled.slice(currentIdx));
             }
@@ -191,7 +191,7 @@ export default class GroupModule {
         }
     }
 
-    // 2. THUẬT TOÁN 2: BY GROUP SIZE
+    // 2. ALGORITHM 2: BY GROUP SIZE
     splitByGroupSize(names, maxSize) {
         const shuffled = [...names].sort(() => Math.random() - 0.5);
         const validSize = Math.max(1, maxSize);
@@ -204,29 +204,29 @@ export default class GroupModule {
         return groups;
     }
 
-    // 3. THUẬT TOÁN 3: UNIQUE NAMES (Không trùng tên trong cùng 1 nhóm)
+    // 3. ALGORITHM 3: UNIQUE NAMES (No duplicate names in the same group)
     splitUniqueNames(names) {
-        // Tầm tần suất xuất hiện của từng tên
+        // Frequency of each name
         const freqMap = {};
         names.forEach(name => {
             freqMap[name] = (freqMap[name] || 0) + 1;
         });
 
-        // Số nhóm bắt buộc = Số lần xuất hiện nhiều nhất của 1 tên
+        // Number of groups required = highest frequency of any name
         const maxFreq = Math.max(...Object.values(freqMap));
         const groups = Array.from({ length: maxFreq }, () => []);
 
-        // Nhóm các tên theo tên trùng nhau
+        // Group names by duplicates
         const buckets = {};
         names.forEach(name => {
             if (!buckets[name]) buckets[name] = [];
             buckets[name].push(name);
         });
 
-        // Với mỗi loại tên, rải ngẫu nhiên vào các group chưa chứa tên đó
+        // For each name type, randomly assign to groups that do not already contain it
         Object.keys(buckets).forEach(nameKey => {
             const count = buckets[nameKey].length;
-            // Chọn ngẫu nhiên 'count' vị trí group trong tổng số 'maxFreq' group
+            // Randomly choose 'count' group positions from a total of 'maxFreq' groups
             const availableGroupIndices = Array.from({ length: maxFreq }, (_, i) => i)
                 .sort(() => Math.random() - 0.5)
                 .slice(0, count);
@@ -239,7 +239,7 @@ export default class GroupModule {
         return groups;
     }
 
-    // 4. THUẬT TOÁN 4: SAME NAMES (Tên giống nhau BẮT BUỘC nằm cùng 1 nhóm)
+    // 4. ALGORITHM 4: SAME NAMES (Duplicate names must stay in the same group)
     splitSameNames(names, targetGroupCount) {
         const buckets = {};
         names.forEach(name => {
@@ -247,19 +247,19 @@ export default class GroupModule {
             buckets[name].push(name);
         });
 
-        // Chuyển thành danh sách các block [ { name: 'A', items: ['A', 'A'] }, ... ]
+        // Convert into block list: [ { name: 'A', items: ['A', 'A'] }, ... ]
         const blockList = Object.keys(buckets).map(k => ({
             name: k,
             items: buckets[k]
         }));
 
-        // Sắp xếp các block có kích thước lớn nhất lên trước (Heuristic Greedy)
+        // Sort blocks with largest size first (Greedy heuristic)
         blockList.sort((a, b) => b.items.length - a.items.length);
 
         const actualGroupCount = Math.max(1, Math.min(targetGroupCount, blockList.length));
         const groups = Array.from({ length: actualGroupCount }, () => []);
 
-        // Phân phối từng block vào nhóm có TỔNG SỐ NGƯỜI ít nhất hiện tại
+        // Distribute each block to the group with the lowest total members currently
         blockList.forEach(block => {
             let minGroup = groups[0];
             for (let g of groups) {
@@ -293,7 +293,7 @@ export default class GroupModule {
 
             box.innerHTML = `
                 <div class="group-title" style="font-weight: 600; color: #10b981; margin-bottom: 8px; font-size: 0.95em;">
-                    Nhóm ${idx + 1} (${group.length} thành viên)
+                    Group ${idx + 1} (${group.length} members)
                 </div>
                 <div class="group-members" style="display: flex; flex-wrap: wrap; gap: 6px;">
                     ${group.map(m => `
