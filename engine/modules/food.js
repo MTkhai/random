@@ -149,12 +149,12 @@ export default class FoodPickerModule {
         const btnOpen = this.container.querySelector('#btn-open-case');
 
         try {
-            const res = await fetch('/data/db_food.json');
+            const res = await fetch('../data/db_food.json');
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
             this.foods = await res.json();
             
             if (statusEl) {
-                statusEl.textContent = `✅ Loaded ${this.foods.length} dishes from /data/db_food.json`;
+                statusEl.textContent = `✅ Loaded ${this.foods.length} dishes`;
                 statusEl.style.color = '#10b981';
             }
         } catch (err) {
