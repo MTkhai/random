@@ -5,7 +5,7 @@
 import { soundMaster } from '../utils/sound_master.js';
 import { historyManager } from '../history.js';
 
-const IMG_BASE_PATH = './data/img/';
+// const IMG_BASE_PATH = './data/img/';
 
 const FALLBACK_FOODS = [
     { id: "f1", name: "Cơm tấm", sub: "Sườn bì chả • Việt Nam", price: 45, quip: "Sườn có thể gãy. Kèo này thì không." },
@@ -201,8 +201,7 @@ export default class FoodPickerModule {
                             justify-content: center;
                             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
                         ">
-                            <img id="food-img" src="${IMG_BASE_PATH}${DEFAULT_IMG}" alt="Food Icon" style="width: 100%; height: 100%; object-fit: cover;" />
-                        </div>
+                        
 
                         <div id="food-title" style="font-size: 1.6rem; font-weight: bold; color: #fff; margin-bottom: 4px;">? ? ?</div>
                         <div id="food-sub" style="font-size: 0.85rem; color: #aaa; margin-bottom: 8px;">Press the button to open the lunch crate</div>
@@ -333,7 +332,7 @@ export default class FoodPickerModule {
                 titleEl.textContent = randomSample.name;
                 subEl.textContent = randomSample.sub || '';
                 
-                const sampleImg = randomSample.image || randomSample.img || DEFAULT_IMG;
+                // const sampleImg = randomSample.image || randomSample.img || DEFAULT_IMG;
                 imgEl.src = `${IMG_BASE_PATH}${sampleImg}`;
 
                 this.playTickSFX(idx / TICK_SECONDS.length);
@@ -347,8 +346,8 @@ export default class FoodPickerModule {
             priceEl.textContent = `💵 ${finalPrice}.000 VND`;
             quipEl.textContent = selectedFood.quip ? `"${selectedFood.quip}"` : '';
             
-            const finalImg = selectedFood.image || selectedFood.img || DEFAULT_IMG;
-            imgEl.src = `${IMG_BASE_PATH}${finalImg}`;
+            // const finalImg = selectedFood.image || selectedFood.img || DEFAULT_IMG;
+            // imgEl.src = `${IMG_BASE_PATH}${finalImg}`;
 
             badgeEl.textContent = `★ ${rarity.label}`;
             badgeEl.style.color = rarity.color;
