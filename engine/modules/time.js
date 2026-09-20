@@ -7,7 +7,7 @@ import { historyManager } from '../history.js';
 
 // Danh sách múi giờ phổ biến trên toàn thế giới
 const TIMEZONE_OPTIONS = [
-    { label: "UTC (Coordinated Universal Time)", zone: "UTC" },
+    { label: "UTC (World Coordinated Universal Time)", zone: "UTC" },
     { label: "New York (EDT/EST)", zone: "America/New_York" },
     { label: "Beijing / Shanghai (CST)", zone: "Asia/Shanghai" },
     { label: "London (GMT/BST)", zone: "Europe/London" },
