@@ -332,7 +332,7 @@ export default class FoodPickerModule {
                 titleEl.textContent = randomSample.name;
                 subEl.textContent = randomSample.sub || '';
                 
-                // const sampleImg = randomSample.image || randomSample.img || DEFAULT_IMG;
+                const sampleImg = randomSample.image || randomSample.img || DEFAULT_IMG;
                 imgEl.src = `${IMG_BASE_PATH}${sampleImg}`;
 
                 this.playTickSFX(idx / TICK_SECONDS.length);
@@ -346,8 +346,8 @@ export default class FoodPickerModule {
             priceEl.textContent = `💵 ${finalPrice}.000 VND`;
             quipEl.textContent = selectedFood.quip ? `"${selectedFood.quip}"` : '';
             
-            // const finalImg = selectedFood.image || selectedFood.img || DEFAULT_IMG;
-            // imgEl.src = `${IMG_BASE_PATH}${finalImg}`;
+            const finalImg = selectedFood.image || selectedFood.img || DEFAULT_IMG;
+            imgEl.src = `${IMG_BASE_PATH}${finalImg}`;
 
             badgeEl.textContent = `★ ${rarity.label}`;
             badgeEl.style.color = rarity.color;
