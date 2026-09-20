@@ -5,13 +5,14 @@
 import { soundMaster } from '../utils/sound_master.js';
 import { historyManager } from '../history.js';
 
-// const IMG_BASE_PATH = './data/img/';
+const IMG_BASE_PATH = './data/img/';
+const DEFAULT_IMG = 'food-hd 0.webp';
 
 const FALLBACK_FOODS = [
-    { id: "f1", name: "Cơm tấm", sub: "Sườn bì chả • Việt Nam", price: 45, quip: "Sườn có thể gãy. Kèo này thì không." },
-    { id: "f2", name: "Phở bò", sub: "Tái nạm • Việt Nam", price: 55, quip: "Đời có thể nhạt. Nước phở thì không." },
-    { id: "f3", name: "Bánh mì", sub: "Thịt nướng • Việt Nam", price: 25, quip: "Vũ khí cận chiến của dân văn phòng." },
-    { id: "f4", name: "Bún chả", sub: "Chả nướng • Việt Nam", price: 50, quip: "Một pha gắp chả đi vào lòng người." }
+    { id: "f1", name: "Cơm tấm", sub: "Sườn bì chả • Việt Nam", price: 45, quip: "Sườn có thể gãy. Kèo này thì không.", image: "food-hd 0.webp" },
+    { id: "f2", name: "Phở bò", sub: "Tái nạm • Việt Nam", price: 55, quip: "Đời có thể nhạt. Nước phở thì không.", image: "food-hd 1.webp" },
+    { id: "f3", name: "Bánh mì", sub: "Thịt nướng • Việt Nam", price: 25, quip: "Vũ khí cận chiến của dân văn phòng.", image: "food-hd 2.webp" },
+    { id: "f4", name: "Bún chả", sub: "Chả nướng • Việt Nam", price: 50, quip: "Một pha gắp chả đi vào lòng người.", image: "food-hd 3.webp" }
 ];
 
 const TARGET_LUNCH_PRICE = 50;
@@ -22,7 +23,7 @@ const TICK_SECONDS = [0,.063,.125,.188,.250,.313,.375,.438,.500,.563,.625,.688,.
    HELPERS & DATA CLEANING
    -------------------------------------------------------------------------- */
 
-// [FIX 6]: Clearly distinguish price === 0 from null/undefined/NaN
+// [FIX 6]: Phân biệt rõ ràng price === 0 với null/undefined/NaN
 function getFoodPrice(food) {
     if (typeof food?.price === 'number' && !isNaN(food.price)) {
         return food.price;
@@ -30,7 +31,7 @@ function getFoodPrice(food) {
     return 50;
 }
 
-// [FIX 2]: Generate a unique ID (prefer id -> normalized fallback name)
+// [FIX 2]: Lấy ID duy nhất (ưu tiên id -> fallback name chuẩn hóa)
 function getFoodId(food) {
     if (food.id !== undefined && food.id !== null) {
         return String(food.id);
@@ -49,11 +50,11 @@ function getRarityKey(priceInThousands) {
 function priceRarity(priceInThousands) {
     const key = getRarityKey(priceInThousands);
     switch (key) {
-        case "common": return { key: "common", label: "Common", color: "#b0c3d9" };
-        case "uncommon": return { key: "uncommon", label: "Uncommon", color: "#5e98d9" };
-        case "rare": return { key: "rare", label: "Rare", color: "#4b69ff" };
-        case "epic": return { key: "epic", label: "Epic", color: "#d32ce6" };
-        case "legendary": return { key: "legendary", label: "Legendary", color: "#eb4b4b" };
+        case "common": return { key: "common", label: "Phổ Thông", color: "#b0c3d9" };
+        case "uncommon": return { key: "uncommon", label: "Đặc Biệt", color: "#5e98d9" };
+        case "rare": return { key: "rare", label: "Hiếm", color: "#4b69ff" };
+        case "epic": return { key: "epic", label: "Cực Hiếm", color: "#d32ce6" };
+        case "legendary": return { key: "legendary", label: "Huyền Thoại", color: "#eb4b4b" };
     }
 }
 
@@ -69,15 +70,15 @@ function chooseWeightedFood(population, rawTarget = TARGET_LUNCH_PRICE) {
     const minPrice = Math.min(...prices);
     const maxPrice = Math.max(...prices);
 
-    // [FIX 1]: Clamp target to the current pool range [minPrice, maxPrice]
+    // [FIX 1]: Clamp target vào đúng khoảng [minPrice, maxPrice] của danh sách hiện tại
     const target = Math.max(minPrice, Math.min(maxPrice, rawTarget));
 
-    // If all items in the pool share the same price, choose uniformly at random
+    // Nếu tất cả món trong pool có cùng mức giá, random đều
     if (minPrice === maxPrice) {
         return population[Math.floor(Math.random() * population.length)];
     }
 
-    // [FIX 7]: Price density (counts) is used to balance different price segments
+    // [FIX 7]: Mật độ giá (counts) dùng để cân bằng giữa các phân khúc giá khác nhau
     const counts = new Map();
     prices.forEach(p => counts.set(p, (counts.get(p) || 0) + 1));
     
@@ -92,12 +93,12 @@ function chooseWeightedFood(population, rawTarget = TARGET_LUNCH_PRICE) {
         return raw.map(x => x / (sum || 1));
     }
 
-    const mean = (w) => population.reduce((s, f, i) => s + prices[i] * w[i], 0);
+    const mean = (w) => population.reduce((s, _, i) => s + prices[i] * w[i], 0);
     
     let lo = -1, hi = 1;
     let guard = 0;
 
-    // [FIX 1]: Add a guard condition to prevent total UI lockups
+    // [FIX 1]: Thêm điều kiện dừng guard loop để chống treo UI tuyệt đối
     while (mean(weights(lo)) > target && guard < 50) {
         lo *= 2;
         guard++;
@@ -129,7 +130,7 @@ export default class FoodPickerModule {
     constructor() {
         this.container = null;
         this.foods = [];
-        this.drawnFoodIds = new Set(); // [FIX 2]: Store Set by ID/Key instead of Name
+        this.drawnFoodIds = new Set(); // [FIX 2]: Lưu Set theo ID/Key thay vì Name
         this.isSpinning = false;
     }
 
@@ -138,36 +139,36 @@ export default class FoodPickerModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">🍲 Food Picker (Gacha CS:GO)</h2>
-                <p class="module-desc">Load data from <code>./data/db_food.json</code> • Flexible budget balancing & gacha algorithm.</p>
+                <p class="module-desc">Dữ liệu nạp từ <code>./data/db_food.json</code> • Thuật toán cân bằng ngân sách & gacha linh hoạt.</p>
 
                 <div class="food-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                     <div class="food-panel">
                         <div class="form-group" style="margin-bottom: 12px;">
-                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Target price (k VND):</label>
+                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Mức giá mục tiêu (k VNĐ):</label>
                             <input type="number" id="target-price" class="form-input" value="50" min="20" max="200" style="width: 100%; padding: 8px;" />
                         </div>
 
                         <div class="form-group" style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                             <input type="checkbox" id="chk-random-price" style="width: 16px; height: 16px; cursor: pointer;" />
-                            <label for="chk-random-price" style="color: #ddd; cursor: pointer; user-select: none;">🎲 Completely random (Ignore price)</label>
+                            <label for="chk-random-price" style="color: #ddd; cursor: pointer; user-select: none;">🎲 Ngẫu nhiên hoàn toàn (Bỏ qua mức giá)</label>
                         </div>
 
                         <div class="form-group" style="margin-bottom: 15px;">
-                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Filter by rarity:</label>
+                            <label style="color: #aaa; display: block; margin-bottom: 5px;">Lọc theo độ phẩm/hiếm:</label>
                             <select id="select-rarity" class="form-input" style="width: 100%; padding: 8px; background: #1e1e24; color: #fff; border: 1px solid #444; border-radius: 6px;">
-                                <option value="all">✨ All rarities</option>
-                                <option value="common">⚪ Common (<= 40k)</option>
-                                <option value="uncommon">🔵 Uncommon (41k - 65k)</option>
-                                <option value="rare">🔷 Rare (66k - 100k)</option>
-                                <option value="epic">🟣 Epic (101k - 130k)</option>
-                                <option value="legendary">🔴 Legendary (> 130k)</option>
+                                <option value="all">✨ Tất cả độ hiếm</option>
+                                <option value="common">⚪ Phổ Thông (<= 40k)</option>
+                                <option value="uncommon">🔵 Đặc Biệt (41k - 65k)</option>
+                                <option value="rare">🔷 Hiếm (66k - 100k)</option>
+                                <option value="epic">🟣 Cực Hiếm (101k - 130k)</option>
+                                <option value="legendary">🔴 Huyền Thoại (> 130k)</option>
                             </select>
                         </div>
 
-                        <div id="data-status" style="font-size: 0.85rem; color: #fbbf24; margin-bottom: 10px;">⏳ Loading food list...</div>
+                        <div id="data-status" style="font-size: 0.85rem; color: #fbbf24; margin-bottom: 10px;">⏳ Đang tải danh sách món ăn...</div>
 
                         <button id="btn-open-case" class="btn-primary" disabled style="width: 100%; padding: 14px; font-size: 1.1rem; background: #10b981; font-weight: bold; opacity: 0.6; cursor: not-allowed; border: none; border-radius: 8px; color: #fff;">
-                            🎰 SPIN RANDOM FOOD
+                            🎰 QUAY MÓN NGẪU NHIÊN
                         </button>
                     </div>
 
@@ -201,10 +202,11 @@ export default class FoodPickerModule {
                             justify-content: center;
                             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
                         ">
-                        
+                            <img id="food-img" src="${IMG_BASE_PATH}${DEFAULT_IMG}" alt="Food Icon" style="width: 100%; height: 100%; object-fit: cover;" />
+                        </div>
 
                         <div id="food-title" style="font-size: 1.6rem; font-weight: bold; color: #fff; margin-bottom: 4px;">? ? ?</div>
-                        <div id="food-sub" style="font-size: 0.85rem; color: #aaa; margin-bottom: 8px;">Press the button to open the lunch crate</div>
+                        <div id="food-sub" style="font-size: 0.85rem; color: #aaa; margin-bottom: 8px;">Ấn nút để mở hòm bữa trưa</div>
                         <div id="food-price" style="font-size: 1.1rem; font-weight: bold; color: #10b981; margin-bottom: 8px;"></div>
                         <div id="food-quip" style="font-size: 0.85rem; font-style: italic; color: #d1d5db; max-width: 85%;"></div>
                     </div>
@@ -226,14 +228,14 @@ export default class FoodPickerModule {
             this.foods = await res.json();
             
             if (statusEl) {
-                statusEl.textContent = `✅ Loaded ${this.foods.length} dishes from ./data/db_food.json`;
+                statusEl.textContent = `✅ Đã tải ${this.foods.length} món từ ./data/db_food.json`;
                 statusEl.style.color = '#10b981';
             }
         } catch (err) {
-            console.warn('Failed to fetch ./data/db_food.json, using fallback data:', err);
+            console.warn('Không fetch được ./data/db_food.json, dùng data dự phòng:', err);
             this.foods = FALLBACK_FOODS;
             if (statusEl) {
-                statusEl.textContent = `⚠️ Using default data (${this.foods.length} dishes)`;
+                statusEl.textContent = `⚠️ Đang dùng dữ liệu mặc định (${this.foods.length} món)`;
                 statusEl.style.color = '#f59e0b';
             }
         }
@@ -257,7 +259,7 @@ export default class FoodPickerModule {
             }
         });
 
-        // [FIX 5]: Clamp the input value as soon as it changes
+        // [FIX 5]: Clamp giá trị input ngay khi thay đổi giá trị
         targetPriceInput?.addEventListener('change', () => {
             let val = parseFloat(targetPriceInput.value) || 50;
             val = Math.max(20, Math.min(200, val));
@@ -273,7 +275,7 @@ export default class FoodPickerModule {
         const rarityFilter = this.container.querySelector('#select-rarity').value;
         const isRandomPrice = this.container.querySelector('#chk-random-price').checked;
         
-        // [FIX 5]: Validate & clamp targetPrice carefully in JavaScript
+        // [FIX 5]: Validate & Clamp targetPrice cẩn thận trong JS
         let rawTarget = parseFloat(this.container.querySelector('#target-price').value) || 50;
         const targetPrice = Math.max(20, Math.min(200, rawTarget));
 
@@ -283,13 +285,13 @@ export default class FoodPickerModule {
         }
 
         if (eligibleFoods.length === 0) {
-            alert('No dishes match this rarity filter!');
+            alert('Không tìm thấy món nào phù hợp với bộ lọc độ hiếm này!');
             return;
         }
 
         let availableFoods = eligibleFoods.filter(f => !this.drawnFoodIds.has(getFoodId(f)));
 
-        // [FIX 3]: Only clear the "already spun" state for the current filter, without affecting other filters
+        // [FIX 3]: Chỉ xỏa trạng thái "đã quay" của riêng bộ lọc hiện tại, không làm ảnh hưởng bộ lọc khác
         if (availableFoods.length === 0) {
             eligibleFoods.forEach(f => this.drawnFoodIds.delete(getFoodId(f)));
             availableFoods = eligibleFoods;
@@ -320,12 +322,12 @@ export default class FoodPickerModule {
 
         card.style.borderColor = "#333";
         imgContainer.style.borderColor = "#444";
-        badgeEl.textContent = "Opening crate...";
+        badgeEl.textContent = "Đang mở hòm...";
         badgeEl.style.color = "#888";
         priceEl.textContent = "";
         quipEl.textContent = "";
 
-        // [FIX 4]: Use availableFoods instead of eligibleFoods to keep the gacha feel consistent
+        // [FIX 4]: Animation dùng availableFoods thay vì eligibleFoods để đồng bộ cảm giác gacha
         TICK_SECONDS.forEach((sec, idx) => {
             setTimeout(() => {
                 const randomSample = availableFoods[Math.floor(Math.random() * availableFoods.length)];
@@ -343,7 +345,7 @@ export default class FoodPickerModule {
         setTimeout(() => {
             titleEl.textContent = selectedFood.name;
             subEl.textContent = selectedFood.sub || '';
-            priceEl.textContent = `💵 ${finalPrice}.000 VND`;
+            priceEl.textContent = `💵 ${finalPrice}.000 VNĐ`;
             quipEl.textContent = selectedFood.quip ? `"${selectedFood.quip}"` : '';
             
             const finalImg = selectedFood.image || selectedFood.img || DEFAULT_IMG;
