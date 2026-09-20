@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MODULE: FOOD PICKER (CS:GO Gacha - Refactored & Bug-free)
+   MODULE: FOOD PICKER)
    ========================================================================== */
 
 import { soundMaster } from '../utils/sound_master.js';
@@ -136,7 +136,7 @@ export default class FoodPickerModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">🍲 Food Picker</h2>
-                <p class="module-desc">Loaded from <code>./data/db_food.json</code> • Budget balancing & flexible gacha algorithm.</p>
+                <p class="module-desc">Loaded • Budget balancing & flexible gacha algorithm.</p>
 
                 <div class="food-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                     <div class="food-panel">
