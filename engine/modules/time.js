@@ -16,7 +16,7 @@ export default class TimeInfoModule {
         this.container.innerHTML = `
             <div class="module-card">
                 <h2 class="module-title">Time Info</h2>
-                <p class="module-desc">Đồng hồ thời gian thực, múi giờ thế giới và công cụ tạo Timestamp ngẫu nhiên.</p>
+                <p class="module-desc">Real-time clock, world time zones, and a random timestamp generator.</p>
 
                 <!-- REALTIME CLOCK BANNER -->
                 <div style="
@@ -31,7 +31,7 @@ export default class TimeInfoModule {
                         00:00:00
                     </div>
                     <div id="realtime-date" style="font-size: 1rem; color: #94a3b8; margin-top: 6px;">
-                        Đang tải thời gian...
+                        Loading time...
                     </div>
                 </div>
 
@@ -40,7 +40,7 @@ export default class TimeInfoModule {
                     <!-- WORLD CLOCK -->
                     <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px;">
                         <h3 style="font-size: 1rem; color: #f8fafc; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            🌍 Giờ Thế Giới
+                            🌍 World Clock
                         </h3>
                         <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9em;">
                             <div style="display: flex; justify-content: space-between;">
@@ -64,14 +64,14 @@ export default class TimeInfoModule {
                             <h3 style="font-size: 1rem; color: #f8fafc; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
                                 🎲 Random Timestamp
                             </h3>
-                            <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 12px;">Tạo ngẫu nhiên 1 mốc thời gian (Unix Epoch).</p>
+                            <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 12px;">Generate a random time point (Unix Epoch).</p>
                         </div>
 
                         <div id="timestamp-result" style="font-family: monospace; font-size: 1.1rem; color: #3b82f6; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px; text-align: center; margin-bottom: 12px;">
                             ----------
                         </div>
 
-                        <button id="btn-gen-timestamp" class="btn-primary" style="padding: 8px 14px; font-size: 0.85em;">⚡ Tạo Timestamp Ngẫu Nhiên</button>
+                        <button id="btn-gen-timestamp" class="btn-primary" style="padding: 8px 14px; font-size: 0.85em;">⚡ Generate Random Timestamp</button>
                     </div>
                 </div>
             </div>
@@ -117,7 +117,7 @@ export default class TimeInfoModule {
     }
 
     generateRandomTimestamp() {
-        // Random từ năm 2000 đến 2030
+        // Random from the year 2000 to 2030
         const start = new Date(2000, 0, 1).getTime();
         const end = new Date(2030, 11, 31).getTime();
         const randomTime = Math.floor(start + Math.random() * (end - start));
