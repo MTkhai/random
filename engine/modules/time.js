@@ -176,7 +176,7 @@ export default class TimeInfoModule {
 
         const isDuplicate = this.worldClocks.some(clock => clock.zone === selectedOpt.zone);
         if (isDuplicate) {
-            historyManager.addLog('Time Info', `Timezone already added: ${selectedOpt.label}`);
+            window.alert(`Timezone already added: ${selectedOpt.label}`);
             return;
         }
 
