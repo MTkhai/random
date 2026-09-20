@@ -174,6 +174,12 @@ export default class TimeInfoModule {
         const selectedOpt = TIMEZONE_OPTIONS.find(opt => opt.zone === zone);
         if (!selectedOpt) return;
 
+        const isDuplicate = this.worldClocks.some(clock => clock.zone === selectedOpt.zone);
+        if (isDuplicate) {
+            historyManager.addLog('Time Info', `Timezone already added: ${selectedOpt.label}`);
+            return;
+        }
+
         const newId = `clock-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
         this.worldClocks.push({
             id: newId,
