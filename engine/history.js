@@ -5,12 +5,10 @@
 export class HistoryManager {
     constructor() {
         this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
-        // Tự động lắng nghe sự kiện nút Clear ngay khi class được khởi tạo
         this.bindEvents();
     }
 
     bindEvents() {
-        // Lắng nghe theo Event Delegation để không bị trượt DOM
         document.addEventListener('click', (e) => {
             if (e.target && e.target.closest('#btn-clear-history, .btn-clear-history, [data-action="clear-history"]')) {
                 this.clear();
@@ -50,24 +48,36 @@ export class HistoryManager {
             return;
         }
 
-        const borderStyle = 'border-bottom: 1px solid rgba(255,255,255,0.08);';
-        
-        // Đường kẻ ở ĐẦU danh sách
-        const topDivider = `<div style="${borderStyle}"></div>`;
-
-        // Render từng dòng history (mỗi dòng đều có border-bottom)
+        // Tạo danh sách các box
         const itemsHtml = this.records.map(item => `
-            <div style="padding: 0.75rem; ${borderStyle} font-size: 0.85rem;">
-                <div style="display:flex; justify-content:space-between; margin-bottom: 0.25rem;">
-                    <strong style="color: var(--accent, #10b981);">${item.module}</strong>
-                    <small style="opacity:0.6;">${item.timestamp}</small>
+            <div style="
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 8px;
+                padding: 12px 14px;
+                font-size: 0.85rem;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            ">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+                    <strong style="color: var(--accent, #10b981); font-weight: 600;">${item.module}</strong>
+                    <small style="color: #94a3b8; font-size: 0.75rem;">${item.timestamp}</small>
                 </div>
-                <div style="font-family: monospace; word-break: break-all;">${item.result}</div>
+                <div style="font-family: monospace; color: #f8fafc; word-break: break-all; line-height: 1.4;">
+                    ${item.result}
+                </div>
             </div>
         `).join('');
 
-        // Nối đường kẻ ĐẦU + Các item + Đường kẻ CUỐI (đã có từ item cuối)
-        container.innerHTML = topDivider + itemsHtml;
+        // Bọc giữa 2 đường kẻ phân cách rõ ràng ở ĐẦU và CUỐI
+        container.innerHTML = `
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 16px;"></div>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                ${itemsHtml}
+            </div>
+
+            <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-top: 16px;"></div>
+        `;
     }
 }
 
