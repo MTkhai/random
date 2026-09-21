@@ -4,15 +4,63 @@
 
 export class HistoryManager {
     constructor() {
-        this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
+        this.records = [];
         this.liveTimer = null;
+        
+        // 1. Load và render dữ liệu mới nhất từ localStorage ngay khi khởi tạo
+        this.refresh();
+        
+        // 2. Mở sẵn History Panel mặc định
+        this.openPanel();
+
+        // 3. Lắng nghe các sự kiện chuyển tab/trình duyệt
         this.bindEvents();
     }
 
+    // Hàm đọc lại dữ liệu mới nhất từ localStorage và re-render UI
+    refresh() {
+        this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
+        this.render();
+    }
+
+    // Tự động mở Panel khi trang load
+    openPanel() {
+        const drawer = document.getElementById('history-drawer') || 
+                       document.querySelector('.history-drawer') || 
+                       document.querySelector('.history-panel');
+
+        if (drawer) {
+            drawer.classList.add('active', 'open', 'show', 'is-open');
+        }
+    }
+
     bindEvents() {
+        // Clear history button
         document.addEventListener('click', (e) => {
             if (e.target && e.target.closest('#btn-clear-history, .btn-clear-history, [data-action="clear-history"]')) {
                 this.clear();
+            }
+
+            // --- BẮT SỰ KIỆN CHUYỂN TAB TRONG APP ---
+            // Mỗi khi người dùng bấm vào các tab navigation trong App (ví dụ: nút có class tab, nav-link, data-tab...)
+            if (e.target && e.target.closest('.tab, .nav-item, .nav-link, [data-tab], .tab-btn')) {
+                this.refresh();
+            }
+        });
+
+        // --- BẮT SỰ KIỆN CHUYỂN TAB TRÌNH DUYỆT (Visibility Change) ---
+        // Khi quay lại tab trình duyệt này -> Tự động fresh dữ liệu
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                this.refresh();
+            }
+        });
+
+        // --- ĐỒNG BỘ DỮ LIỆU GIỮA CÁC TAB TRÌNH DUYỆT (Storage Event) ---
+        // Nếu mở App ở 2 tab trình duyệt cùng lúc, tab này đổi thì tab kia tự cập nhật ngay
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'rans_history') {
+                this.refresh();
             }
         });
     }
@@ -22,8 +70,11 @@ export class HistoryManager {
         return this.records.some(r => r.isDynamic);
     }
 
-    // Thêm Log (Đảm bảo Log Dynamic luôn được ghim lên đầu)
+    // Thêm Log mới
     addLog(moduleName, result, options = {}) {
+        // Đảm bảo luôn lấy danh sách mới nhất trước khi thêm
+        this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
+
         const record = {
             id: Date.now(),
             module: moduleName,
@@ -34,11 +85,9 @@ export class HistoryManager {
         };
 
         if (record.isDynamic) {
-            // Xóa dynamic clock cũ nếu có và đưa bản mới lên ĐẦU danh sách
             this.records = this.records.filter(r => !r.isDynamic);
             this.records.unshift(record);
         } else {
-            // Các log thông thường sẽ được chèn bên dưới log Dynamic (nếu có)
             const dynamicItems = this.records.filter(r => r.isDynamic);
             const normalItems = this.records.filter(r => !r.isDynamic);
             normalItems.unshift(record);
@@ -51,6 +100,7 @@ export class HistoryManager {
 
     // Bỏ ghim Dynamic Clock khỏi History
     removeDynamicClock() {
+        this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
         this.records = this.records.filter(r => !r.isDynamic);
         this.save();
         this.render();
@@ -95,14 +145,12 @@ export class HistoryManager {
             return;
         }
 
-        // Đảm bảo item Dynamic luôn xếp đầu tiên trong mảng hiển thị
         const sortedRecords = [
             ...this.records.filter(r => r.isDynamic),
             ...this.records.filter(r => !r.isDynamic)
         ];
 
         const itemsHtml = sortedRecords.map(item => {
-            // Badge PINNED & DYNAMIC cho đồng hồ chính
             const dynamicBadge = item.isDynamic ? `
                 <span style="
                     background: rgba(16, 185, 129, 0.15);
