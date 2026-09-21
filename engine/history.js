@@ -50,8 +50,14 @@ export class HistoryManager {
             return;
         }
 
-        container.innerHTML = this.records.map(item => `
-            <div style="padding: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.85rem;">
+        const borderStyle = 'border-bottom: 1px solid rgba(255,255,255,0.08);';
+        
+        // Đường kẻ ở ĐẦU danh sách
+        const topDivider = `<div style="${borderStyle}"></div>`;
+
+        // Render từng dòng history (mỗi dòng đều có border-bottom)
+        const itemsHtml = this.records.map(item => `
+            <div style="padding: 0.75rem; ${borderStyle} font-size: 0.85rem;">
                 <div style="display:flex; justify-content:space-between; margin-bottom: 0.25rem;">
                     <strong style="color: var(--accent, #10b981);">${item.module}</strong>
                     <small style="opacity:0.6;">${item.timestamp}</small>
@@ -59,6 +65,9 @@ export class HistoryManager {
                 <div style="font-family: monospace; word-break: break-all;">${item.result}</div>
             </div>
         `).join('');
+
+        // Nối đường kẻ ĐẦU + Các item + Đường kẻ CUỐI (đã có từ item cuối)
+        container.innerHTML = topDivider + itemsHtml;
     }
 }
 
