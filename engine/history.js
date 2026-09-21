@@ -17,17 +17,13 @@ export class HistoryManager {
         });
     }
 
-    // Kiểm tra xem đã có log Dynamic Clock hay chưa
-    hasDynamicLog() {
+    // Kiểm tra xem đã ghim Dynamic Clock chưa
+    hasDynamicClock() {
         return this.records.some(r => r.isDynamic);
     }
 
+    // Thêm Log (Đảm bảo Log Dynamic luôn được ghim lên đầu)
     addLog(moduleName, result, options = {}) {
-        // Nếu là Dynamic Clock và đã tồn tại trong History thì không lưu thêm
-        if (options.isDynamic && this.hasDynamicLog()) {
-            return false;
-        }
-
         const record = {
             id: Date.now(),
             module: moduleName,
@@ -37,18 +33,33 @@ export class HistoryManager {
             timezone: options.timezone || null
         };
 
-        this.records.unshift(record);
+        if (record.isDynamic) {
+            // Xóa dynamic clock cũ nếu có và đưa bản mới lên ĐẦU danh sách
+            this.records = this.records.filter(r => !r.isDynamic);
+            this.records.unshift(record);
+        } else {
+            // Các log thông thường sẽ được chèn bên dưới log Dynamic (nếu có)
+            const dynamicItems = this.records.filter(r => r.isDynamic);
+            const normalItems = this.records.filter(r => !r.isDynamic);
+            normalItems.unshift(record);
+            this.records = [...dynamicItems, ...normalItems];
+        }
+
         this.save();
         this.render();
-        return true;
+    }
+
+    // Bỏ ghim Dynamic Clock khỏi History
+    removeDynamicClock() {
+        this.records = this.records.filter(r => !r.isDynamic);
+        this.save();
+        this.render();
     }
 
     clear() {
         this.records = [];
         this.save();
         this.render();
-        // Báo sự kiện để các module ngoài (như Time Info) cập nhật lại UI Banner
-        document.dispatchEvent(new CustomEvent('history-updated'));
     }
 
     save() {
@@ -84,14 +95,14 @@ export class HistoryManager {
             return;
         }
 
-        // SẮP XẾP: Tất cả item isDynamic sẽ luôn được GHIM LÊN ĐẦU
-        const displayRecords = [...this.records].sort((a, b) => {
-            if (a.isDynamic && !b.isDynamic) return -1;
-            if (!a.isDynamic && b.isDynamic) return 1;
-            return b.id - a.id;
-        });
+        // Đảm bảo item Dynamic luôn xếp đầu tiên trong mảng hiển thị
+        const sortedRecords = [
+            ...this.records.filter(r => r.isDynamic),
+            ...this.records.filter(r => !r.isDynamic)
+        ];
 
-        const itemsHtml = displayRecords.map(item => {
+        const itemsHtml = sortedRecords.map(item => {
+            // Badge PINNED & DYNAMIC cho đồng hồ chính
             const dynamicBadge = item.isDynamic ? `
                 <span style="
                     background: rgba(16, 185, 129, 0.15);
@@ -102,6 +113,9 @@ export class HistoryManager {
                     border-radius: 4px;
                     font-weight: 700;
                     letter-spacing: 0.5px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 3px;
                 ">📌 PINNED DYNAMIC</span>
             ` : '';
 
@@ -121,7 +135,7 @@ export class HistoryManager {
             return `
                 <div style="
                     background: ${item.isDynamic ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.04)'};
-                    border: 1px solid ${item.isDynamic ? 'rgba(16, 185, 129, 0.25)' : 'rgba(255, 255, 255, 0.08)'};
+                    border: 1px solid ${item.isDynamic ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255, 255, 255, 0.08)'};
                     border-radius: 8px;
                     padding: 12px 14px;
                     font-size: 0.85rem;

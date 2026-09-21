@@ -44,7 +44,7 @@ export default class TimeInfoModule {
                 <h2 class="module-title">Time Info</h2>
                 <p class="module-desc">Real-time clock, customizable world time zones, and a random timestamp generator.</p>
 
-                <!-- REALTIME CLOCK BANNER -->
+                <!-- REALTIME CLOCK BANNER (Toggle Pin / Unpin Dynamic Clock) -->
                 <div id="realtime-clock-banner" style="
                     background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
                     border: 1px solid rgba(16, 185, 129, 0.2);
@@ -52,6 +52,7 @@ export default class TimeInfoModule {
                     padding: 24px;
                     text-align: center;
                     margin: 20px 0;
+                    cursor: pointer;
                     transition: all 0.2s;
                 ">
                     <div id="realtime-clock" style="font-size: 2.8rem; font-weight: 700; font-family: monospace; color: #10b981; letter-spacing: 2px;">
@@ -60,8 +61,8 @@ export default class TimeInfoModule {
                     <div id="realtime-date" style="font-size: 1rem; color: #94a3b8; margin-top: 6px;">
                         Loading time...
                     </div>
-                    <div id="banner-hint" style="font-size: 0.75rem; margin-top: 8px; opacity: 0.9; font-weight: 500;">
-                        📌 Click banner to pin Dynamic Main Clock to History
+                    <div id="pin-status-tag" style="font-size: 0.8rem; font-weight: 600; margin-top: 10px;">
+                        <!-- Text pin status rendering dynamically -->
                     </div>
                 </div>
 
@@ -120,28 +121,25 @@ export default class TimeInfoModule {
         `;
 
         this.renderWorldClocksList();
+        this.updateBannerPinStatus();
         this.bindEvents();
         this.startClock();
-        this.updateBannerState();
     }
 
-    // Cập nhật trạng thái Banner tùy theo việc đã ghim Dynamic Clock hay chưa
-    updateBannerState() {
-        const clockBanner = this.container?.querySelector('#realtime-clock-banner');
-        const hintEl = this.container?.querySelector('#banner-hint');
-        if (!clockBanner || !hintEl) return;
+    // Cập nhật trạng thái hiển thị của Banner dựa trên việc đã Pin Dynamic Clock chưa
+    updateBannerPinStatus() {
+        const tag = this.container?.querySelector('#pin-status-tag');
+        const banner = this.container?.querySelector('#realtime-clock-banner');
+        if (!tag || !banner) return;
 
-        const isPinned = historyManager.hasDynamicLog();
+        const isPinned = historyManager.hasDynamicClock();
+
         if (isPinned) {
-            hintEl.textContent = '✅ Dynamic Main Clock is pinned to History';
-            hintEl.style.color = '#94a3b8';
-            clockBanner.style.cursor = 'default';
-            clockBanner.style.opacity = '0.85';
+            tag.innerHTML = `<span style="color: #ef4444; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); padding: 4px 10px; border-radius: 6px;">📌 Dynamic Clock Pinned (Click to unpin)</span>`;
+            banner.style.borderColor = 'rgba(16, 185, 129, 0.5)';
         } else {
-            hintEl.textContent = '📌 Click banner to pin Dynamic Main Clock to History';
-            hintEl.style.color = '#10b981';
-            clockBanner.style.cursor = 'pointer';
-            clockBanner.style.opacity = '1';
+            tag.innerHTML = `<span style="color: #10b981; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 10px; border-radius: 6px;">📌 Click banner to pin Dynamic Clock</span>`;
+            banner.style.borderColor = 'rgba(16, 185, 129, 0.2)';
         }
     }
 
@@ -187,21 +185,16 @@ export default class TimeInfoModule {
         const btnAdd = this.container.querySelector('#btn-add-clock');
         btnAdd?.addEventListener('click', () => this.addSelectedClock());
 
-        // Bấm Banner: Chỉ cho phép ấn 1 lần duy nhất
+        // Bấm banner: Nếu chưa pin thì Pin, nếu đã pin thì Bỏ ghim (Unpin)
         const clockBanner = this.container.querySelector('#realtime-clock-banner');
         clockBanner?.addEventListener('click', () => {
-            if (historyManager.hasDynamicLog()) return; // Đã có rồi thì bỏ qua
-
-            const added = historyManager.addLog('Time Info', '', { isDynamic: true, timezone: 'local' });
-            if (added) {
-                this.playClickSFX();
-                this.updateBannerState();
+            if (historyManager.hasDynamicClock()) {
+                historyManager.removeDynamicClock();
+            } else {
+                historyManager.addLog('Time Info', '', { isDynamic: true, timezone: 'local' });
             }
-        });
-
-        // Lắng nghe sự kiện nếu History bị xóa sạch
-        document.addEventListener('history-updated', () => {
-            this.updateBannerState();
+            this.updateBannerPinStatus();
+            this.playClickSFX();
         });
     }
 
@@ -229,7 +222,6 @@ export default class TimeInfoModule {
         this.renderWorldClocksList();
         this.playClickSFX();
 
-        // Múi giờ phụ -> Lưu log dạng tĩnh
         const currentTime = new Date().toLocaleTimeString('en-US', { timeZone: selectedOpt.zone });
         historyManager.addLog('Time Info', `${selectedOpt.label} — ${currentTime}`);
     }
