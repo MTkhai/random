@@ -48,7 +48,7 @@ export class HistoryManager {
             return;
         }
 
-        // Tạo danh sách các box
+        // Render từng item thành thẻ Box riêng biệt
         const itemsHtml = this.records.map(item => `
             <div style="
                 background: rgba(255, 255, 255, 0.04);
@@ -68,15 +68,17 @@ export class HistoryManager {
             </div>
         `).join('');
 
-        // Bọc giữa 2 đường kẻ phân cách rõ ràng ở ĐẦU và CUỐI
+        // Đường gạch nét đứt (dashed) dày 2px ở ĐẦU và CUỐI
+        const dashedBorder = `border-top: 2px dashed rgba(255, 255, 255, 0.25);`;
+
         container.innerHTML = `
-            <div style="border-top: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 16px;"></div>
+            <div style="${dashedBorder} margin-bottom: 16px;"></div>
             
             <div style="display: flex; flex-direction: column; gap: 16px;">
                 ${itemsHtml}
             </div>
 
-            <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-top: 16px;"></div>
+            <div style="${dashedBorder} margin-top: 16px;"></div>
         `;
     }
 }
