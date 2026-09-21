@@ -17,7 +17,17 @@ export class HistoryManager {
         });
     }
 
+    // Kiểm tra xem đã có log Dynamic Clock hay chưa
+    hasDynamicLog() {
+        return this.records.some(r => r.isDynamic);
+    }
+
     addLog(moduleName, result, options = {}) {
+        // Nếu là Dynamic Clock và đã tồn tại trong History thì không lưu thêm
+        if (options.isDynamic && this.hasDynamicLog()) {
+            return false;
+        }
+
         const record = {
             id: Date.now(),
             module: moduleName,
@@ -30,12 +40,15 @@ export class HistoryManager {
         this.records.unshift(record);
         this.save();
         this.render();
+        return true;
     }
 
     clear() {
         this.records = [];
         this.save();
         this.render();
+        // Báo sự kiện để các module ngoài (như Time Info) cập nhật lại UI Banner
+        document.dispatchEvent(new CustomEvent('history-updated'));
     }
 
     save() {
@@ -71,8 +84,14 @@ export class HistoryManager {
             return;
         }
 
-        const itemsHtml = this.records.map(item => {
-            // Tag DYNAMIC cho múi giờ chính
+        // SẮP XẾP: Tất cả item isDynamic sẽ luôn được GHIM LÊN ĐẦU
+        const displayRecords = [...this.records].sort((a, b) => {
+            if (a.isDynamic && !b.isDynamic) return -1;
+            if (!a.isDynamic && b.isDynamic) return 1;
+            return b.id - a.id;
+        });
+
+        const itemsHtml = displayRecords.map(item => {
             const dynamicBadge = item.isDynamic ? `
                 <span style="
                     background: rgba(16, 185, 129, 0.15);
@@ -83,10 +102,9 @@ export class HistoryManager {
                     border-radius: 4px;
                     font-weight: 700;
                     letter-spacing: 0.5px;
-                ">DYNAMIC</span>
+                ">📌 PINNED DYNAMIC</span>
             ` : '';
 
-            // Nội dung hiển thị trong box
             let contentHtml = item.result;
             if (item.isDynamic) {
                 const initialTime = new Date().toLocaleTimeString('en-US');
@@ -102,8 +120,8 @@ export class HistoryManager {
 
             return `
                 <div style="
-                    background: rgba(255, 255, 255, 0.04);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background: ${item.isDynamic ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.04)'};
+                    border: 1px solid ${item.isDynamic ? 'rgba(16, 185, 129, 0.25)' : 'rgba(255, 255, 255, 0.08)'};
                     border-radius: 8px;
                     padding: 12px 14px;
                     font-size: 0.85rem;
@@ -135,7 +153,6 @@ export class HistoryManager {
             <div style="${dashedBorder} margin-top: 16px;"></div>
         `;
 
-        // Kích hoạt đồng hồ nhảy thời gian thực trong Log
         this.startLiveUpdate();
     }
 }

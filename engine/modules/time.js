@@ -44,7 +44,7 @@ export default class TimeInfoModule {
                 <h2 class="module-title">Time Info</h2>
                 <p class="module-desc">Real-time clock, customizable world time zones, and a random timestamp generator.</p>
 
-                <!-- REALTIME CLOCK BANNER (Click to log dynamic main clock) -->
+                <!-- REALTIME CLOCK BANNER -->
                 <div id="realtime-clock-banner" style="
                     background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
                     border: 1px solid rgba(16, 185, 129, 0.2);
@@ -52,16 +52,17 @@ export default class TimeInfoModule {
                     padding: 24px;
                     text-align: center;
                     margin: 20px 0;
-                    cursor: pointer;
-                    transition: transform 0.2s;
-                " title="Click to log dynamic main clock to History">
+                    transition: all 0.2s;
+                ">
                     <div id="realtime-clock" style="font-size: 2.8rem; font-weight: 700; font-family: monospace; color: #10b981; letter-spacing: 2px;">
                         00:00:00
                     </div>
                     <div id="realtime-date" style="font-size: 1rem; color: #94a3b8; margin-top: 6px;">
                         Loading time...
                     </div>
-                    <div style="font-size: 0.75rem; color: #10b981; margin-top: 8px; opacity: 0.8;">📌 Click banner to log Dynamic Clock</div>
+                    <div id="banner-hint" style="font-size: 0.75rem; margin-top: 8px; opacity: 0.9; font-weight: 500;">
+                        📌 Click banner to pin Dynamic Main Clock to History
+                    </div>
                 </div>
 
                 <!-- WORLD CLOCKS & TIMESTAMP GENERATOR -->
@@ -121,6 +122,27 @@ export default class TimeInfoModule {
         this.renderWorldClocksList();
         this.bindEvents();
         this.startClock();
+        this.updateBannerState();
+    }
+
+    // Cập nhật trạng thái Banner tùy theo việc đã ghim Dynamic Clock hay chưa
+    updateBannerState() {
+        const clockBanner = this.container?.querySelector('#realtime-clock-banner');
+        const hintEl = this.container?.querySelector('#banner-hint');
+        if (!clockBanner || !hintEl) return;
+
+        const isPinned = historyManager.hasDynamicLog();
+        if (isPinned) {
+            hintEl.textContent = '✅ Dynamic Main Clock is pinned to History';
+            hintEl.style.color = '#94a3b8';
+            clockBanner.style.cursor = 'default';
+            clockBanner.style.opacity = '0.85';
+        } else {
+            hintEl.textContent = '📌 Click banner to pin Dynamic Main Clock to History';
+            hintEl.style.color = '#10b981';
+            clockBanner.style.cursor = 'pointer';
+            clockBanner.style.opacity = '1';
+        }
     }
 
     renderWorldClocksList() {
@@ -165,11 +187,21 @@ export default class TimeInfoModule {
         const btnAdd = this.container.querySelector('#btn-add-clock');
         btnAdd?.addEventListener('click', () => this.addSelectedClock());
 
-        // Bấm vào Banner đồng hồ chính để lưu DYNAMIC CLOCK
+        // Bấm Banner: Chỉ cho phép ấn 1 lần duy nhất
         const clockBanner = this.container.querySelector('#realtime-clock-banner');
         clockBanner?.addEventListener('click', () => {
-            historyManager.addLog('Time Info', '', { isDynamic: true, timezone: 'local' });
-            this.playClickSFX();
+            if (historyManager.hasDynamicLog()) return; // Đã có rồi thì bỏ qua
+
+            const added = historyManager.addLog('Time Info', '', { isDynamic: true, timezone: 'local' });
+            if (added) {
+                this.playClickSFX();
+                this.updateBannerState();
+            }
+        });
+
+        // Lắng nghe sự kiện nếu History bị xóa sạch
+        document.addEventListener('history-updated', () => {
+            this.updateBannerState();
         });
     }
 
@@ -197,7 +229,7 @@ export default class TimeInfoModule {
         this.renderWorldClocksList();
         this.playClickSFX();
 
-        // Múi giờ phụ -> Lưu log dạng tĩnh (Static snapshot)
+        // Múi giờ phụ -> Lưu log dạng tĩnh
         const currentTime = new Date().toLocaleTimeString('en-US', { timeZone: selectedOpt.zone });
         historyManager.addLog('Time Info', `${selectedOpt.label} — ${currentTime}`);
     }
