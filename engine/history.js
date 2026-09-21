@@ -48,7 +48,6 @@ export class HistoryManager {
             return;
         }
 
-        // Render từng item thành thẻ Box riêng biệt
         const itemsHtml = this.records.map(item => `
             <div style="
                 background: rgba(255, 255, 255, 0.04);
@@ -58,17 +57,16 @@ export class HistoryManager {
                 font-size: 0.85rem;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             ">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
                     <strong style="color: var(--accent, #10b981); font-weight: 600;">${item.module}</strong>
                     <small style="color: #94a3b8; font-size: 0.75rem;">${item.timestamp}</small>
                 </div>
-                <div style="font-family: monospace; color: #f8fafc; word-break: break-all; line-height: 1.4;">
+                <div style="color: #f8fafc; word-break: break-all; line-height: 1.4;">
                     ${item.result}
                 </div>
             </div>
         `).join('');
 
-        // Đường gạch nét đứt (dashed) dày 2px ở ĐẦU và CUỐI
         const dashedBorder = `border-top: 2px dashed rgba(255, 255, 255, 0.25);`;
 
         container.innerHTML = `

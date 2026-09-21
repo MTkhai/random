@@ -160,10 +160,25 @@ export default class ImagePlaceholderModule {
             }
             if (loader) loader.style.display = 'none';
             this.playSuccessSFX();
-        };
 
-        // Save History Log
-        historyManager.addLog('Image Placeholder', `${width}x${height} px`);
+            const historyPayload = `
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #cbd5e1;">${width} × ${height} px</span>
+                        <a href="${url}" target="_blank" style="color: #10b981; text-decoration: none; font-size: 0.8em;">🔗 Open</a>
+                    </div>
+                    <img src="${url}" alt="Preview" style="
+                        width: 100%; 
+                        max-height: 120px; 
+                        object-fit: cover; 
+                        border-radius: 6px; 
+                        border: 1px solid rgba(255,255,255,0.1);
+                    " />
+                </div>
+            `;
+
+            historyManager.addLog('Image Placeholder', historyPayload);
+        };
     }
 
     playSuccessSFX() {
