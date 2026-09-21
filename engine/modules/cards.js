@@ -60,14 +60,14 @@ export default class CardDrawerModule {
                 </div>
 
                 <div id="cards-display-container" style="
-                    display: flex; 
-                    gap: 16px; 
-                    justify-content: center; 
-                    align-items: center; 
-                    min-height: 240px; 
-                    margin-top: 20px; 
-                    flex-wrap: wrap;
-                ">
+    display: flex; 
+    gap: 16px; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 240px; 
+    margin-top: 20px;
+    flex-wrap: nowrap;
+">
                     <div style="color: var(--text-muted, #888); font-style: italic;">Click "Draw Cards" to begin...</div>
                 </div>
             </div>

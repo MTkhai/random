@@ -1,16 +1,15 @@
-/* Container chứa danh sách lá bài */
 #cards-container {
-    display: grid;
-    /* Tự động chia đều cột theo số lượng lá bài (tối đa 6 cột) */
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
     gap: 12px;
     width: 100%;
-    margin-top: 20px;
+    overflow-x: auto;
 }
 
-/* Điều chỉnh kích thước lá bài co giãn linh hoạt */
 .card-item {
-    width: 100%; /* Cho phép lá bài co giãn theo cột của Grid */
-    aspect-ratio: 2 / 3; /* Giữ tỉ lệ lá bài chuẩn */
-    /* Các thuộc tính style cũ của bạn */
+    flex: 0 1 150px;
+    width: 150px;
+    aspect-ratio: 2 / 3;
 }
