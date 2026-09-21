@@ -5,7 +5,6 @@
 import { soundMaster } from '../utils/sound_master.js';
 import { historyManager } from '../history.js';
 
-// Danh sách múi giờ phổ biến trên toàn thế giới
 const TIMEZONE_OPTIONS = [
     { label: "UTC (World Coordinated Universal Time)", zone: "UTC" },
     { label: "New York (EDT/EST)", zone: "America/New_York" },
@@ -25,7 +24,6 @@ const TIMEZONE_OPTIONS = [
     { label: "Honolulu (HST)", zone: "Pacific/Honolulu" }
 ];
 
-// Múi giờ mặc định ban đầu
 const DEFAULT_CLOCKS = [
     { id: "clock-ny", label: "New York (EDT/EST)", zone: "America/New_York" },
     { id: "clock-beijing", label: "Beijing (CST)", zone: "Asia/Shanghai" },
@@ -46,21 +44,24 @@ export default class TimeInfoModule {
                 <h2 class="module-title">Time Info</h2>
                 <p class="module-desc">Real-time clock, customizable world time zones, and a random timestamp generator.</p>
 
-                <!-- REALTIME CLOCK BANNER -->
-                <div style="
+                <!-- REALTIME CLOCK BANNER (Click to log dynamic main clock) -->
+                <div id="realtime-clock-banner" style="
                     background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
                     border: 1px solid rgba(16, 185, 129, 0.2);
                     border-radius: 12px;
                     padding: 24px;
                     text-align: center;
                     margin: 20px 0;
-                ">
+                    cursor: pointer;
+                    transition: transform 0.2s;
+                " title="Click to log dynamic main clock to History">
                     <div id="realtime-clock" style="font-size: 2.8rem; font-weight: 700; font-family: monospace; color: #10b981; letter-spacing: 2px;">
                         00:00:00
                     </div>
                     <div id="realtime-date" style="font-size: 1rem; color: #94a3b8; margin-top: 6px;">
                         Loading time...
                     </div>
+                    <div style="font-size: 0.75rem; color: #10b981; margin-top: 8px; opacity: 0.8;">📌 Click banner to log Dynamic Clock</div>
                 </div>
 
                 <!-- WORLD CLOCKS & TIMESTAMP GENERATOR -->
@@ -149,7 +150,6 @@ export default class TimeInfoModule {
             </div>
         `).join('');
 
-        // Gán sự kiện xóa cho từng button
         listContainer.querySelectorAll('.btn-remove-clock').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const idToRemove = e.currentTarget.getAttribute('data-id');
@@ -164,6 +164,13 @@ export default class TimeInfoModule {
 
         const btnAdd = this.container.querySelector('#btn-add-clock');
         btnAdd?.addEventListener('click', () => this.addSelectedClock());
+
+        // Bấm vào Banner đồng hồ chính để lưu DYNAMIC CLOCK
+        const clockBanner = this.container.querySelector('#realtime-clock-banner');
+        clockBanner?.addEventListener('click', () => {
+            historyManager.addLog('Time Info', '', { isDynamic: true, timezone: 'local' });
+            this.playClickSFX();
+        });
     }
 
     addSelectedClock() {
@@ -189,7 +196,10 @@ export default class TimeInfoModule {
 
         this.renderWorldClocksList();
         this.playClickSFX();
-        historyManager.addLog('Time Info', `Added World Clock: ${selectedOpt.label}`);
+
+        // Múi giờ phụ -> Lưu log dạng tĩnh (Static snapshot)
+        const currentTime = new Date().toLocaleTimeString('en-US', { timeZone: selectedOpt.zone });
+        historyManager.addLog('Time Info', `${selectedOpt.label} — ${currentTime}`);
     }
 
     removeClock(id) {
@@ -204,7 +214,6 @@ export default class TimeInfoModule {
         const update = () => {
             const now = new Date();
             
-            // Local Clock
             const clockEl = this.container?.querySelector('#realtime-clock');
             const dateEl = this.container?.querySelector('#realtime-date');
 
@@ -214,7 +223,6 @@ export default class TimeInfoModule {
                 dateEl.textContent = now.toLocaleDateString('en-US', options);
             }
 
-            // Dynamic World Clocks
             this.worldClocks.forEach(item => {
                 const clockItemEl = this.container?.querySelector(`#${item.id}`);
                 if (clockItemEl) {
