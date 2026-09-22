@@ -106,60 +106,69 @@ export class EntropyEngine {
     // 4. Encrypted DoH Multi-DNS Latency Ping (Fixed URLs & Headers)
     // --------------------------------------------------------------------------
     async collectNetworkLatency() {
-        // Chuỗi Query DNS giả lập chuẩn DoH RFC 8484 (Request A record cho root/example)
-        const dohQuery = '?dns=AAABAAABAAAAAAAACG10a2hhaXEGZ2l0aHViAmlvAAABAAE';
+    // 1. Định nghĩa 2 chuỗi query riêng biệt cho IPv4 (A) và IPv6 (AAAA)
+    const dohQueryV4 = '?dns=AAABAAABAAAAAAAABm10a2hhaQZnaXRodWICaW8AAAEAAQ';
+    const dohQueryV6 = '?dns=AAABAAABAAAAAAAABm10a2hhaQZnaXRodWICaW8AABwAAQ';
 
-        const dnsEndpoints = [
-            { name: 'Google', url: 'https://dns.google/dns-query' + dohQuery },
-            { name: 'Cloudflare', url: 'https://cloudflare-dns.com/dns-query' + dohQuery },
-            { name: 'NextDNS', url: 'https://dns.nextdns.io' + dohQuery },
-            { name: 'Quad9', url: 'https://dns11.quad9.net/dns-query' + dohQuery },
-            { name: 'Wikimedia', url: 'https://wikimedia-dns.org/dns-query' + dohQuery },
-            { name: 'Mullvad', url: 'https://dns.mullvad.net/dns-query' + dohQuery }
-        ];
+    const dnsEndpoints = [
+        { name: 'Google (v4)', url: 'https://dns.google/dns-query' + dohQueryV4 },
+        { name: 'Google (v6)', url: 'https://dns.google/dns-query' + dohQueryV6 },
+        { name: 'Cloudflare (v4)', url: 'https://cloudflare-dns.com/dns-query' + dohQueryV4 },
+        { name: 'Cloudflare (v6)', url: 'https://cloudflare-dns.com/dns-query' + dohQueryV6 },
+        { name: 'NextDNS (v4)', url: 'https://dns.nextdns.io' + dohQueryV4 },
+        { name: 'NextDNS (v6)', url: 'https://dns.nextdns.io' + dohQueryV6 },
+        { name: 'Quad9 (v4)', url: 'https://dns11.quad9.net/dns-query' + dohQueryV4 },
+        { name: 'Quad9 (v6)', url: 'https://dns11.quad9.net/dns-query' + dohQueryV6 },
+        { name: 'Wikimedia (v4)', url: 'https://wikimedia-dns.org/dns-query' + dohQueryV4 },
+        { name: 'Wikimedia (v6)', url: 'https://wikimedia-dns.org/dns-query' + dohQueryV6 },
+        { name: 'Mullvad (v4)', url: 'https://dns.mullvad.net/dns-query' + dohQueryV4 },
+        { name: 'Mullvad (v6)', url: 'https://dns.mullvad.net/dns-query' + dohQueryV6 }
+    ];
 
-        const latencyPromises = dnsEndpoints.map(async (item) => {
-            const start = performance.now();
-            try {
-                // Request no-cors nhẹ nhàng đo độ trễ vi mô
-                await fetch(item.url, { 
-                    method: 'GET',
-                    mode: 'no-cors', 
-                    cache: 'no-store'
-                });
-                return { name: item.name, latency: performance.now() - start };
-            } catch (err) {
-                return null;
-            }
-        });
-
-        const results = await Promise.allSettled(latencyPromises);
-        const validResults = [];
-
-        results.forEach((res) => {
-            if (res.status === 'fulfilled' && res.value !== null) {
-                validResults.push(res.value);
-            }
-        });
-
-        if (validResults.length > 0) {
-            const latencies = validResults.map(r => r.latency);
-            this.pingLatency = latencies.reduce((a, b) => a + b, 0) / latencies.length;
-
-            const latencyBytes = new Float64Array(latencies);
-            this.mixIntoPool(new Uint8Array(latencyBytes.buffer));
-
-            if (this.debug) {
-                console.log('%c[EntropyEngine] 🌐 Source 4: Multi-DoH DNS Latencies Mixed', 'color: #06b6d4;', {
-                    avgPing: `${this.pingLatency.toFixed(2)}ms`,
-                    nodesResponded: `${validResults.length}/${dnsEndpoints.length}`,
-                    details: validResults
-                });
-            }
-        } else {
-            this.pingLatency = 0;
+    // 2. Gửi request song song (Giữ nguyên logic đo performance của bạn)
+    const latencyPromises = dnsEndpoints.map(async (item) => {
+        const start = performance.now();
+        try {
+            await fetch(item.url, { 
+                method: 'GET',
+                mode: 'no-cors', 
+                cache: 'no-store'
+            });
+            return { name: item.name, latency: performance.now() - start };
+        } catch (err) {
+            return null; // Trả về null nếu mạng không hỗ trợ IPv6 hoặc endpoint lỗi
         }
+    });
+
+    const results = await Promise.allSettled(latencyPromises);
+    const validResults = [];
+
+    results.forEach((res) => {
+        if (res.status === 'fulfilled' && res.value !== null) {
+            validResults.push(res.value);
+        }
+    });
+
+    if (validResults.length > 0) {
+        const latencies = validResults.map(r => r.latency);
+        this.pingLatency = latencies.reduce((a, b) => a + b, 0) / latencies.length;
+
+        // Trộn dữ liệu độ trễ (hiện tại đã nhiều và ngẫu nhiên hơn gấp đôi) vào pool
+        const latencyBytes = new Float64Array(latencies);
+        this.mixIntoPool(new Uint8Array(latencyBytes.buffer));
+
+        if (this.debug) {
+            console.log('%c[EntropyEngine] 🌐 Source 4: Multi-DoH (v4/v6) DNS Latencies Mixed', 'color: #06b6d4;', {
+                avgPing: `${this.pingLatency.toFixed(2)}ms`,
+                nodesResponded: `${validResults.length}/${dnsEndpoints.length}`,
+                details: validResults
+            });
+        }
+    } else {
+        this.pingLatency = 0;
     }
+}
+
     // --------------------------------------------------------------------------
     // 5. Weather Data API (Optional)
     // --------------------------------------------------------------------------
