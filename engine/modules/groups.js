@@ -148,40 +148,48 @@ export default class GroupGeneratorModule {
     }
 
     generateGroups() {
-        const input = this.container.querySelector('#group-names-input').value;
-        const names = input.split('\n').map(s => s.trim()).filter(Boolean);
-        if (names.length === 0) return alert('Please enter some names!');
+    const input = this.container.querySelector('#group-names-input').value;
+    const names = input.split('\n').map(s => s.trim()).filter(Boolean);
+    if (names.length === 0) return alert('Please enter some names!');
 
-        const mode = this.container.querySelector('#group-mode-select').value;
-        const val = parseInt(this.container.querySelector('#group-mode-val').value) || 1;
+    const mode = this.container.querySelector('#group-mode-select').value;
+    const val = parseInt(this.container.querySelector('#group-mode-val').value) || 1;
 
-        // Trộn ngẫu nhiên danh sách (Fisher-Yates Shuffle)
-        const shuffled = [...names].sort(() => Math.random() - 0.5);
-        let groups = [];
+    // Trộn ngẫu nhiên danh sách (Fisher-Yates Shuffle)
+    const shuffled = [...names].sort(() => Math.random() - 0.5);
+    let groups = [];
 
-        if (mode === 'by_groups') {
-            const groupCount = Math.min(val, shuffled.length);
-            for (let i = 0; i < groupCount; i++) groups.push([]);
-            shuffled.forEach((name, idx) => groups[idx % groupCount].push(name));
-        } else {
-            const memberCount = val;
-            for (let i = 0; i < shuffled.length; i += memberCount) {
-                groups.push(shuffled.slice(i, i + memberCount));
-            }
+    if (mode === 'by_groups') {
+        const groupCount = Math.min(val, shuffled.length);
+        for (let i = 0; i < groupCount; i++) groups.push([]);
+        shuffled.forEach((name, idx) => groups[idx % groupCount].push(name));
+    } else {
+        const memberCount = val;
+        for (let i = 0; i < shuffled.length; i += memberCount) {
+            groups.push(shuffled.slice(i, i + memberCount));
         }
-
-        // Render kết quả ra UI
-        const resContainer = this.container.querySelector('#groups-result-container');
-        resContainer.innerHTML = groups.map((grp, idx) => `
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 10px;">
-                <div style="font-size: 0.8em; color: #10b981; font-weight: 600; margin-bottom: 6px;">Group ${idx + 1} (${grp.length} members)</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                    ${grp.map(m => `<span style="background: rgba(0,0,0,0.3); color: #f8fafc; font-size: 0.8em; padding: 2px 6px; border-radius: 4px;">${m}</span>`).join('')}
-                </div>
-            </div>
-        `).join('');
-
-        // Ghi Log vào Global History
-        historyManager.addLog('Group Generator', `Split ${names.length} people into ${groups.length} groups (${mode})`);
     }
+
+    // Render kết quả ra UI chính
+    const resContainer = this.container.querySelector('#groups-result-container');
+    resContainer.innerHTML = groups.map((grp, idx) => `
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 10px;">
+            <div style="font-size: 0.8em; color: #10b981; font-weight: 600; margin-bottom: 6px;">Group ${idx + 1} (${grp.length} members)</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                ${grp.map(m => `<span style="background: rgba(0,0,0,0.3); color: #f8fafc; font-size: 0.8em; padding: 2px 6px; border-radius: 4px;">${m}</span>`).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    // Build chuỗi kết quả chi tiết từng nhóm để lưu vào Log
+    const logFormattedResult = groups.map((grp, idx) => 
+        `<div style="margin-bottom: 6px;">` +
+            `<strong style="color: #10b981; font-size: 0.8em;">Group ${idx + 1}:</strong> ` +
+            `<span style="color: #cbd5e1; font-size: 0.85em;">${grp.join(', ')}</span>` +
+        `</div>`
+    ).join('');
+
+    // Ghi Log chi tiết các nhóm vào Global History
+    historyManager.addLog('Group Generator', logFormattedResult);
+}
 }
