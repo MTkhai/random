@@ -1,114 +1,84 @@
 /* ==========================================================================
-   ENGINE: HISTORY MANAGER
+   ENGINE: HISTORY MANAGER (With Export Functionality)
    ========================================================================== */
 
 export class HistoryManager {
     constructor() {
         this.records = [];
         this.liveTimer = null;
-        
-        // 1. Load và render dữ liệu mới nhất từ localStorage ngay khi khởi tạo
         this.refresh();
-        
-        // 2. Mở sẵn History Panel mặc định
         this.openPanel();
-
-        // 3. Lắng nghe các sự kiện chuyển tab/trình duyệt
         this.bindEvents();
-        
     }
-    exportJSON() {
-    if (this.records.length === 0) return alert('No history data to export!');
-    
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.records, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `rans_history_${Date.now()}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-}
 
-exportCSV() {
-    if (this.records.length === 0) return alert('No history data to export!');
-
-    const headers = ["ID", "Module", "Result", "Timestamp", "IsDynamic"];
-    const rows = this.records.map(r => [
-        r.id,
-        `"${r.module}"`,
-        `"${(r.result || '').replace(/"/g, '""')}"`,
-        `"${r.timestamp}"`,
-        r.isDynamic ? "Yes" : "No"
-    ]);
-
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `rans_history_${Date.now()}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-}
-
-    // Hàm đọc lại dữ liệu mới nhất từ localStorage và re-render UI
     refresh() {
         this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
         this.render();
     }
 
-    // Tự động mở Panel khi trang load
     openPanel() {
         const drawer = document.getElementById('history-drawer') || 
                        document.querySelector('.history-drawer') || 
                        document.querySelector('.history-panel');
-
-        if (drawer) {
-            drawer.classList.add('active', 'open', 'show', 'is-open');
-        }
+        if (drawer) drawer.classList.add('active', 'open', 'show', 'is-open');
     }
 
     bindEvents() {
-        // Clear history button
         document.addEventListener('click', (e) => {
             if (e.target && e.target.closest('#btn-clear-history, .btn-clear-history, [data-action="clear-history"]')) {
                 this.clear();
             }
-
-            // --- BẮT SỰ KIỆN CHUYỂN TAB TRONG APP ---
-            // Mỗi khi người dùng bấm vào các tab navigation trong App (ví dụ: nút có class tab, nav-link, data-tab...)
-            if (e.target && e.target.closest('.tab, .nav-item, .nav-link, [data-tab], .tab-btn')) {
-                this.refresh();
+            if (e.target && e.target.closest('#btn-export-json')) {
+                this.exportJSON();
+            }
+            if (e.target && e.target.closest('#btn-export-csv')) {
+                this.exportCSV();
             }
         });
 
-        // --- BẮT SỰ KIỆN CHUYỂN TAB TRÌNH DUYỆT (Visibility Change) ---
-        // Khi quay lại tab trình duyệt này -> Tự động fresh dữ liệu
         document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                this.refresh();
-            }
+            if (document.visibilityState === 'visible') this.refresh();
         });
 
-        // --- ĐỒNG BỘ DỮ LIỆU GIỮA CÁC TAB TRÌNH DUYỆT (Storage Event) ---
-        // Nếu mở App ở 2 tab trình duyệt cùng lúc, tab này đổi thì tab kia tự cập nhật ngay
         window.addEventListener('storage', (e) => {
-            if (e.key === 'rans_history') {
-                this.refresh();
-            }
+            if (e.key === 'rans_history') this.refresh();
         });
     }
 
-    // Kiểm tra xem đã ghim Dynamic Clock chưa
+    exportJSON() {
+        if (this.records.length === 0) return alert('No history records to export!');
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.records, null, 2));
+        const a = document.createElement('a');
+        a.href = dataStr;
+        a.download = `rans_history_${Date.now()}.json`;
+        a.click();
+        a.remove();
+    }
+
+    exportCSV() {
+        if (this.records.length === 0) return alert('No history records to export!');
+        const headers = ["ID", "Module", "Result", "Timestamp", "IsDynamic"];
+        const rows = this.records.map(r => [
+            r.id,
+            `"${r.module}"`,
+            `"${(r.result || '').replace(/"/g, '""')}"`,
+            `"${r.timestamp}"`,
+            r.isDynamic ? "Yes" : "No"
+        ]);
+        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+        const a = document.createElement('a');
+        a.href = encodeURI(csvContent);
+        a.download = `rans_history_${Date.now()}.csv`;
+        a.click();
+        a.remove();
+    }
+
     hasDynamicClock() {
         return this.records.some(r => r.isDynamic);
     }
 
-    // Thêm Log mới
     addLog(moduleName, result, options = {}) {
-        // Đảm bảo luôn lấy danh sách mới nhất trước khi thêm
         this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
-
         const record = {
             id: Date.now(),
             module: moduleName,
@@ -132,7 +102,6 @@ exportCSV() {
         this.render();
     }
 
-    // Bỏ ghim Dynamic Clock khỏi History
     removeDynamicClock() {
         this.records = JSON.parse(localStorage.getItem('rans_history') || '[]');
         this.records = this.records.filter(r => !r.isDynamic);
@@ -152,11 +121,9 @@ exportCSV() {
 
     startLiveUpdate() {
         if (this.liveTimer) clearInterval(this.liveTimer);
-
         this.liveTimer = setInterval(() => {
             const dynamicEls = document.querySelectorAll('.history-dynamic-clock');
             if (dynamicEls.length === 0) return;
-
             const now = new Date();
             dynamicEls.forEach(el => {
                 const zone = el.getAttribute('data-zone');
@@ -176,6 +143,7 @@ exportCSV() {
 
         if (this.records.length === 0) {
             container.innerHTML = `<div style="text-align:center; padding: 2rem; color: var(--text-muted, #888);">No history records yet.</div>`;
+            this.renderFooterButtons();
             return;
         }
 
@@ -186,19 +154,7 @@ exportCSV() {
 
         const itemsHtml = sortedRecords.map(item => {
             const dynamicBadge = item.isDynamic ? `
-                <span style="
-                    background: rgba(16, 185, 129, 0.15);
-                    color: #10b981;
-                    border: 1px solid rgba(16, 185, 129, 0.4);
-                    font-size: 0.65rem;
-                    padding: 1px 6px;
-                    border-radius: 4px;
-                    font-weight: 700;
-                    letter-spacing: 0.5px;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 3px;
-                ">📌 PINNED DYNAMIC</span>
+                <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.65rem; padding: 1px 6px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">📌 PINNED DYNAMIC</span>
             ` : '';
 
             let contentHtml = item.result;
@@ -215,14 +171,7 @@ exportCSV() {
             }
 
             return `
-                <div style="
-                    background: ${item.isDynamic ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.04)'};
-                    border: 1px solid ${item.isDynamic ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255, 255, 255, 0.08)'};
-                    border-radius: 8px;
-                    padding: 12px 14px;
-                    font-size: 0.85rem;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                ">
+                <div style="background: ${item.isDynamic ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.04)'}; border: 1px solid ${item.isDynamic ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255, 255, 255, 0.08)'}; border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <strong style="color: var(--accent, #10b981); font-weight: 600;">${item.module}</strong>
@@ -241,15 +190,28 @@ exportCSV() {
 
         container.innerHTML = `
             <div style="${dashedBorder} margin-bottom: 16px;"></div>
-            
             <div style="display: flex; flex-direction: column; gap: 16px;">
                 ${itemsHtml}
             </div>
-
             <div style="${dashedBorder} margin-top: 16px;"></div>
         `;
 
+        this.renderFooterButtons();
         this.startLiveUpdate();
+    }
+
+    // Hiển thị cụm nút Clear + Export JSON + Export CSV ở footer
+    renderFooterButtons() {
+        const footer = document.querySelector('.history-drawer-footer') || document.getElementById('history-footer');
+        if (!footer) return;
+
+        footer.innerHTML = `
+            <div style="display: flex; gap: 8px; padding: 12px; width: 100%; box-sizing: border-box;">
+                <button id="btn-export-json" style="flex: 1; background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 8px; font-size: 0.8em; cursor: pointer;">📥 JSON</button>
+                <button id="btn-export-csv" style="flex: 1; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 8px; font-size: 0.8em; cursor: pointer;">📊 CSV</button>
+                <button id="btn-clear-history" style="flex: 1; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; padding: 8px; font-size: 0.8em; cursor: pointer;">🗑️ Clear</button>
+            </div>
+        `;
     }
 }
 
