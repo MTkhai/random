@@ -137,3 +137,16 @@ export function initShortcuts() {
         }
     });
 }
+import { entropyEngine } from '../engine/entropy.js';
+
+// ... các đoạn code khởi tạo khác của app ...
+
+console.log('🚀 RANS App initialized successfully!');
+
+// Kích hoạt thu thập & in Log Entropy ngay khi khởi chạy App
+(async () => {
+    console.log('%c[RANS] Checking Entropy Engine status...', 'color: #3b82f6; font-weight: bold;');
+    
+    // Yêu cầu sinh thử 1 hạt giống Seed SHA-256 để in toàn bộ log 5 nguồn nhiễu
+    await entropyEngine.getSHA256Seed();
+})();
