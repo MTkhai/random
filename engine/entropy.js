@@ -1,21 +1,16 @@
 /**
  * RANS Engine — Multi-Source Entropy Mixing Engine
- * Combines CSPRNG, Audio Noise, User Behavior, Encrypted DoH DNS Latency, and Weather API.
+ * Combines CSPRNG, Audio Noise, User Behavior, Network Latency, and Weather API.
  * Uses SHA-256 to extract true cryptographic entropy.
  */
 
 export class EntropyEngine {
-    constructor(debug = true) {
+    constructor() {
         this.pool = new Uint8Array(256); // Bể entropy 256-bit
         this.poolIndex = 0;
         this.audioContext = null;
         this.weatherData = null;
         this.pingLatency = 0;
-        this.debug = debug; // Bật / Tắt Debug Console
-
-        if (this.debug) {
-            console.log('%c[EntropyEngine] 🚀 Engine started with Multi-Source Entropy mixing enabled', 'color: #10b981; font-weight: bold;');
-        }
 
         // Tự động thu thập nhiễu ngay khi tạo Engine
         this.initEntropySources();
@@ -25,10 +20,19 @@ export class EntropyEngine {
      * Khởi tạo & thu thập 5 nguồn nhiễu ngẫu nhiên
      */
     async initEntropySources() {
+        // Source 1: CSPRNG (Cryptographically Secure PRNG)
         this.collectCSPRNG();
+
+        // Source 2: User Mouse & Movement Behavior
         this.collectUserBehavior();
+
+        // Source 3: Hardware Audio Context Noise
         this.collectAudioNoise();
+
+        // Source 4: Network Latency (Encrypted Ping)
         this.collectNetworkLatency();
+
+        // Source 5: Live Weather Data (Optional Async)
         this.collectWeatherData();
     }
 
@@ -39,32 +43,22 @@ export class EntropyEngine {
         const csprngBytes = new Uint8Array(32);
         crypto.getRandomValues(csprngBytes);
         this.mixIntoPool(csprngBytes);
-
-        if (this.debug) {
-            console.log('%c[EntropyEngine] 🎲 Source 1: CSPRNG Bytes Mixed', 'color: #3b82f6;', csprngBytes.slice(0, 8));
-        }
     }
 
     // --------------------------------------------------------------------------
     // 2. User Behavior (Mouse Position & Performance Timestamp)
     // --------------------------------------------------------------------------
     collectUserBehavior() {
-        let eventCount = 0;
         const handler = (e) => {
             const time = performance.now();
             const x = e.clientX || 0;
             const y = e.clientY || 0;
 
+            // Chuyển đổi tọa độ & thời gian thành dữ liệu Byte
             const behaviorData = new Float64Array([x, y, time]);
             const bytes = new Uint8Array(behaviorData.buffer);
 
             this.mixIntoPool(bytes);
-            eventCount++;
-
-            // Throttling: Chỉ log mỗi 20 sự kiện để không làm lag Console
-            if (this.debug && eventCount % 20 === 0) {
-                console.log(`%c[EntropyEngine] 🖱️ Source 2: User Motion Mixed (x:${x}, y:${y}, t:${time.toFixed(2)}ms)`, 'color: #8b5cf6;');
-            }
         };
 
         window.addEventListener('mousemove', handler, { passive: true });
@@ -91,6 +85,7 @@ export class EntropyEngine {
 
             oscillator.start(0);
 
+            // Thu nhiễu vi mô từ card âm thanh
             setTimeout(() => {
                 const noiseData = new Float32Array([
                     compressor.reduction,
@@ -98,40 +93,41 @@ export class EntropyEngine {
                     performance.now()
                 ]);
                 this.mixIntoPool(new Uint8Array(noiseData.buffer));
-
-                if (this.debug) {
-                    console.log('%c[EntropyEngine] 🔊 Source 3: Audio Noise Mixed', 'color: #f59e0b;', {
-                        reduction: compressor.reduction,
-                        currentTime: ctx.currentTime
-                    });
-                }
-
+                
                 oscillator.stop();
                 ctx.close();
             }, 50);
         } catch (err) {
-            if (this.debug) console.warn('[EntropyEngine] Audio Context blocked or unsupported.');
+            // Fallback im lặng nếu trình duyệt chặn Autoplay Audio Context
         }
     }
 
-    // --------------------------------------------------------------------------
-    // 4. Encrypted DoH Multi-DNS Latency Ping
+   // --------------------------------------------------------------------------
+    // 4. Encrypted DoH Multi-DNS Latency Ping (Fixed URLs & Headers)
     // --------------------------------------------------------------------------
     async collectNetworkLatency() {
+        // Chuỗi Query DNS giả lập chuẩn DoH RFC 8484 (Request A record cho root/example)
+        const dohQuery = '?dns=AAABAAABAAAAAAAAB2V4YW1wbGUDY29tAAABAAE';
+
         const dnsEndpoints = [
-            'https://dns.google/dns-query',
-            'https://cloudflare-dns.com/dns-query',
-            'https://dns.nextdns.io',
-            'https://dns11.quad9.net',
-            'https://wikimedia-dns.org',
-            'https://dns.mullvad.net'
+            { name: 'Google', url: 'https://dns.google/dns-query' + dohQuery },
+            { name: 'Cloudflare', url: 'https://cloudflare-dns.com/dns-query' + dohQuery },
+            { name: 'NextDNS', url: 'https://dns.nextdns.io' + dohQuery },
+            { name: 'Quad9', url: 'https://dns11.quad9.net/dns-query' + dohQuery },
+            { name: 'Wikimedia', url: 'https://wikimedia-dns.org/dns-query' + dohQuery },
+            { name: 'Mullvad', url: 'https://dns.mullvad.net/dns-query' + dohQuery }
         ];
 
-        const latencyPromises = dnsEndpoints.map(async (url) => {
+        const latencyPromises = dnsEndpoints.map(async (item) => {
             const start = performance.now();
             try {
-                await fetch(url, { mode: 'no-cors', cache: 'no-store' });
-                return { url, latency: performance.now() - start };
+                // Request no-cors nhẹ nhàng đo độ trễ vi mô
+                await fetch(item.url, { 
+                    method: 'GET',
+                    mode: 'no-cors', 
+                    cache: 'no-store'
+                });
+                return { name: item.name, latency: performance.now() - start };
             } catch (err) {
                 return null;
             }
@@ -164,25 +160,21 @@ export class EntropyEngine {
             this.pingLatency = 0;
         }
     }
-
     // --------------------------------------------------------------------------
-    // 5. Weather Data API
+    // 5. Weather Data API (Optional)
     // --------------------------------------------------------------------------
     async collectWeatherData() {
         try {
+            // Lấy thời tiết mặc định không cần API Key từ Open-Meteo
             const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=21.02&longitude=105.83&current_weather=true');
             const data = await res.json();
             if (data && data.current_weather) {
                 const weatherVal = data.current_weather.temperature + data.current_weather.windspeed;
                 const weatherBytes = new Float64Array([weatherVal]);
                 this.mixIntoPool(new Uint8Array(weatherBytes.buffer));
-
-                if (this.debug) {
-                    console.log('%c[EntropyEngine] 🌤️ Source 5: Live Weather Data Mixed', 'color: #ec4899;', data.current_weather);
-                }
             }
         } catch (err) {
-            if (this.debug) console.warn('[EntropyEngine] Weather API offline or unreachable.');
+            // Bỏ qua nếu offline hoặc API lỗi
         }
     }
 
@@ -191,62 +183,53 @@ export class EntropyEngine {
     // --------------------------------------------------------------------------
     mixIntoPool(byteArray) {
         for (let i = 0; i < byteArray.length; i++) {
-            this.pool[this.poolIndex] ^= byteArray[i];
+            this.pool[this.poolIndex] ^= byteArray[i]; // Trộn bằng XOR
             this.poolIndex = (this.poolIndex + 1) % this.pool.length;
         }
     }
 
-    toHex(uint8Array) {
-        return Array.from(uint8Array).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
+    /**
+     * Băm Bể Entropy hiện tại qua SHA-256 và trả về mảng 32-byte True Random
+     */
     async getSHA256Seed() {
+        // Thu thập lại CSPRNG & High-Res Timestamp làm Salt trước mỗi lần Hash
         this.collectCSPRNG();
         this.mixIntoPool(new Uint8Array(new Float64Array([performance.now()]).buffer));
 
+        // Crypto Subtle API SHA-256
         const hashBuffer = await crypto.subtle.digest('SHA-256', this.pool);
-        const seedBytes = new Uint8Array(hashBuffer);
-
-        if (this.debug) {
-            console.groupCollapsed('%c[EntropyEngine] 🔑 SHA-256 Seed Generated', 'color: #10b981; font-weight: bold;');
-            console.log('Pool Sample (Hex):', this.toHex(this.pool.slice(0, 16)) + '...');
-            console.log('SHA-256 Seed (Hex):', this.toHex(seedBytes));
-            console.groupEnd();
-        }
-
-        return seedBytes;
+        return new Uint8Array(hashBuffer);
     }
 
+    /**
+     * Trích xuất số nguyên ngẫu nhiên trong khoảng [min, max]
+     */
     async getRandomInt(min, max) {
         if (min >= max) return min;
 
         const seed = await this.getSHA256Seed();
+        // Lấy 4 bytes đầu tiên biến thành số nguyên UInt32
         const view = new DataView(seed.buffer);
         const randomUInt32 = view.getUint32(0);
 
         const range = (max - min + 1);
-        const result = min + (randomUInt32 % range);
-
-        if (this.debug) {
-            console.log(`%c[EntropyEngine] 🎲 Random Int [${min}, ${max}]: %c${result}`, 'color: #9333ea;', 'color: #10b981; font-weight: bold;');
-        }
-
-        return result;
+        return min + (randomUInt32 % range);
     }
 
+    /**
+     * Trích xuất số thực ngẫu nhiên trong khoảng [0, 1)
+     */
     async getRandomFloat() {
         const seed = await this.getSHA256Seed();
         const view = new DataView(seed.buffer);
         const randomUInt32 = view.getUint32(0);
-        const result = randomUInt32 / (0xFFFFFFFF + 1);
-
-        if (this.debug) {
-            console.log(`%c[EntropyEngine] 🎲 Random Float [0, 1): %c${result}`, 'color: #9333ea;', 'color: #10b981; font-weight: bold;');
-        }
-
-        return result;
+        return randomUInt32 / (0xFFFFFFFF + 1);
     }
 }
 
-// Export Instance mặc định với debug = true
-export const entropyEngine = new EntropyEngine(true);
+// Export một Instance Singleton duy nhất dùng cho toàn ứng dụng RANS
+export const entropyEngine = new EntropyEngine();
+export default function initSpinner() {
+    const spinner = new SpinnerModule();
+    spinner.init();
+}
