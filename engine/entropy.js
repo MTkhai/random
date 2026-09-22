@@ -107,7 +107,7 @@ export class EntropyEngine {
     // --------------------------------------------------------------------------
     async collectNetworkLatency() {
         // Chuỗi Query DNS giả lập chuẩn DoH RFC 8484 (Request A record cho root/example)
-        const dohQuery = '?dns=AAABAAABAAAAAAAAB2V4YW1wbGUDY29tAAABAAE';
+        const dohQuery = '?dns=AAABAAABAAAAAAAACG10a2hhaXEGZ2l0aHViAmlvAAABAAE';
 
         const dnsEndpoints = [
             { name: 'Google', url: 'https://dns.google/dns-query' + dohQuery },
