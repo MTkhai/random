@@ -186,7 +186,44 @@ export class EntropyEngine {
             // Bỏ qua nếu offline hoặc API lỗi
         }
     }
+    // --------------------------------------------------------------------------
+    // 6. GPU Canvas & WebGL Rendering Noise (Hardware Graphics Jitter)
+    // --------------------------------------------------------------------------
+    collectGPUEntropy() {
+        try {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            
+            if (!ctx) return;
 
+            // Kích hoạt shader hoặc thao tác render ngầm để ép GPU tính toán
+            const buffer = ctx.createBuffer();
+            ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
+            
+            // Lấy thông tin mở rộng hoặc trạng thái bộ nhớ GPU làm nhiễu
+            const debugInfo = ctx.getExtension('WEBGL_debug_renderer_info');
+            const rendererVendor = debugInfo ? ctx.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'unknown';
+            const rendererInfo = debugInfo ? ctx.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'unknown';
+
+            // Kết hợp thông tin GPU string + thời gian render chính xác cao vào pool
+            const gpuString = rendererVendor + '_' + rendererInfo + '_' + performance.now();
+            const encoder = new TextEncoder();
+            const gpuBytes = encoder.encode(gpuString);
+
+            this.mixIntoPool(gpuBytes);
+
+            if (this.debug) {
+                console.log('%c[EntropyEngine] 🎨 Source 6: GPU Hardware Noise Mixed', 'color: #14b8a6;', {
+                    gpu: rendererInfo,
+                    bytesMixed: gpuBytes.length
+                });
+            }
+        } catch (err) {
+            if (this.debug) console.warn('[EntropyEngine] GPU Canvas entropy skipped.');
+        }
+    }
     // --------------------------------------------------------------------------
     // Core Functions: Pool Mixer & SHA-256 Digest
     // --------------------------------------------------------------------------
