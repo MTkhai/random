@@ -103,18 +103,49 @@ export class EntropyEngine {
     }
 
     // --------------------------------------------------------------------------
-    // 4. Network Latency (Encrypted DNS Ping)
+    // 4. Network Latency (Encrypted DoH Multi-DNS Ping)
     // --------------------------------------------------------------------------
     async collectNetworkLatency() {
-        const start = performance.now();
-        try {
-            // Fetch nhẹ gói DNS Cloudflare để đo millisecond độ trễ mạng
-            await fetch('https://1.1.1.1/cdn-cgi/trace', { mode: 'no-cors', cache: 'no-store' });
-            this.pingLatency = performance.now() - start;
+        // Danh sách các DoH (DNS over HTTPS) Server
+        const dnsEndpoints = [
+            'https://dns.google/dns-query',
+            'https://cloudflare-dns.com/dns-query',
+            'https://dns.nextdns.io',
+            'https://dns11.quad9.net',
+            'https://wikimedia-dns.org',
+            'https://dns.mullvad.net'
+        ];
 
-            const latencyBytes = new Float64Array([this.pingLatency]);
+        // Gửi ping song song đến tất cả DNS Server để đo độ trễ mạng đa hướng
+        const latencyPromises = dnsEndpoints.map(async (url) => {
+            const start = performance.now();
+            try {
+                // Gửi request dạng no-cors để đo chính xác thời gian phản hồi theo millisecond
+                await fetch(url, { mode: 'no-cors', cache: 'no-store' });
+                return performance.now() - start;
+            } catch (err) {
+                return null;
+            }
+        });
+
+        // Chờ phản hồi từ tất cả các server (kể cả khi có server lỗi/timeout)
+        const results = await Promise.allSettled(latencyPromises);
+        const validLatencies = [];
+
+        results.forEach((res) => {
+            if (res.status === 'fulfilled' && res.value !== null) {
+                validLatencies.push(res.value);
+            }
+        });
+
+        if (validLatencies.length > 0) {
+            // Lấy độ trễ trung bình lưu vết
+            this.pingLatency = validLatencies.reduce((a, b) => a + b, 0) / validLatencies.length;
+
+            // Trộn toàn bộ mảng dữ liệu độ trễ của các DNS Server vào Bể Entropy
+            const latencyBytes = new Float64Array(validLatencies);
             this.mixIntoPool(new Uint8Array(latencyBytes.buffer));
-        } catch (err) {
+        } else {
             // Offline Mode Fallback
             this.pingLatency = 0;
         }
