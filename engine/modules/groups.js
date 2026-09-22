@@ -83,7 +83,6 @@ export default class GroupGeneratorModule {
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                             <h3 style="font-size: 0.95em; color: #10b981; margin: 0;">Group Split Result</h3>
-                            <button id="btn-copy-groups" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; border-radius: 4px; padding: 4px 8px; font-size: 0.75em; cursor: pointer;">📋 Copy Result</button>
                         </div>
                         <div id="groups-result-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto;">
                             <div style="text-align: center; color: #64748b; font-size: 0.85em; padding: 20px;">No groups generated yet.</div>
