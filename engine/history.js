@@ -202,11 +202,21 @@ export class HistoryManager {
 
     // Hiển thị cụm nút Clear + Export JSON + Export CSV ở footer
     renderFooterButtons() {
-        const footer = document.querySelector('.history-drawer-footer') || document.getElementById('history-footer');
-        if (!footer) return;
+        const drawer = document.getElementById('history-drawer') || 
+                       document.querySelector('.history-drawer') || 
+                       document.querySelector('.history-panel');
+        if (!drawer) return;
+
+        // Tìm hoặc tự động tạo mới footer nằm gọn trong drawer
+        let footer = drawer.querySelector('.history-drawer-footer') || drawer.querySelector('footer');
+        if (!footer) {
+            footer = document.createElement('div');
+            footer.className = 'history-drawer-footer';
+            drawer.appendChild(footer);
+        }
 
         footer.innerHTML = `
-            <div style="display: flex; gap: 8px; padding: 12px; width: 100%; box-sizing: border-box;">
+            <div style="display: flex; gap: 8px; padding: 12px; width: 100%; box-sizing: border-box; border-top: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2);">
                 <button id="btn-export-json" style="flex: 1; background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 8px; font-size: 0.8em; cursor: pointer;">📥 JSON</button>
                 <button id="btn-export-csv" style="flex: 1; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 8px; font-size: 0.8em; cursor: pointer;">📊 CSV</button>
                 <button id="btn-clear-history" style="flex: 1; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; padding: 8px; font-size: 0.8em; cursor: pointer;">🗑️ Clear</button>
