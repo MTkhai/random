@@ -15,7 +15,41 @@ export class HistoryManager {
 
         // 3. Lắng nghe các sự kiện chuyển tab/trình duyệt
         this.bindEvents();
+        
     }
+    exportJSON() {
+    if (this.records.length === 0) return alert('No history data to export!');
+    
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.records, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `rans_history_${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+}
+
+exportCSV() {
+    if (this.records.length === 0) return alert('No history data to export!');
+
+    const headers = ["ID", "Module", "Result", "Timestamp", "IsDynamic"];
+    const rows = this.records.map(r => [
+        r.id,
+        `"${r.module}"`,
+        `"${(r.result || '').replace(/"/g, '""')}"`,
+        `"${r.timestamp}"`,
+        r.isDynamic ? "Yes" : "No"
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `rans_history_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
 
     // Hàm đọc lại dữ liệu mới nhất từ localStorage và re-render UI
     refresh() {

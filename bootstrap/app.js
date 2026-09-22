@@ -106,3 +106,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const app = new RansApp();
     app.init();
 });
+
+export function initShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // Bỏ qua nếu người dùng đang nhập text trong input hoặc textarea
+        const activeTag = document.activeElement.tagName;
+        if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') {
+            if (e.key === 'Escape') document.activeElement.blur();
+            return;
+        }
+
+        // Space / Enter: Trigger nút hành động chính của module hiện tại
+        if (e.code === 'Space' || e.code === 'Enter') {
+            e.preventDefault();
+            const mainBtn = document.querySelector('.module-card .btn-primary, .module-card button[id*="gen"], .module-card button[id*="spin"]');
+            mainBtn?.click();
+        }
+
+        // Ctrl + H: Toggle History Panel
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'h') {
+            e.preventDefault();
+            const historyDrawer = document.getElementById('history-drawer') || document.querySelector('.history-drawer');
+            historyDrawer?.classList.toggle('active');
+        }
+
+        // Esc: Đóng History
+        if (e.key === 'Escape') {
+            const historyDrawer = document.getElementById('history-drawer') || document.querySelector('.history-drawer');
+            historyDrawer?.classList.remove('active');
+        }
+    });
+}

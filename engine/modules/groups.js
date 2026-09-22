@@ -336,3 +336,71 @@ export default class GroupModule {
         }
     }
 }
+
+export class GroupPresetManager {
+    constructor(container, onSelectPreset) {
+        this.container = container;
+        this.onSelectPreset = onSelectPreset;
+        this.presets = JSON.parse(localStorage.getItem('rans_group_presets') || '{}');
+    }
+
+    renderControls() {
+        return `
+            <div style="margin-bottom: 12px; display: flex; gap: 8px; align-items: center;">
+                <select id="select-group-preset" style="flex: 1; background: #1e293b; color: #f8fafc; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 10px; font-size: 0.85em;">
+                    <option value="">-- Select Saved Preset --</option>
+                    ${Object.keys(this.presets).map(name => `<option value="${name}">${name}</option>`).join('')}
+                </select>
+                <button id="btn-save-preset" class="btn-primary" style="padding: 6px 12px; font-size: 0.8em;">💾 Save Preset</button>
+                <button id="btn-del-preset" style="background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid rgba(239,68,68,0.4); padding: 6px 10px; border-radius: 6px; font-size: 0.8em; cursor: pointer;">🗑️</button>
+            </div>
+        `;
+    }
+
+    bindEvents(textareaEl) {
+        const selectEl = this.container.querySelector('#select-group-preset');
+        const saveBtn = this.container.querySelector('#btn-save-preset');
+        const delBtn = this.container.querySelector('#btn-del-preset');
+
+        // Khi chọn preset -> Đổ dữ liệu vào textarea
+        selectEl?.addEventListener('change', (e) => {
+            const name = e.target.value;
+            if (name && this.presets[name]) {
+                textareaEl.value = this.presets[name].join('\n');
+            }
+        });
+
+        // Lưu preset mới
+        saveBtn?.addEventListener('click', () => {
+            const list = textareaEl.value.split('\n').map(s => s.trim()).filter(Boolean);
+            if (list.length === 0) return alert('Please enter at least one item to save!');
+
+            const presetName = prompt('Enter preset name (e.g. Class List, Dev Team):');
+            if (!presetName) return;
+
+            this.presets[presetName] = list;
+            localStorage.setItem('rans_group_presets', JSON.stringify(this.presets));
+            alert(`Preset "${presetName}" saved!`);
+            
+            // Re-render select options
+            if (selectEl) {
+                selectEl.innerHTML = `<option value="">-- Select Saved Preset --</option>` + 
+                    Object.keys(this.presets).map(n => `<option value="${n}">${n}</option>`).join('');
+                selectEl.value = presetName;
+            }
+        });
+
+        // Xóa preset
+        delBtn?.addEventListener('click', () => {
+            const selected = selectEl.value;
+            if (!selected) return alert('Select a preset to delete!');
+
+            if (confirm(`Delete preset "${selected}"?`)) {
+                delete this.presets[selected];
+                localStorage.setItem('rans_group_presets', JSON.stringify(this.presets));
+                selectEl.querySelector(`option[value="${selected}"]`)?.remove();
+                selectEl.value = "";
+            }
+        });
+    }
+}
